@@ -19,7 +19,6 @@
   ],
   "author": "Intel",
   "license": "MIT",
-  "devDependencies": {},
   "dependencies": {
     "@ant-design/icons": "^4.6.3",
     "@types/lodash": "^4.14.172",
@@ -61,5 +60,9 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "url-loader": "^4.1.1"
   }
 }

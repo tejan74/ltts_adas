@@ -11,6 +11,10 @@ import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+// new code added
+import { GoogleLogin } from 'react-google-login';
+// import { googleOAuth2 } from '../../actions/google-actions';
+// new end here
 
 export interface LoginData {
     username: string;
@@ -88,6 +92,16 @@ function LoginFormComponent(props: Props): JSX.Element {
                     >
                         Sign in
                     </Button>
+                </Form.Item>
+            </Form>
+            <Form className='login-form' layout='horizontal'>
+                <Form.Item {...tailLayout}>
+                    <GoogleLogin
+                        clientId='26656257900-mev87ifbrc96dl3gp9115oae6lslcrsj.apps.googleusercontent.com'
+                        buttonText='Sign in with Google'
+                        cookiePolicy='single_host_origin'
+                        isSignedIn
+                    />
                 </Form.Item>
             </Form>
         </>

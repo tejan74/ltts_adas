@@ -28,7 +28,10 @@ import Text from 'antd/lib/typography/Text';
 import getCore from 'cvat-core-wrapper';
 // import consts from 'consts';
 
-import { CVATLogo, AccountIcon } from 'icons';
+// New code added by Raju N
+// import { CVATLogo, AccountIcon } from 'icons';
+import { AccountIcon } from 'icons';
+// New code added by Raju N
 import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 import { logoutAsync, authActions } from 'actions/auth-actions';
@@ -259,7 +262,21 @@ function HeaderContainer(props: Props): JSX.Element {
     return (
         <Layout.Header className='cvat-header'>
             <div className='cvat-left-header'>
-                <Icon className='cvat-logo-icon' component={CVATLogo} />
+                {/* New code added below by Raju N */}
+                <Button
+                    className='cvat-header-button'
+                    type='link'
+                    value='projects'
+                    href='/projects'
+                    onClick={(event: React.MouseEvent): void => {
+                        event.preventDefault();
+                        history.push('/projects');
+                    }}
+                >
+                    ADAS-LTTS
+                </Button>
+                {/* New code added above by Raju N */}
+                {/* <Icon className='cvat-logo-icon' component={CVATLogo} /> */}
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -295,6 +312,18 @@ function HeaderContainer(props: Props): JSX.Element {
                     }}
                 >
                     Cloud Storages
+                </Button>
+                <Button
+                    className='cvat-header-button'
+                    type='link'
+                    value='projects'
+                    href='/projects'
+                    onClick={(event: React.MouseEvent): void => {
+                        event.preventDefault();
+                        history.push('/projects');
+                    }}
+                >
+                    User List
                 </Button>
                 {isModelsPluginActive && (
                     <Button

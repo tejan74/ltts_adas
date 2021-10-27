@@ -2,38 +2,96 @@
 //
 // SPDX-License-Identifier: MIT
 
-// Copyright (C) 2020 Intel Corporation
 //
+
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+// Copyright (C) 2020 Intel Corporation
+
+//
+
+// SPDX-License-Identifier: MIT
+
+import React, { useCallback } from 'react';
+
 import Form from 'antd/lib/form';
+
 import Button from 'antd/lib/button';
+
 import Input from 'antd/lib/input';
+
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+
+// new code added
+
+import { GoogleLogin } from 'react-google-login';
+
+// import { googleOAuth2 } from '../../actions/google-actions';
+
+// new end here
 
 export interface LoginData {
     username: string;
+
     password: string;
 }
 
 interface Props {
     fetching: boolean;
+
     onSubmit(loginData: LoginData): void;
 }
 
 function LoginFormComponent(props: Props): JSX.Element {
     const { fetching, onSubmit } = props;
+
     const formItemLayout = {
         labelCol: { span: 6 },
+
         wrapperCol: { span: 10 },
     };
+
     const tailLayout = {
         wrapperCol: {
             offset: 8,
+
             span: 16,
         },
     };
+
+    const openGoogleLoginPage = useCallback(() => {
+        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+        // const redirectUri = 'http://localhost:7000/api/v1/auth/login/google/';
+
+        // const redirectUri = 'http://localhost:3000/';
+
+        const scope = [
+            'https://www.googleapis.com/auth/userinfo.email',
+
+            'https://www.googleapis.com/auth/userinfo.profile',
+        ].join(' ');
+
+        const params = {
+            response_type: 'code',
+
+            client_id: '675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com',
+
+            redirect_uri: 'http://localhost:7000/api/v1/auth/login/google/',
+
+            prompt: 'select_account',
+
+            access_type: 'offline',
+
+            scope,
+        };
+
+        // console.log(params, 'urlParams');
+
+        const urlParams = new URLSearchParams(params).toString();
+
+        window.location = `${googleAuthUrl}?${urlParams}`;
+    }, []);
 
     return (
         <>
@@ -46,6 +104,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             required: true,
+
                             message: 'Please specify a username',
                         },
                     ]}
@@ -66,6 +125,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             required: true,
+
                             message: 'Please specify a password',
                         },
                     ]}
@@ -78,6 +138,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                         style={{ borderRadius: '20px' }}
                     />
                 </Form.Item>
+
                 <Form.Item {...tailLayout}>
                     <Button
                         type='primary'
@@ -88,6 +149,18 @@ function LoginFormComponent(props: Props): JSX.Element {
                     >
                         Sign in
                     </Button>
+                </Form.Item>
+            </Form>
+
+            <Form className='login-form' layout='horizontal'>
+                <Form.Item {...tailLayout}>
+                    <Button onClick={openGoogleLoginPage}>GoogleLoginwithserver</Button>
+                    <GoogleLogin
+                        clientId='675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com'
+                        buttonText='Sign in with Google'
+                        cookiePolicy='single_host_origin'
+                        isSignedIn
+                    />
                 </Form.Item>
             </Form>
         </>

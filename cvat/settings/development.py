@@ -23,7 +23,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 DATABASES = {
     'default': {
     'ENGINE': 'djongo',
-    'NAME': 'adas_cvatwsl',
+    'NAME': 'new_db',
     'HOST': '127.0.0.1',
     'PORT': 27017,
     }
@@ -46,3 +46,12 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '{}/auth/email-confirmation'
 
 CORS_ORIGIN_WHITELIST = [UI_URL]
 CORS_REPLACE_HTTPS_REFERER = True
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'keshavadk@gmail.com'
+EMAIL_HOST_PASSWORD = 'rwecrdaqokkoxmww'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'CodingWithMitch Team <noreply@codingwithmitch.com>'

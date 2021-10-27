@@ -127,13 +127,14 @@ INSTALLED_APPS = [
     'allauth.account',
     'corsheaders',
     'allauth.socialaccount',
-    'rest_auth.registration'
+    'rest_auth.registration',
+    'allauth.socialaccount.providers.google',
 ]
 
 if strtobool(os.environ.get("ADAPTIVE_AUTO_ANNOTATION", 'false')):
     INSTALLED_APPS.append('cvat.apps.training')
 
-SITE_ID = 1
+SITE_ID = 2
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -482,3 +483,13 @@ CACHES = {
 
 USE_CACHE = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'keshavadk@gmail.com'
+EMAIL_HOST_PASSWORD = 'rwecrdaqokkoxmww'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'CodingWithMitch Team <noreply@codingwithmitch.com>'
+
+GOOGLE_OAUTH2_CLIENT_ID ='675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET ='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'

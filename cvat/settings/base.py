@@ -483,13 +483,3 @@ CACHES = {
 
 USE_CACHE = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'keshavadk@gmail.com'
-EMAIL_HOST_PASSWORD = 'rwecrdaqokkoxmww'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'CodingWithMitch Team <noreply@codingwithmitch.com>'
-
-GOOGLE_OAUTH2_CLIENT_ID ='675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET ='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'

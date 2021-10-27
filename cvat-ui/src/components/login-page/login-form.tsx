@@ -21,13 +21,9 @@ import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-
 // new code added
-
 import { GoogleLogin } from 'react-google-login';
-
 // import { googleOAuth2 } from '../../actions/google-actions';
-
 // new end here
 
 export interface LoginData {

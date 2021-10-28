@@ -23,7 +23,7 @@ import Input from 'antd/lib/input';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // new code added
 import { GoogleLogin } from 'react-google-login';
-// import { googleOAuth2 } from '../../actions/google-actions';
+import { googleOAuth2 } from '../../actions/google-actions';
 // new end here
 
 export interface LoginData {
@@ -152,9 +152,11 @@ function LoginFormComponent(props: Props): JSX.Element {
                 <Form.Item {...tailLayout}>
                     <Button onClick={openGoogleLoginPage}>GoogleLoginwithserver</Button>
                     <GoogleLogin
-                        clientId='675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com'
+                        clientId='26656257900-mev87ifbrc96dl3gp9115oae6lslcrsj.apps.googleusercontent.com'
                         buttonText='Sign in with Google'
                         cookiePolicy='single_host_origin'
+                        onSuccess={googleOAuth2}
+                        onFailure={googleOAuth2}
                         isSignedIn
                     />
                 </Form.Item>

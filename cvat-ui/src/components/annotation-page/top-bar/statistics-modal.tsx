@@ -56,7 +56,7 @@ export default function StatisticsModalComponent(props: Props): JSX.Element {
     if (collecting || !data) {
         return (
             <Modal {...baseProps}>
-                <Spin style={{ margin: '0 50%' }} />
+                <Spin style={{ margin: '0 50%' }} tip='Loading...' />
             </Modal>
         );
     }

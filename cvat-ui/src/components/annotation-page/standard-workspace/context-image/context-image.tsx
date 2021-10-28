@@ -54,7 +54,7 @@ function ContextImage(): JSX.Element | null {
     return (
         <div className='cvat-context-image-wrapper' {...(contextImageHidden ? { style: { width: '32px' } } : {})}>
             <div className='cvat-context-image-wrapper-header' />
-            {contextImageFetching ? <Spin size='small' /> : null}
+            {contextImageFetching ? <Spin size='small' tip='Loading...' /> : null}
             {contextImageHidden ? (
                 <CVATTooltip title='A context image is available'>
                     <QuestionCircleOutlined

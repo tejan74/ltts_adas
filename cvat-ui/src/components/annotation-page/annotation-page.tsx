@@ -87,7 +87,7 @@ export default function AnnotationPageComponent(props: Props): JSX.Element {
     }, [job, fetching, prevJob, prevFetching]);
 
     if (job === null) {
-        return <Spin size='large' className='cvat-spinner' />;
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
     }
 
     if (typeof job === 'undefined') {

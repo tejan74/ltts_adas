@@ -255,7 +255,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                     />
                 ),
                 duration: null,
-                description: error.length > 200 ? 'Open the Browser Console to get details' : error,
+                description: error.length > 200 ? 'Open the Browser Console testing get details' : error,
             });
 
             // eslint-disable-next-line no-console
@@ -396,7 +396,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             );
         }
 
-        return <Spin size='large' className='cvat-spinner' />;
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
     }
 }
 

@@ -71,7 +71,7 @@ function LoginFormComponent(props: Props): JSX.Element {
         const params = {
             response_type: 'code',
 
-            client_id: '675994499794-4ioaloj444coaccgt94vmnfe90j7ecqu.apps.googleusercontent.com',
+            client_id: '179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com',
 
             redirect_uri: 'http://localhost:7000/api/v1/auth/login/google/',
 

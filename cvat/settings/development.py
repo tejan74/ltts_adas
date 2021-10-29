@@ -53,10 +53,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'adasltts@gmail.com'
 EMAIL_HOST_PASSWORD = 'ibahsrokbbtuzsxs'
-
-# EMAIL_HOST_USER = 'savitakulkarni76@gmail.com'
-# EMAIL_HOST_PASSWORD = 'svofzbnpuemoihyf'
-
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Password reset mail from ADAS team <noreply@ltts.com>'
+
+GOOGLE_OAUTH2_CLIENT_ID ='179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET ='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'
+
+
+

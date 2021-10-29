@@ -23,17 +23,14 @@ from django.contrib import admin
 from django.urls import path, include
 from cvat.apps.authentication.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('cvat.apps.engine.urls')),
     path('django-rq/', include('django_rq.urls')),
     path('accounts/' ,include('allauth.urls')),
-    # path('accounts/', include('django.contrib.auth.urls')),
-    #path('rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
-    # path('password_reset/', views.PasswordResetView.as_view(), name='password_reset'),
-    # path('password_reset/done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    # path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    # path('reset/done/', views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('google/', GoogleLogin.as_view(), name='google_login'),
+   
 ]
 
 if apps.is_installed('cvat.apps.dataset_repo'):

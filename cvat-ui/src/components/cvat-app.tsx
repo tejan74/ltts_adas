@@ -254,7 +254,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                         }}
                     />
                 ),
-                duration: null,
+                // duration: null,
+                duration:5,
                 description: error.length > 200 ? 'Open the Browser Console testing get details' : error,
             });
 

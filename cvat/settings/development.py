@@ -23,7 +23,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 DATABASES = {
     'default': {
     'ENGINE': 'djongo',
-    'NAME': 'new_db',
+    'NAME': 'adas_cvatwsl',
     'HOST': '127.0.0.1',
     'PORT': 27017,
     }
@@ -57,8 +57,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Password reset mail from ADAS team <noreply@ltts.com>'
 
-GOOGLE_OAUTH2_CLIENT_ID ='179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET ='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'
+# GOOGLE_OAUTH2_CLIENT_ID ='179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com'
+# GOOGLE_OAUTH2_CLIENT_SECRET ='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'
 
 
 

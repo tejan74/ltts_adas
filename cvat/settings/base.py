@@ -129,7 +129,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_auth.registration',
     'allauth.socialaccount.providers.google',
-    'dj_rest_auth',
+    # 'dj_rest_auth',
     
     # 'rest_framework_jwt',
 
@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
         'cvat.apps.authentication.auth.SignatureAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+       # 'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
     'DEFAULT_VERSIONING_CLASS':
         # Don't try to use URLPathVersioning. It will give you /api/{version}
@@ -204,7 +204,7 @@ MIDDLEWARE = [
 
 UI_URL = ''
 
-REST_USE_JWT = True
+#REST_USE_JWT = True
 
 # SIMPLE_JWT = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(days=2),

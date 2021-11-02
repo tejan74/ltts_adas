@@ -12,7 +12,7 @@
 
 // SPDX-License-Identifier: MIT
 
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import Form from 'antd/lib/form';
 
@@ -24,6 +24,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // new code added
 import { GoogleLogin } from 'react-google-login';
 import { googleOAuth2 } from '../../actions/google-actions';
+import axios from 'axios';
 // new end here
 
 export interface LoginData {
@@ -54,40 +55,17 @@ function LoginFormComponent(props: Props): JSX.Element {
             span: 16,
         },
     };
+    const successGoogleLogin = (response) => {
+        console.log(response);
 
-    const openGoogleLoginPage = useCallback(() => {
-        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-
-        // const redirectUri = 'http://localhost:7000/api/v1/auth/login/google/';
-
-        // const redirectUri = 'http://localhost:3000/';
-
-        const scope = [
-            'https://www.googleapis.com/auth/userinfo.email',
-
-            'https://www.googleapis.com/auth/userinfo.profile',
-        ].join(' ');
-
-        const params = {
-            response_type: 'code',
-
-            client_id: '179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com',
-
-            redirect_uri: 'http://localhost:7000/api/v1/auth/login/google/',
-
-            prompt: 'select_account',
-
-            access_type: 'offline',
-
-            scope,
+        const payload = {
+            access_token: response.accessToken,
         };
 
-        // console.log(params, 'urlParams');
-
-        const urlParams = new URLSearchParams(params).toString();
-
-        window.location = `${googleAuthUrl}?${urlParams}`;
-    }, []);
+        axios.post('http://localhost:7000/google/', payload).then((response) => {
+            console.log(response);
+        });
+    };
 
     return (
         <>
@@ -112,7 +90,6 @@ function LoginFormComponent(props: Props): JSX.Element {
                         style={{ borderRadius: '20px' }}
                     />
                 </Form.Item>
-
                 <Form.Item
                     {...formItemLayout}
                     label='Password'
@@ -134,7 +111,6 @@ function LoginFormComponent(props: Props): JSX.Element {
                         style={{ borderRadius: '20px' }}
                     />
                 </Form.Item>
-
                 <Form.Item {...tailLayout}>
                     <Button
                         type='primary'
@@ -147,16 +123,14 @@ function LoginFormComponent(props: Props): JSX.Element {
                     </Button>
                 </Form.Item>
             </Form>
-
             <Form className='login-form' layout='horizontal'>
                 <Form.Item {...tailLayout}>
-                    <Button onClick={openGoogleLoginPage}>GoogleLoginwithserver</Button>
                     <GoogleLogin
-                        clientId='26656257900-mev87ifbrc96dl3gp9115oae6lslcrsj.apps.googleusercontent.com'
+                        clientId='179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com'
                         buttonText='Sign in with Google'
                         cookiePolicy='single_host_origin'
-                        onSuccess={googleOAuth2}
-                        onFailure={googleOAuth2}
+                        onSuccess={successGoogleLogin}
+                        // onFailure={googleOAuth2}
                         isSignedIn
                     />
                 </Form.Item>

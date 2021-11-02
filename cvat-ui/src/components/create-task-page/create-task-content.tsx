@@ -95,6 +95,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                 message: 'The task has been created',
                 btn,
                 className: 'cvat-notification-create-task-success',
+                duration:5,
             });
 
             this.basicConfigurationComponent.current?.resetFields();
@@ -173,6 +174,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             notification.error({
                 message: 'Could not create a task',
                 description: 'A task must contain at least one label or belong to some project',
+                duration:5,
                 className: 'cvat-notification-create-task-fail',
             });
             return;
@@ -182,6 +184,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             notification.error({
                 message: 'Could not create a task',
                 description: 'A task must contain at least one file',
+                duration:5,
                 className: 'cvat-notification-create-task-fail',
             });
             return;
@@ -209,6 +212,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                                 .map((text: string): JSX.Element => <div>{text}</div>) :
                             error.toString(),
                         className: 'cvat-notification-create-task-fail',
+                        duration:5,
                     });
                 });
         }

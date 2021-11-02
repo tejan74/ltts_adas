@@ -218,8 +218,13 @@
 
                 return response.data;
             }
-
+            //code added by raju
+            async function Googlelogin(token) {
+                alert('fff');
+                console.log(token, 'tokens');
+            }
             async function login(username, password) {
+                console.log(username, 'tokens');
                 const authenticationData = [
                     `${encodeURIComponent('username')}=${encodeURIComponent(username)}`,
                     `${encodeURIComponent('password')}=${encodeURIComponent(password)}`,
@@ -1143,7 +1148,8 @@
 
                     const closureId = Date.now();
                     predictAnnotations.latestRequest.id = closureId;
-                    const predicate = () => !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
+                    const predicate = () =>
+                        !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
                     if (predictAnnotations.latestRequest.fetching) {
                         waitFor(5, predicate).then(() => {
                             if (predictAnnotations.latestRequest.id !== closureId) {
@@ -1310,6 +1316,7 @@
                             request: serverRequest,
                             userAgreements,
                             installedApps,
+                            Googlelogin,
                         }),
                         writable: false,
                     },

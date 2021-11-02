@@ -23,7 +23,6 @@ function build() {
     const MLModel = require('./ml-model');
     const { FrameData } = require('./frames');
     const { CloudStorage } = require('./cloud-storage');
-
     const enums = require('./enums');
 
     const {
@@ -157,6 +156,20 @@ function build() {
              */
             async login(username, password) {
                 const result = await PluginRegistry.apiWrapper(cvat.server.login, username, password);
+                return result;
+            },
+            /**
+             * Method allows to google login on a server
+             * @method login
+             * @async
+             * @memberof module:API.cvat.server
+             * @param {string} username An username of an account
+             * @param {string} password A password of an account
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+             async Googlelogin(Token) {
+                const result = await PluginRegistry.apiWrapper(cvat.server.Googlelogin, Token);
                 return result;
             },
             /**

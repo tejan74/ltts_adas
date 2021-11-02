@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import LoginPageComponent from 'components/login-page/login-page';
 import { CombinedState } from 'reducers/interfaces';
 import { loginAsync } from 'actions/auth-actions';
-
+import { googleOAuth2 } from '../../actions/google-actions';
 interface StateToProps {
     fetching: boolean;
     renderResetPassword: boolean;
@@ -14,6 +14,7 @@ interface StateToProps {
 
 interface DispatchToProps {
     onLogin: typeof loginAsync;
+    onGooglelogin: typeof googleOAuth2
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -25,6 +26,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
 
 const mapDispatchToProps: DispatchToProps = {
     onLogin: loginAsync,
+    onGooglelogin: googleOAuth2
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPageComponent);

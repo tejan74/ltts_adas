@@ -73,6 +73,7 @@ function ContextImage(): JSX.Element | null {
                         onError={() => {
                             notification.error({
                                 message: 'Could not display context image',
+                                duration:5,
                                 description: `Source is  ${
                                     contextImageData === null ? 'empty' : contextImageData.slice(0, 100)
                                 }`,

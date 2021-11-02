@@ -82,6 +82,7 @@ export default function AnnotationPageComponent(props: Props): JSX.Element {
                 ),
                 placement: 'topRight',
                 className: 'cvat-notification-no-labels',
+                duration: 5,
             });
         }
     }, [job, fetching, prevJob, prevFetching]);

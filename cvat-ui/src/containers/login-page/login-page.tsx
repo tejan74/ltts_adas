@@ -22,7 +22,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
     return {
         fetching: state.auth.fetching,
         renderResetPassword: state.auth.allowResetPassword,
-        access_token:state.googleAuth.access_token
+        access_token:state.googleAuth.Data_list,
     };
 }
 

@@ -131,7 +131,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                         buttonText='Sign in with Google'
                         cookiePolicy='single_host_origin'
                         onSuccess={successGoogleLogin}
-                        // onFailure={googleOAuth2}
+                        onFailure={successGoogleLogin}
                         isSignedIn
                     />
                 </Form.Item>

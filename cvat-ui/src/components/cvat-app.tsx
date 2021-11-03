@@ -20,6 +20,7 @@ import ResetPasswordPageComponent from 'components/reset-password-page/reset-pas
 import ShortcutsDialog from 'components/shortcuts-dialog/shortcuts-dialog';
 import ProjectsPageComponent from 'components/projects-page/projects-page';
 import CreateProjectPageComponent from 'components/create-project-page/create-project-page';
+import UserListComponent from 'components/user-list-page/user-list';
 import ProjectPageComponent from 'components/project-page/project-page';
 import TasksPageContainer from 'containers/tasks-page/tasks-page';
 import LoginWithTokenComponent from 'components/login-with-token/login-with-token';
@@ -341,6 +342,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />
+                                        <Route exact path='/userlist' component={UserListComponent} />
                                         <Route
                                             exact
                                             path='/cloudstorages/create'

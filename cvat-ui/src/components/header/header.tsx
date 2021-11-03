@@ -316,11 +316,11 @@ function HeaderContainer(props: Props): JSX.Element {
                 <Button
                     className='cvat-header-button'
                     type='link'
-                    value='projects'
-                    href='/projects'
+                    value='userlist'
+                    href='/userlist'
                     onClick={(event: React.MouseEvent): void => {
                         event.preventDefault();
-                        history.push('/projects');
+                        history.push('/userlist');
                     }}
                 >
                     User List

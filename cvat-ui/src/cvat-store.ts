@@ -1,18 +1,23 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
-
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, Store, Reducer } from 'redux';
+import {
+    createStore, applyMiddleware, Store, Reducer,
+} from 'redux';
 import { createLogger } from 'redux-logger';
+import createSagaMiddleware from 'redux-saga';
 import { isDev } from 'utils/enviroment';
-
+// new code added by Raju
 const logger = createLogger({
     predicate: isDev,
     collapsed: true,
 });
 
-const middlewares = [thunk, logger];
+const sagaMiddleware = createSagaMiddleware();
+// const middlewares = [sagaMiddleware, logger];
+
+const middlewares = [sagaMiddleware, thunk, logger];
 
 let store: Store | null = null;
 
@@ -31,6 +36,7 @@ export default function createCVATStore(createRootReducer: () => Reducer): void 
 
 export function getCVATStore(): Store {
     if (store) {
+        // sagaMiddleware.run(rootSaga)
         return store;
     }
 

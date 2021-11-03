@@ -34,7 +34,7 @@ export default function UpdateCloudStoragePageComponent(): JSX.Element {
     }, [isFetching]);
 
     if (!cloudStorage && !isInitialized) {
-        return <Spin size='large' className='cvat-spinner' />;
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
     }
 
     if (!cloudStorage) {

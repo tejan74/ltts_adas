@@ -55,7 +55,7 @@ export default function ProjectPageComponent(): JSX.Element {
     }
 
     if (projectsFetching) {
-        return <Spin size='large' className='cvat-spinner' />;
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
     }
 
     if (!project) {

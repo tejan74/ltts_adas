@@ -15,6 +15,11 @@ from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
+from django.conf import settings
+
+
 @method_decorator(name='post', decorator=swagger_auto_schema(
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
@@ -54,3 +59,9 @@ class RegisterView(_RegisterView):
             allauth_settings.EmailVerificationMethod.MANDATORY
 
         return data
+
+
+class GoogleLogin(SocialLoginView):
+    print("Signing in")
+    authentication_classes = []
+    adapter_class = GoogleOAuth2Adapter

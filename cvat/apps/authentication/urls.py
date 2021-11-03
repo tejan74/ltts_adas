@@ -11,11 +11,13 @@ from allauth.account.views import ConfirmEmailView, EmailVerificationSentView
 from allauth.account import app_settings as allauth_settings
 
 from cvat.apps.authentication.views import SigningView, RegisterView
-
+from django.contrib.auth.models import User
+from cvat.apps.authentication.views import *
 urlpatterns = [
     path('login', LoginView.as_view(), name='rest_login'),
     path('logout', LogoutView.as_view(), name='rest_logout'),
-    path('signing', SigningView.as_view(), name='signing')
+    path('signing', SigningView.as_view(), name='signing'),
+    
 ]
 
 if settings.DJANGO_AUTH_TYPE == 'BASIC':
@@ -27,6 +29,7 @@ if settings.DJANGO_AUTH_TYPE == 'BASIC':
             name='rest_password_reset_confirm'),
         path('password/change', PasswordChangeView.as_view(),
             name='rest_password_change'),
+        
     ]
     if allauth_settings.EMAIL_VERIFICATION != \
        allauth_settings.EmailVerificationMethod.NONE:

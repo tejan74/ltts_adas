@@ -89,6 +89,18 @@ module.exports = (env) => ({
                 ],
             },
             {
+                test: /\.(jpe?g|gif|png)$/i,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 50000,
+                        },
+                    },
+                ],
+            },
+            {
                 test: /\.svg$/,
                 exclude: /node_modules/,
                 use: [

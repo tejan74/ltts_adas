@@ -46,3 +46,19 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '{}/auth/email-confirmation'
 
 CORS_ORIGIN_WHITELIST = [UI_URL]
 CORS_REPLACE_HTTPS_REFERER = True
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'adasltts@gmail.com'
+EMAIL_HOST_PASSWORD = 'ibahsrokbbtuzsxs'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Password reset mail from ADAS team <noreply@ltts.com>'
+
+GOOGLE_OAUTH2_CLIENT_ID ='179747056513-6htt24u0nrclke33f6lifn9bnivmiunp.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET ='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'
+
+
+

@@ -127,13 +127,19 @@ INSTALLED_APPS = [
     'allauth.account',
     'corsheaders',
     'allauth.socialaccount',
-    'rest_auth.registration'
+    'rest_auth.registration',
+    'allauth.socialaccount.providers.google',
+    'dj_rest_auth',
+    
+    'rest_framework_jwt',
+
+    # 'rest_framework_jwt.blacklist',
 ]
 
 if strtobool(os.environ.get("ADAPTIVE_AUTO_ANNOTATION", 'false')):
     INSTALLED_APPS.append('cvat.apps.training')
 
-SITE_ID = 1
+SITE_ID = 2
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -143,7 +149,8 @@ REST_FRAMEWORK = {
         'cvat.apps.authentication.auth.TokenAuthentication',
         'cvat.apps.authentication.auth.SignatureAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication'
+        'rest_framework.authentication.BasicAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
     'DEFAULT_VERSIONING_CLASS':
         # Don't try to use URLPathVersioning. It will give you /api/{version}
@@ -197,6 +204,13 @@ MIDDLEWARE = [
 
 UI_URL = ''
 
+#REST_USE_JWT = True
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=2),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+# }
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -234,6 +248,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+
 
 # https://github.com/pennersr/django-allauth
 ACCOUNT_EMAIL_VERIFICATION = 'none'

@@ -21,11 +21,17 @@ Including another URLconf
 from django.apps import apps
 from django.contrib import admin
 from django.urls import path, include
+from cvat.apps.authentication.views import *
+from cvat.apps.authentication.views import GoogleLogin
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('cvat.apps.engine.urls')),
     path('django-rq/', include('django_rq.urls')),
+    path('accounts/' ,include('allauth.urls')),
+    path('google/', GoogleLogin.as_view(), name='google_login'),
+   
 ]
 
 if apps.is_installed('cvat.apps.dataset_repo'):

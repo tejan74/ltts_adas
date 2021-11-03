@@ -256,6 +256,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
             }
         } catch (error) {
             notification.error({
+                duration:5,
                 description: error.toString(),
                 message: 'OpenCV.js processing error occured',
                 className: 'cvat-notification-notice-opencv-processing-error',
@@ -307,6 +308,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
         } catch (error) {
             notification.error({
                 description: error.toString(),
+                duration:5,
                 message: 'OpenCV.js processing error occured',
                 className: 'cvat-notification-notice-opencv-processing-error',
             });
@@ -496,6 +498,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                                         } catch (error) {
                                             notification.error({
                                                 description: error.toString(),
+                                                duration:5,
                                                 message: 'Could not initialize OpenCV library',
                                             });
                                             this.setState({

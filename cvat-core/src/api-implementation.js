@@ -87,7 +87,11 @@
         cvat.server.login.implementation = async (username, password) => {
             await serverProxy.server.login(username, password);
         };
-
+        // New code added by raju
+        cvat.server.Googlelogin.implementation = async (accessToken) => {
+            await serverProxy.server.Googlelogin(accessToken);
+        };
+        // New code added by raju
         cvat.server.logout.implementation = async () => {
             await serverProxy.server.logout();
         };

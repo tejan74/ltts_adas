@@ -218,7 +218,33 @@
 
                 return response.data;
             }
-
+            // code added by raju
+            async function Googlelogin(access) {
+                const payload = {
+                    access_token: access.accessToken,
+                };
+                console.log(payload, 'tokens');
+                Axios.defaults.headers.common.Authorization = '';
+                let authenticationResponse = null;
+                try {
+                    authenticationResponse = await Axios.post('http://localhost:7000/google/', payload, {
+                        proxy: config.proxy,
+                    });
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+                console.log(payload, 'tokens');
+                if (authenticationResponse.headers['set-cookie']) {
+                    // Browser itself setup cookie and header is none
+                    // In NodeJS we need do it manually
+                    const cookies = authenticationResponse.headers['set-cookie'].join(';');
+                    Axios.defaults.headers.common.Cookie = cookies;
+                }
+                token = authenticationResponse.data.key;
+                store.set('token', token);
+                console.log(token, 'token');
+                Axios.defaults.headers.common.Authorization = `Token ${token}`;
+            }
             async function login(username, password) {
                 const authenticationData = [
                     `${encodeURIComponent('username')}=${encodeURIComponent(username)}`,
@@ -760,7 +786,7 @@
 
             async function getUsers(filter = 'page_size=all') {
                 const { backendAPI } = config;
-
+                console.log("check",`${backendAPI}/users?${filter}`)
                 let response = null;
                 try {
                     response = await Axios.get(`${backendAPI}/users?${filter}`, {
@@ -1143,7 +1169,8 @@
 
                     const closureId = Date.now();
                     predictAnnotations.latestRequest.id = closureId;
-                    const predicate = () => !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
+                    const predicate = () =>
+                        !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
                     if (predictAnnotations.latestRequest.fetching) {
                         waitFor(5, predicate).then(() => {
                             if (predictAnnotations.latestRequest.id !== closureId) {
@@ -1310,6 +1337,7 @@
                             request: serverRequest,
                             userAgreements,
                             installedApps,
+                            Googlelogin,
                         }),
                         writable: false,
                     },

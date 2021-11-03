@@ -20,6 +20,7 @@ import ResetPasswordPageComponent from 'components/reset-password-page/reset-pas
 import ShortcutsDialog from 'components/shortcuts-dialog/shortcuts-dialog';
 import ProjectsPageComponent from 'components/projects-page/projects-page';
 import CreateProjectPageComponent from 'components/create-project-page/create-project-page';
+import UserListComponent from 'components/user-list-page/user-list';
 import ProjectPageComponent from 'components/project-page/project-page';
 import TasksPageContainer from 'containers/tasks-page/tasks-page';
 import LoginWithTokenComponent from 'components/login-with-token/login-with-token';
@@ -218,7 +219,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                         }}
                     />
                 ),
-                duration: null,
+                duration: 5,
             });
         }
 
@@ -254,8 +255,9 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                         }}
                     />
                 ),
-                duration: null,
-                description: error.length > 200 ? 'Open the Browser Console to get details' : error,
+                // duration: null,
+                duration:5,
+                description: error.length > 200 ? 'Open the Browser Console get details' : error,
             });
 
             // eslint-disable-next-line no-console
@@ -340,6 +342,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />
+                                        <Route exact path='/userlist' component={UserListComponent} />
                                         <Route
                                             exact
                                             path='/cloudstorages/create'
@@ -396,7 +399,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             );
         }
 
-        return <Spin size='large' className='cvat-spinner' />;
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
     }
 }
 

@@ -55,7 +55,7 @@ class TaskPageComponent extends React.PureComponent<Props> {
         const { task, updating } = this.props;
 
         if (task === null) {
-            return <Spin size='large' className='cvat-spinner' />;
+            return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
         }
 
         if (typeof task === 'undefined') {
@@ -85,7 +85,7 @@ class TaskPageComponent extends React.PureComponent<Props> {
                 </Row>
                 <ModelRunnerModal />
                 <MoveTaskModal />
-                {updating && <Spin size='large' className='cvat-spinner' />}
+                {updating && <Spin size='large' className='cvat-spinner' tip='Loading...' />}
             </>
         );
     }

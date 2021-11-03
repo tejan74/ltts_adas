@@ -21,6 +21,13 @@ export interface AuthState {
     allowChangePassword: boolean;
     allowResetPassword: boolean;
 }
+export interface GoogleAuth {
+    Data_list : any;
+    initialized: boolean;
+    fetching: boolean;
+    user: any;
+}
+
 
 export interface ProjectsQuery {
     page: number;
@@ -113,6 +120,22 @@ export interface ExportState {
     };
     instance: any;
     modalVisible: boolean;
+}
+//121-135 added by Giti
+export interface UserState {
+    users: any;
+    // dateJoined: number;
+    // email: string | null;
+    // firstName: string | null;
+    // groups: string | null;
+    // id: string | null;
+    // isActive: boolean | null;
+    // isStaff: boolean | null;
+    // isSuperuser: boolean | null;
+    // isVerified: boolean |null;
+    // lastLogin: number |null;
+    // lastName: string | null;
+    // username: string | null;
 }
 
 export interface FormatsState {
@@ -698,6 +721,10 @@ export interface CombinedState {
     review: ReviewState;
     export: ExportState;
     cloudStorages: CloudStoragesState;
+
+    userList: UserState;
+
+    googleAuth:GoogleAuth
 }
 
 export enum DimensionType {

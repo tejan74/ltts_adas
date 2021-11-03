@@ -3,17 +3,17 @@
 // SPDX-License-Identifier: MIT
 import { BoundariesActions, BoundariesActionTypes } from 'actions/boundaries-actions';
 import { GoogleAction, GoogleActionTypes } from 'actions/google-actions';
-import { GoogleAuthState } from './interfaces';
+import { GoogleAuth } from './interfaces';
 
-const defaultState: GoogleAuthState = {
+const defaultState: GoogleAuth = {
     initialized: false,
     fetching: false,
     user: null,
-    access_token:null,
+    Data_list:null
 
 };
 
-export default function (state = defaultState, action: GoogleAction | BoundariesActions): GoogleAuthState {
+export default function (state = defaultState, action: GoogleAction | BoundariesActions): GoogleAuth {
     switch (action.type) {
 
         case GoogleActionTypes.GOOGLE_OAUTH2:

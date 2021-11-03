@@ -227,7 +227,7 @@
                 Axios.defaults.headers.common.Authorization = '';
                 let authenticationResponse = null;
                 try {
-                    authenticationResponse = await Axios.post(`${config.backendAPI}/google`, payload, {
+                    authenticationResponse = await Axios.post('http://localhost:7000/google/', payload, {
                         proxy: config.proxy,
                     });
                 } catch (errorData) {

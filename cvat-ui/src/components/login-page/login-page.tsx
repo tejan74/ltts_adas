@@ -17,9 +17,8 @@ import LoginForm, { LoginData } from './login-form';
 interface LoginPageComponentProps {
     fetching: boolean;
     renderResetPassword: boolean;
-    access_token:string|null;
     onLogin: (username: string, password: string) => void;
-    onGooglelogin: (access_token:string|null) => void;
+    onGooglelogin: (googleresponse: any) => void;
 }
 
 function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps): JSX.Element {
@@ -34,7 +33,7 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
 
     const { Content } = Layout;
 
-    const { fetching, onLogin, renderResetPassword,access_token,onGooglelogin } = props;
+    const { fetching, onLogin, renderResetPassword,onGooglelogin } = props;
 
     return (
         <Layout>

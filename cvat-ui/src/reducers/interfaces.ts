@@ -22,8 +22,10 @@ export interface AuthState {
     allowResetPassword: boolean;
 }
 export interface GoogleAuth {
-    access_token : string;
-
+    Data_list : any;
+    initialized: boolean;
+    fetching: boolean;
+    user: any;
 }
 
 export interface ProjectsQuery {
@@ -702,7 +704,7 @@ export interface CombinedState {
     review: ReviewState;
     export: ExportState;
     cloudStorages: CloudStoragesState;
-    GoogleAuth:GoogleAuth
+    googleAuth:GoogleAuth
 }
 
 export enum DimensionType {

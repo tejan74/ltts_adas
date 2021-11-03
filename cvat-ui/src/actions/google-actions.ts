@@ -1,56 +1,34 @@
 // Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
-import { GOOGLE_OAUTH2 } from '../types/constants';
-import { createAction } from '../utils/redux';
+// import { GOOGLE_OAUTH2 } from '../types/constants';
+
 import getCore from '../cvat-core-wrapper';
-import axios from 'axios';
+import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 const cvat = getCore();
 
-export enum AuthActionTypes {
-
-    LOGIN = 'LOGIN',
+export enum GoogleActionTypes {
+    GOOGLE_OAUTH2= 'GOOGLE_OAUTH2',
     LOGIN_SUCCESS = 'LOGIN_SUCCESS',
     LOGIN_FAILED = 'LOGIN_FAILED',
 }
-export const authActions = {
-    authorizeSuccess: (user: any) => createAction(AuthActionTypes.AUTHORIZED_SUCCESS, { user }),
-    authorizeFailed: (error: any) => createAction(AuthActionTypes.AUTHORIZED_FAILED, { error }),
-    login: () => createAction(AuthActionTypes.LOGIN),
-    loginSuccess: (user: any) => createAction(AuthActionTypes.LOGIN_SUCCESS, { user }),
-    loginFailed: (error: any) => createAction(AuthActionTypes.LOGIN_FAILED, { error }),
+export const googleActions = {
+    googlelogin: () => createAction(GoogleActionTypes.GOOGLE_OAUTH2),
+    loginSuccess: (user: any) => createAction(GoogleActionTypes.LOGIN_SUCCESS, { user }),
+    loginFailed: (error: any) => createAction(GoogleActionTypes.LOGIN_FAILED, { error }),
 };
 
-    export const googleOAuth2 =(googleResponse) =>{
-    const payload = {access_token: googleResponse['accessToken']}
-//    const users =  axios.post("http://localhost:7000/google/", payload).then((response)=>{console.log(response)});
-console.log(googleResponse
-    ,"googleResponse");
-        async (dispatch: any) => {
-         dispatch(authActions.login());
-        alert("ll");
-        try {
-            alert("ll");
-            await cvat.server.Googlelogin(payload);
 
+export type GoogleAction = ActionUnion<typeof googleActions>;
+export const googleOAuth2 = (access_token:string|null): ThunkAction => async (dispatch) => {
+    dispatch(googleActions.googlelogin());
 
+    try {
+        await cvat.server.Googlelogin(access_token);
+        const users = await cvat.users.get({ self: true });
 
-        } catch (error) {
-            console.log(error,"error");
-            dispatch(authActions.loginFailed(error));
-        }
+        dispatch(googleActions.loginSuccess(users[0]));
+    } catch (error) {
+        dispatch(googleActions.loginFailed(error));
     }
-}
-// const successGoogleLogin = (response) => {
-
-//     console.log(response);
-
-//  const payload = {
-
-//      access_token: response.accessToken
-
-//  }
-
-//  axios.post("http://localhost:7000/google/", payload).then((response)=>{console.log(response)});
-
-// }
+};

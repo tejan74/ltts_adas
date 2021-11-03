@@ -158,20 +158,21 @@ function build() {
                 const result = await PluginRegistry.apiWrapper(cvat.server.login, username, password);
                 return result;
             },
+            // new code added by Raju
             /**
-             * Method allows to google login on a server
-             * @method login
+             * Method allows to google_login on a server
+             * @method Googlelogin
              * @async
              * @memberof module:API.cvat.server
-             * @param {string} username An username of an account
-             * @param {string} password A password of an account
+             * @param {string|null} Token An username of an account
              * @throws {module:API.cvat.exceptions.PluginError}
              * @throws {module:API.cvat.exceptions.ServerError}
              */
-             async Googlelogin(Token) {
+            async Googlelogin(Token) {
                 const result = await PluginRegistry.apiWrapper(cvat.server.Googlelogin, Token);
                 return result;
             },
+            // New code added by Raju ended above
             /**
              * Method allows to logout from the server
              * @method logout

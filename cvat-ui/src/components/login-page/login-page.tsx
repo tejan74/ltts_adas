@@ -17,11 +17,13 @@ import LoginForm, { LoginData } from './login-form';
 interface LoginPageComponentProps {
     fetching: boolean;
     renderResetPassword: boolean;
+    access_token:string|null;
     onLogin: (username: string, password: string) => void;
-    onLoginwithGoogle: (username: string, password: string) => void;
+    onGooglelogin: (access_token:string|null) => void;
 }
 
 function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps): JSX.Element {
+
     const sizes = {
         xs: { span: 14 },
         sm: { span: 14 },
@@ -32,7 +34,7 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
 
     const { Content } = Layout;
 
-    const { fetching, onLogin, renderResetPassword } = props;
+    const { fetching, onLogin, renderResetPassword,access_token,onGooglelogin } = props;
 
     return (
         <Layout>
@@ -71,6 +73,9 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
                                     fetching={fetching}
                                     onSubmit={(loginData: LoginData): void => {
                                         onLogin(loginData.username, loginData.password);
+                                    }}
+                                    successGoogleLogin={(response:any): void => {
+                                        onGooglelogin(response);
                                     }}
                                 />
                             </div>

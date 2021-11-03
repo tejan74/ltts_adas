@@ -218,13 +218,34 @@
 
                 return response.data;
             }
-            //code added by raju
-            async function Googlelogin(token) {
-                alert('fff');
-                console.log(token, 'tokens');
+            // code added by raju
+            async function Googlelogin(access) {
+                const payload = {
+                    access_token: access.accessToken,
+                };
+                console.log(payload, 'tokens');
+                Axios.defaults.headers.common.Authorization = '';
+                let authenticationResponse = null;
+                try {
+                    authenticationResponse = await Axios.post(`${config.backendAPI}/google`, payload, {
+                        proxy: config.proxy,
+                    });
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+                console.log(payload, 'tokens');
+                if (authenticationResponse.headers['set-cookie']) {
+                    // Browser itself setup cookie and header is none
+                    // In NodeJS we need do it manually
+                    const cookies = authenticationResponse.headers['set-cookie'].join(';');
+                    Axios.defaults.headers.common.Cookie = cookies;
+                }
+                token = authenticationResponse.data.key;
+                store.set('token', token);
+                console.log(token, 'token');
+                Axios.defaults.headers.common.Authorization = `Token ${token}`;
             }
             async function login(username, password) {
-                console.log(username, 'tokens');
                 const authenticationData = [
                     `${encodeURIComponent('username')}=${encodeURIComponent(username)}`,
                     `${encodeURIComponent('password')}=${encodeURIComponent(password)}`,

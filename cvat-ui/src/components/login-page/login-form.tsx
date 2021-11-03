@@ -35,12 +35,13 @@ export interface LoginData {
 
 interface Props {
     fetching: boolean;
-
     onSubmit(loginData: LoginData): void;
+    successGoogleLogin(response:any):void
 }
 
 function LoginFormComponent(props: Props): JSX.Element {
-    const { fetching, onSubmit } = props;
+
+    const { fetching, onSubmit,successGoogleLogin } = props;
 
     const formItemLayout = {
         labelCol: { span: 6 },
@@ -55,17 +56,17 @@ function LoginFormComponent(props: Props): JSX.Element {
             span: 16,
         },
     };
-    const successGoogleLogin = (response) => {
-        console.log(response);
+    // const successGoogleLogin = (response) => {
+    //     console.log(response);
 
-        const payload = {
-            access_token: response.accessToken,
-        };
+    //     const payload = {
+    //         access_token: response.accessToken,
+    //     };
 
-        axios.post('http://localhost:7000/google/', payload).then((response) => {
-            console.log(response);
-        });
-    };
+    //     axios.post('http://localhost:7000/google/', payload).then((response) => {
+    //         console.log(response);
+    //     });
+    // };
 
     return (
         <>

@@ -223,7 +223,6 @@
                 const payload = {
                     access_token: access.accessToken,
                 };
-                console.log(payload, 'tokens');
                 Axios.defaults.headers.common.Authorization = '';
                 let authenticationResponse = null;
                 try {
@@ -242,7 +241,6 @@
                 }
                 token = authenticationResponse.data.key;
                 store.set('token', token);
-                console.log(token, 'token');
                 Axios.defaults.headers.common.Authorization = `Token ${token}`;
             }
             async function login(username, password) {
@@ -786,7 +784,6 @@
 
             async function getUsers(filter = 'page_size=all') {
                 const { backendAPI } = config;
-                console.log("check",`${backendAPI}/users?${filter}`)
                 let response = null;
                 try {
                     response = await Axios.get(`${backendAPI}/users?${filter}`, {

@@ -2,32 +2,41 @@
 //
 // SPDX-License-Identifier: MIT
 
-import { createAction, ThunkAction } from 'utils/redux';
+
 import getCore from 'cvat-core-wrapper';
-
+import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 const cvat = getCore();
-
+import { Dispatch, ActionCreator } from 'redux';
 export enum UserActionTypes {
+        GET_UERS='GET_UERS',
         LIST_FETCH_SUCCESS = 'USER_LIST_SUCCESS',
+        LIST_FETCH_FAILED = 'USER_LIST_FAILED',
 
     }
 
-// const userListSuccess: (user: any) => createAction(AuthActionTypes.AUTHORIZED_SUCCESS, { user });
-
 export const userActions = {
-        userListSuccess: (users: any) => createAction(UserActionTypes.LIST_FETCH_SUCCESS, { users }),
-
+    getUser: () => createAction(UserActionTypes.GET_UERS),
+    userListSuccess: (users: any[], count: number) => (
+    createAction(UserActionTypes.LIST_FETCH_SUCCESS, { users, count })
+        ),
+    userListFailed: (error: any) => createAction(UserActionTypes.LIST_FETCH_FAILED, { error }),
     };
 
-// export type UserActions = ActionUnion<typeof userActions>;
+
+export type UserActions = ActionUnion<typeof userActions>;
+export function getUserList(): ThunkAction {
+    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+        dispatch(userActions.getUser());
+
+        let result = null;
+        try {
+            result = await cvat.users.get();
+            dispatch(userActions.userListSuccess(result,result.length));
+        } catch (error) {
+            dispatch(userActions.userListFailed(error));
+            return;
+        }
 
 
-export const getUserList = (): ThunkAction => async (dispatch) => {
-
-        console.log('in there');
-        const users = await cvat.users.get();
-        dispatch(userActions.userListSuccess(users));
-        console.log(users);
-
-
-};
+    };
+}

@@ -1,95 +1,88 @@
-import * as React from "react";
-import { connect } from 'react-redux';
+// Copyright (C) 2020-2021 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
 
-import { withRouter } from 'react-router-dom';
-// import * as ReactDOM from "react-dom";
-import {  Col } from 'antd/lib/grid';
-//import { Table } from 'antd';
-import getCore from 'cvat-core-wrapper';
-import 'actions/auth-actions';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { getUserList } from 'actions/user-actions';
-//import Menu from 'antd/lib/menu';
+import { CombinedState, UserState } from 'reducers/interfaces';
+import { Table, Tag, Space } from 'antd';
+import { Row, Col } from 'antd';
+export default function UserListComponent(): JSX.Element {
 
-const cvat = getCore();
-// const userList = getUserList();
-//console.log(getUserList);
-interface DispatchToProps {
-  getUsers: () => void;
+
+    const columns = [
+      {
+        title: 'SL NO',
+        dataIndex: 'id',
+        key: 'id',
+    },
+        {
+            title: 'USERNAME',
+            dataIndex: 'username',
+            key: 'username',
+        },
+        {
+            title: 'EMAIL ADDRESS',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+          title: 'FIRST NAME',
+          dataIndex: 'firstName',
+          key: 'firstName',
+      },
+      {
+        title: 'LAST NAME',
+        dataIndex: 'lastName',
+        key: 'lastName',
+    },
+    {
+      title: 'STAFF STATUS',
+      dataIndex: 'isStaff',
+      key: 'isStaff',
+  },
+    ];
+    const dispatch = useDispatch();
+    // const projectsCount = useSelector((state: CombinedState) => state.userList.count);
+     let  userlist = useSelector((state: CombinedState) => state.userList.users);
+    useEffect(() => {
+        dispatch(getUserList());
+    }, [dispatch]);
+
+    const dimensions = {
+        md: 22,
+        lg: 18,
+        xl: 16,
+        xxl: 16,
+    };
+    const handleSearch = (event:any) => {
+       let value = event.target.value.toLowerCase();
+       let result = [];
+       result = userlist.filter((data:any) => {
+      return data['username'].search(value) != -1;
+      });
+      console.log(result);
+       userlist=result;
+      }
+      const PAGE_SIZE = 5
+    return (
+        <>
+            {/* <Table rowKey={(obj) => obj.id} dataSource={userlist} columns={columns} />; */}
+            <Row justify='center' align='middle'>
+                <Col className='cvat-projects-list'>
+                    <h2>User List</h2>
+                </Col>
+            </Row>
+            <Row justify='center' align='middle'>
+
+                <Col>
+                <label>Search:
+<input type="text" onChange={(event) =>handleSearch(event)} /></label>
+                <Table rowKey='id' dataSource={userlist} columns={columns} size="middle" pagination={{ pageSize: PAGE_SIZE}}/>
+
+                </Col>
+            </Row>
+        </>
+    );
 }
-function mapDispatchToProps(dispatch: any): DispatchToProps {
-  return {
-    getUsers: (): void => dispatch(getUserList()),
-      // onLogout: (): void => dispatch(logoutAsync()),
-  };
-}
-
-type Props =  DispatchToProps;
-
-function UserListComponent(props: Props)  {
-  const {
-    getUsers
-} = props;
-console.log("props",props);
-getUsers();
-  // const users = cvat.users.get({ self: true });
-  // users.then((response: any) => {
-  //   console.log(response);
-  //   const dataSource = [
-  //     {
-  //       key: '1',
-  //       name: 'Mike',
-  //       email: 'abcdefg@gmail.com',
-  //       role: 'admin',
-  //     },
-  //     {
-  //       key: '2',
-  //       name: 'John',
-  //       email: 'xxxx@gmail.com',
-  //       role: 'checker',
-  //     },
-
-  //   ];
-
-  //   const columns = [
-  //     {
-  //       title: 'Name',
-  //       dataIndex: 'name',
-  //       key: 'name',
-  //     },
-  //     {
-  //         title: 'email',
-  //         dataIndex: 'email',
-  //         key: 'email',
-  //       },
-  //       {
-  //         title: 'Role',
-  //         dataIndex: 'role',
-  //         key: 'role',
-  //       },
-  //     ];
-  //   return (
-  //     <div>
-  //       <Col md={20} lg={16} xl={14} xxl={9}>
-  //         <p>List of Users</p>
-  //       </Col>
-  //       <Table dataSource={dataSource} columns={columns} />;
-  //     </div>
-  //   );
-  // });
-  // console.log(users);
-
-
-  return (
-
-      //<SettingsModal visible={settingsDialogShown} onClose={() => switchSettingsDialog(false)} />
-      <div>
-        <Col md={20} lg={16} xl={14} xxl={9}>
-          <p>List of Userss</p>
-        </Col>
-        {/* <Table dataSource={dataSource} columns={columns} />; */}
-      </div>
-
-  );
-
-}
-export default withRouter(connect(null,mapDispatchToProps)(React.memo(UserListComponent)));

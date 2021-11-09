@@ -1143,7 +1143,8 @@ class UserFilter(filters.FilterSet):
     operation_summary='Method deletes a specific user from the server'))
 class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
-    queryset = User.objects.prefetch_related('groups').all().order_by('id')
+    # queryset = User.objects.prefetch_related('groups').all().order_by('id')
+    queryset = User.objects.all().order_by('id')
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
     search_fields = ('username', 'first_name', 'last_name')
     filterset_class = UserFilter

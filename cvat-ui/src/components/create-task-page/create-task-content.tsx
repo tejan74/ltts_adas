@@ -112,7 +112,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
     private validateLabelsOrProject = (): boolean => {
         const { projectId, labels } = this.state;
-        return !!labels.length || !!projectId;
+        return !!labels.length && !!projectId;
     };
 
     private validateFiles = (): boolean => {
@@ -270,18 +270,18 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private renderLabelsBlock(): JSX.Element {
         const { projectId, labels } = this.state;
 
-        if (projectId) {
-            return (
-                <>
-                    <Col span={24}>
-                        <Text className='cvat-text-color'>Labels:</Text>
-                    </Col>
-                    <Col span={24}>
-                        <Text type='secondary'>Project labels will be used</Text>
-                    </Col>
-                </>
-            );
-        }
+        // if (projectId) {
+        //     return (
+        //         <>
+        //             <Col span={24}>
+        //                 <Text className='cvat-text-color'>Labels:</Text>
+        //             </Col>
+        //             <Col span={24}>
+        //                 <Text type='secondary'>Project labels will be used</Text>
+        //             </Col>
+        //         </>
+        //     );
+        // }
 
         return (
             <Col span={24}>

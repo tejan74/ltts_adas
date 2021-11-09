@@ -1,95 +1,98 @@
-import * as React from "react";
-import { connect } from 'react-redux';
+// Copyright (C) 2020-2021 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
 
-import { withRouter } from 'react-router-dom';
-// import * as ReactDOM from "react-dom";
-import {  Col } from 'antd/lib/grid';
-//import { Table } from 'antd';
-import getCore from 'cvat-core-wrapper';
-import 'actions/auth-actions';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { getUserList } from 'actions/user-actions';
-//import Menu from 'antd/lib/menu';
+import { CombinedState, UserState } from 'reducers/interfaces';
+import { Table, Tag, Space } from 'antd';
+import { Row, Col } from 'antd';
+import './styles.scss';
+export default function UserListComponent(): JSX.Element {
 
-const cvat = getCore();
-// const userList = getUserList();
-//console.log(getUserList);
-interface DispatchToProps {
-  getUsers: () => void;
+
+    const columns = [
+      {
+        title: 'SL NO',
+        dataIndex: 'id',
+        key: 'id',
+        minWidth: 320,
+    },
+        {
+            title: 'USERNAME',
+            dataIndex: 'username',
+            key: 'username',
+            minWidth: 320,
+        },
+        {
+            title: 'EMAIL ADDRESS',
+            dataIndex: 'email',
+            key: 'email',
+            minWidth: 320,
+        },
+        {
+          title: 'FIRST NAME',
+          dataIndex: 'firstName',
+          key: 'firstName',
+          minWidth:320,
+      },
+      {
+        title: 'LAST NAME',
+        dataIndex: 'lastName',
+        key: 'lastName',
+        minWidth: 320,
+    },
+    {
+      title: 'STAFF STATUS',
+      dataIndex: 'isStaff',
+      key: 'isStaff',
+      minWidth: 320,
+  },
+    ];
+    const dispatch = useDispatch();
+// code added by Raju
+ const currentData= useSelector((state: CombinedState)  => state.userList);
+
+ const [userlist, setValue] = React.useState([]);
+ const [FilterdValue, setFilterValue] = React.useState([]);
+
+    console.log(userlist);
+
+     useEffect(() => {
+         dispatch(getUserList());
+     }, [dispatch]);
+    React.useEffect(() => {
+        setValue(currentData.users);
+       setFilterValue(currentData.users);
+       },[currentData])
+// code ended up
+    const handleSearch = (event:any) => {
+       let value = event.target.value.toLowerCase();
+       let result = [];
+       result = userlist.filter((data:any) => {
+        return data.username.toLowerCase().search(value) !== -1;
+         });
+             setFilterValue(result);
+      }
+      const PAGE_SIZE = 5
+    return (
+        <>
+            <Row justify='center' align='middle'>
+                <Col className='user-list-title'>
+                    <h2>User List</h2>
+                </Col>
+            </Row>
+            <Row justify='center' align='top' className='cvat-create-task-form-wrapper search-wrapper'>
+            <Col md={20} lg={16} xl={14} xxl={9}>
+
+
+                <label className="search-label">Search:
+                <input id ="user-list-search" type="text" onKeyUp={(event) =>handleSearch(event)} /></label>
+                <Table rowKey='id' dataSource={FilterdValue} columns={columns} size="middle" pagination={{ pageSize: PAGE_SIZE}}/>
+
+                </Col>
+            </Row>
+        </>
+    );
 }
-function mapDispatchToProps(dispatch: any): DispatchToProps {
-  return {
-    getUsers: (): void => dispatch(getUserList()),
-      // onLogout: (): void => dispatch(logoutAsync()),
-  };
-}
-
-type Props =  DispatchToProps;
-
-function UserListComponent(props: Props)  {
-  const {
-    getUsers
-} = props;
-console.log("props",props);
-getUsers();
-  // const users = cvat.users.get({ self: true });
-  // users.then((response: any) => {
-  //   console.log(response);
-  //   const dataSource = [
-  //     {
-  //       key: '1',
-  //       name: 'Mike',
-  //       email: 'abcdefg@gmail.com',
-  //       role: 'admin',
-  //     },
-  //     {
-  //       key: '2',
-  //       name: 'John',
-  //       email: 'xxxx@gmail.com',
-  //       role: 'checker',
-  //     },
-
-  //   ];
-
-  //   const columns = [
-  //     {
-  //       title: 'Name',
-  //       dataIndex: 'name',
-  //       key: 'name',
-  //     },
-  //     {
-  //         title: 'email',
-  //         dataIndex: 'email',
-  //         key: 'email',
-  //       },
-  //       {
-  //         title: 'Role',
-  //         dataIndex: 'role',
-  //         key: 'role',
-  //       },
-  //     ];
-  //   return (
-  //     <div>
-  //       <Col md={20} lg={16} xl={14} xxl={9}>
-  //         <p>List of Users</p>
-  //       </Col>
-  //       <Table dataSource={dataSource} columns={columns} />;
-  //     </div>
-  //   );
-  // });
-  // console.log(users);
-
-
-  return (
-
-      //<SettingsModal visible={settingsDialogShown} onClose={() => switchSettingsDialog(false)} />
-      <div>
-        <Col md={20} lg={16} xl={14} xxl={9}>
-          <p>List of Userss</p>
-        </Col>
-        {/* <Table dataSource={dataSource} columns={columns} />; */}
-      </div>
-
-  );
-
-}
-export default withRouter(connect(null,mapDispatchToProps)(React.memo(UserListComponent)));

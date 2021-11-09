@@ -123,19 +123,9 @@ export interface ExportState {
 }
 //121-135 added by Giti
 export interface UserState {
-    users: any;
-    // dateJoined: number;
-    // email: string | null;
-    // firstName: string | null;
-    // groups: string | null;
-    // id: string | null;
-    // isActive: boolean | null;
-    // isStaff: boolean | null;
-    // isSuperuser: boolean | null;
-    // isVerified: boolean |null;
-    // lastLogin: number |null;
-    // lastName: string | null;
-    // username: string | null;
+    users:any;
+    count: number;
+
 }
 
 export interface FormatsState {

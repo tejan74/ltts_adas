@@ -46,8 +46,10 @@ export default function UserListComponent(): JSX.Element {
     const dispatch = useDispatch();
 // code added by Raju
  const currentData= useSelector((state: CombinedState)  => state.userList);
- const [userlist, setValue] = React.useState(null);
- const [FilterdValue, setFilterValue] = React.useState(null);
+
+ const [userlist, setValue] = React.useState([]);
+ const [FilterdValue, setFilterValue] = React.useState([]);
+
     console.log(userlist);
 
      useEffect(() => {
@@ -75,7 +77,6 @@ export default function UserListComponent(): JSX.Element {
       const PAGE_SIZE = 5
     return (
         <>
-            {/* <Table rowKey={(obj) => obj.id} dataSource={userlist} columns={columns} />; */}
             <Row justify='center' align='middle'>
                 <Col className='cvat-projects-list'>
                     <h2>User List</h2>

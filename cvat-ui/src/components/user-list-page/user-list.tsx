@@ -46,8 +46,10 @@ export default function UserListComponent(): JSX.Element {
     const dispatch = useDispatch();
 // code added by Raju
  const currentData= useSelector((state: CombinedState)  => state.userList);
+
  const [userlist, setValue] = React.useState([]);
  const [FilterdValue, setFilterValue] = React.useState([]);
+
     console.log(userlist);
 
      useEffect(() => {
@@ -58,12 +60,6 @@ export default function UserListComponent(): JSX.Element {
        setFilterValue(currentData.users);
        },[currentData])
 // code ended up
-    const dimensions = {
-        md: 22,
-        lg: 18,
-        xl: 16,
-        xxl: 16,
-    };
     const handleSearch = (event:any) => {
        let value = event.target.value.toLowerCase();
        let result = [];

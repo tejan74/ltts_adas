@@ -1,0 +1,22 @@
+// Copyright (C) 2020 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+
+@import '../../base.scss';
+
+.search-label {
+    margin-bottom: 20px;
+}
+#user-list-search {
+margin-left: 10px;
+margin-bottom :10px;
+}
+.user-list-title {
+    margin-bottom: 10px;
+}
+
+.cvat-create-task-form-wrapper {
+    &.search-wrapper {
+        padding-top: 0px;
+    }
+}

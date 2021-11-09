@@ -44,12 +44,20 @@ export default function UserListComponent(): JSX.Element {
   },
     ];
     const dispatch = useDispatch();
-    // const projectsCount = useSelector((state: CombinedState) => state.userList.count);
-     let  userlist = useSelector((state: CombinedState) => state.userList.users);
-    useEffect(() => {
-        dispatch(getUserList());
-    }, [dispatch]);
+// code added by Raju
+ const currentData= useSelector((state: CombinedState)  => state.userList);
+ const [userlist, setValue] = React.useState(null);
+ const [FilterdValue, setFilterValue] = React.useState(null);
+    console.log(userlist);
 
+     useEffect(() => {
+         dispatch(getUserList());
+     }, [dispatch]);
+    React.useEffect(() => {
+        setValue(currentData.users);
+       setFilterValue(currentData.users);
+       },[currentData])
+// code ended up
     const dimensions = {
         md: 22,
         lg: 18,
@@ -60,10 +68,9 @@ export default function UserListComponent(): JSX.Element {
        let value = event.target.value.toLowerCase();
        let result = [];
        result = userlist.filter((data:any) => {
-      return data['username'].search(value) != -1;
-      });
-      console.log(result);
-       userlist=result;
+        return data.username.toLowerCase().search(value) !== -1;
+         });
+             setFilterValue(result);
       }
       const PAGE_SIZE = 5
     return (
@@ -78,8 +85,8 @@ export default function UserListComponent(): JSX.Element {
 
                 <Col>
                 <label>Search:
-<input type="text" onChange={(event) =>handleSearch(event)} /></label>
-                <Table rowKey='id' dataSource={userlist} columns={columns} size="middle" pagination={{ pageSize: PAGE_SIZE}}/>
+                <input type="text" onKeyUp={(event) =>handleSearch(event)} /></label>
+               <Table rowKey='id' dataSource={FilterdValue} columns={columns} size="middle" pagination={{ pageSize: PAGE_SIZE}}/>
 
                 </Col>
             </Row>

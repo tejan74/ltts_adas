@@ -313,6 +313,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 >
                     Cloud Storages
                 </Button>
+                {user.isStaff && (
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -325,6 +326,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 >
                     User List
                 </Button>
+                )}
                 {isModelsPluginActive && (
                     <Button
                         className='cvat-header-button'

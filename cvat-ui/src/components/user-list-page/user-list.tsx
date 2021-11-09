@@ -60,12 +60,6 @@ export default function UserListComponent(): JSX.Element {
        setFilterValue(currentData.users);
        },[currentData])
 // code ended up
-    const dimensions = {
-        md: 22,
-        lg: 18,
-        xl: 16,
-        xxl: 16,
-    };
     const handleSearch = (event:any) => {
        let value = event.target.value.toLowerCase();
        let result = [];

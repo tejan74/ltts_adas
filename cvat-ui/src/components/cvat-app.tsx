@@ -324,7 +324,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 switchSettingsDialog();
             },
         };
-console.log(user?.isSuperuser,"useruser");
         if (readyForRender) {
             if (user && user.isVerified) {
                 return (

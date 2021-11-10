@@ -277,7 +277,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 </Button>
                 {/* New code added above by Raju N */}
                 {/* <Icon className='cvat-logo-icon' component={CVATLogo} /> */}
-                {user.isStaff && (
+                {user.isSuperuser && (
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -314,7 +314,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 >
                     Cloud Storages
                 </Button>
-                {user.isStaff && (
+                {user.isSuperuser && (
                 <Button
                     className='cvat-header-button'
                     type='link'

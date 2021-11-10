@@ -112,7 +112,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
     private validateLabelsOrProject = (): boolean => {
         const { projectId, labels } = this.state;
-        return !!labels.length && !!projectId;
+        return !!labels.length || !!projectId;
     };
 
     private validateFiles = (): boolean => {
@@ -173,7 +173,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         if (!this.validateLabelsOrProject()) {
             notification.error({
                 message: 'Could not create a task',
-                description: 'A task must contain at least one label or belong to some project',
+                description: 'A task must belong to some project',
                 duration:5,
                 className: 'cvat-notification-create-task-fail',
             });
@@ -235,6 +235,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return (
             <>
                 <Col span={24}>
+                <Text type='danger'>* </Text>
                     <Text className='cvat-text-color'>Project:</Text>
                 </Col>
                 <Col span={24}>
@@ -267,36 +268,37 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return null;
     }
 
-    private renderLabelsBlock(): JSX.Element {
+    private renderLabelsBlock(): JSX.Element | null{
         const { projectId, labels } = this.state;
 
-        // if (projectId) {
-        //     return (
-        //         <>
-        //             <Col span={24}>
-        //                 <Text className='cvat-text-color'>Labels:</Text>
-        //             </Col>
-        //             <Col span={24}>
-        //                 <Text type='secondary'>Project labels will be used</Text>
-        //             </Col>
-        //         </>
-        //     );
-        // }
+        if (projectId) {
+            return (
+                <>
+                    <Col span={24}>
 
-        return (
-            <Col span={24}>
-                <Text type='danger'>* </Text>
-                <Text className='cvat-text-color'>Labels:</Text>
-                <LabelsEditor
-                    labels={labels}
-                    onSubmit={(newLabels): void => {
-                        this.setState({
-                            labels: newLabels,
-                        });
-                    }}
-                />
-            </Col>
-        );
+                        <Text className='cvat-text-color'>Labels:</Text>
+                    </Col>
+                    <Col span={24}>
+                        <Text type='secondary'>Project labels will be used</Text>
+                    </Col>
+                </>
+            );
+        }
+             return null;
+        // return (
+            // <Col span={24}>
+            //     <Text type='danger'>* </Text>
+            //     <Text className='cvat-text-color'>Labels:</Text>
+            //     <LabelsEditor
+            //         labels={labels}
+            //         onSubmit={(newLabels): void => {
+            //             this.setState({
+            //                 labels: newLabels,
+            //             });
+            //         }}
+            //     />
+            // </Col>
+        // );
     }
 
     private renderFilesBlock(): JSX.Element {

@@ -277,6 +277,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 </Button>
                 {/* New code added above by Raju N */}
                 {/* <Icon className='cvat-logo-icon' component={CVATLogo} /> */}
+                {user.isStaff && (
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -288,7 +289,7 @@ function HeaderContainer(props: Props): JSX.Element {
                     }}
                 >
                     Projects
-                </Button>
+                </Button>)}
                 <Button
                     className='cvat-header-button'
                     type='link'

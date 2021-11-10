@@ -34,6 +34,7 @@ import RegisterPageContainer from 'containers/register-page/register-page';
 import CloudStoragesPageComponent from 'components/cloud-storages-page/cloud-storages-page';
 import CreateCloudStoragePageComponent from 'components/create-cloud-storage-page/create-cloud-storage-page';
 import UpdateCloudStoragePageComponent from 'components/update-cloud-storage-page/update-cloud-storage-page';
+import PageNotFound from 'components/not-found-page/notfoundpage'
 import getCore from 'cvat-core-wrapper';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { NotificationsState } from 'reducers/interfaces';
@@ -323,7 +324,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 switchSettingsDialog();
             },
         };
-
+console.log(user?.isSuperuser,"useruser");
         if (readyForRender) {
             if (user && user.isVerified) {
                 return (
@@ -334,15 +335,21 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                 <ShortcutsDialog />
                                 <GlobalHotKeys keyMap={subKeyMap} handlers={handlers}>
                                     <Switch>
-                                        <Route exact path='/projects' component={ProjectsPageComponent} />
+                                        {/* <Route exact path='/projects' component={ProjectsPageComponent} /> */}
                                         <Route exact path='/projects/create' component={CreateProjectPageComponent} />
+                                        <Route exact path="/projects" render={() =>(
+                                       user?.isSuperuser? ( <Route  component={ProjectsPageComponent} />):  ( <Route  component={PageNotFound} />)
+                                              )} />
                                         <Route exact path='/projects/:id' component={ProjectPageComponent} />
                                         <Route exact path='/tasks' component={TasksPageContainer} />
                                         <Route exact path='/tasks/create' component={CreateTaskPageContainer} />
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />
-                                        <Route exact path='/userlist' component={UserListComponent} />
+                                        <Route exact path="/userlist" render={() =>(
+                                       user?.isSuperuser? ( <Route  component={UserListComponent} />):
+                                       ( <Route  component={PageNotFound} />)
+                                              )} />
                                         <Route
                                             exact
                                             path='/cloudstorages/create'

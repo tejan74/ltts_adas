@@ -269,7 +269,7 @@ function deleteTaskSuccess(taskID: number): AnyAction {
             taskID,
         },
     };
-
+  window.location.reload();
     return action;
 }
 
@@ -289,6 +289,7 @@ export function deleteTaskAsync(taskInstance: any): ThunkAction<Promise<void>, {
     return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
         try {
             dispatch(deleteTask(taskInstance.id));
+
             await taskInstance.delete();
         } catch (error) {
             dispatch(deleteTaskFailed(taskInstance.id, error));

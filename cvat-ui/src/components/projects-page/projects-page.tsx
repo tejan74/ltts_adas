@@ -54,7 +54,7 @@ export default function ProjectsPageComponent(): JSX.Element {
         <div className='cvat-projects-page'>
             <TopBarComponent />
             {projectsCount ? <ProjectListComponent /> : <EmptyListComponent notFound={anySearchQuery} />}
-            <FeedbackComponent />
+            {/* <FeedbackComponent /> */}
         </div>
     );
 }

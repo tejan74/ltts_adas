@@ -22,7 +22,9 @@ export default function SearchField(props: Props): JSX.Element {
     function parse(_query: Query): string {
         let searchString = '';
         for (const field of Object.keys(_query)) {
+
             const value = _query[field];
+
             if (value !== null && typeof value !== 'undefined' && field !== 'page') {
                 if (field === 'search') {
                     return _query[field] as string;
@@ -36,7 +38,6 @@ export default function SearchField(props: Props): JSX.Element {
                 }
             }
         }
-
         return searchString.slice(0, -5);
     }
 
@@ -74,7 +75,6 @@ export default function SearchField(props: Props): JSX.Element {
         if (!specificRequest && value) {
             currentQuery.search = value;
         }
-
         onSearch(currentQuery);
     };
 
@@ -84,8 +84,10 @@ export default function SearchField(props: Props): JSX.Element {
                 className='cvat-search-field'
                 defaultValue={parse(query)}
                 onSearch={handleSearch}
+                allowClear
                 size='large'
                 placeholder='Search'
+                enterButton
             />
         </SearchTooltip>
     );

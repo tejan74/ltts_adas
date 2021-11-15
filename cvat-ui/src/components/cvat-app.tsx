@@ -34,7 +34,7 @@ import RegisterPageContainer from 'containers/register-page/register-page';
 import CloudStoragesPageComponent from 'components/cloud-storages-page/cloud-storages-page';
 import CreateCloudStoragePageComponent from 'components/create-cloud-storage-page/create-cloud-storage-page';
 import UpdateCloudStoragePageComponent from 'components/update-cloud-storage-page/update-cloud-storage-page';
-import PageNotFound from 'components/not-found-page/notfoundpage'
+import PageNotFound from 'components/not-found-page/notfoundpage';
 import getCore from 'cvat-core-wrapper';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { NotificationsState } from 'reducers/interfaces';
@@ -86,6 +86,37 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         // configure({ ignoreRepeatedEventsWhenKeyHeldDown: false });
 
         // Logger configuration
+
+        // For preventing and 'Right-click' and 'F12', 'Ctrl+Shift+I' button click:
+        // document.addEventListener('contextmenu', (e) => {
+        //     e.preventDefault();
+        // });
+        // document.addEventListener('keydown', (e) => {
+        //     console.log(e.ctrlKey, e.shiftKey, 'e.key', e.key);
+
+        //     if (e.key == 'F12') {
+        //         // Prevent F12
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        //     if (e.ctrlKey && e.shiftKey && e.key == 'I') {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        //     if (e.ctrlKey && e.shiftKey && e.key == 'C') {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        //     if (e.ctrlKey && e.shiftKey && e.key == 'J') {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        //     if (e.ctrlKey && e.key == 'U') {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        // });
+
         const userActivityCallback: (() => void)[] = [];
         window.addEventListener('click', () => {
             userActivityCallback.forEach((handler) => handler());
@@ -99,9 +130,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
 
         verifyAuthorized();
 
-        const {
-            name, version, engine, os,
-        } = platformInfo();
+        const { name, version, engine, os } = platformInfo();
 
         if (showPlatformNotification()) {
             stopNotifications(false);
@@ -143,7 +172,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             });
         }
     }
-
     public componentDidUpdate(): void {
         const {
             verifyAuthorized,
@@ -257,7 +285,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                     />
                 ),
                 // duration: null,
-                duration:5,
+                duration: 5,
                 description: error.length > 200 ? 'Open the Browser Console get details' : error,
             });
 
@@ -336,19 +364,34 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                     <Switch>
                                         {/* <Route exact path='/projects' component={ProjectsPageComponent} /> */}
                                         <Route exact path='/projects/create' component={CreateProjectPageComponent} />
-                                        <Route exact path="/projects" render={() =>(
-                                       user?.isSuperuser? ( <Route  component={ProjectsPageComponent} />):  ( <Route  component={PageNotFound} />)
-                                              )} />
+                                        <Route
+                                            exact
+                                            path='/projects'
+                                            render={() =>
+                                                user?.isSuperuser ? (
+                                                    <Route component={ProjectsPageComponent} />
+                                                ) : (
+                                                    <Route component={PageNotFound} />
+                                                )
+                                            }
+                                        />
                                         <Route exact path='/projects/:id' component={ProjectPageComponent} />
                                         <Route exact path='/tasks' component={TasksPageContainer} />
                                         <Route exact path='/tasks/create' component={CreateTaskPageContainer} />
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />
-                                        <Route exact path="/userlist" render={() =>(
-                                       user?.isSuperuser? ( <Route  component={UserListComponent} />):
-                                       ( <Route  component={PageNotFound} />)
-                                              )} />
+                                        <Route
+                                            exact
+                                            path='/userlist'
+                                            render={() =>
+                                                user?.isSuperuser ? (
+                                                    <Route component={UserListComponent} />
+                                                ) : (
+                                                    <Route component={PageNotFound} />
+                                                )
+                                            }
+                                        />
                                         <Route
                                             exact
                                             path='/cloudstorages/create'

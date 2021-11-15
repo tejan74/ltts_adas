@@ -125,7 +125,7 @@ export interface ExportState {
 export interface UserState {
     users:any;
     count: number;
-
+    fetching: boolean;
 }
 
 export interface FormatsState {

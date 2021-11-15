@@ -7,6 +7,7 @@ import LoginPageComponent from 'components/login-page/login-page';
 import { CombinedState } from 'reducers/interfaces';
 import { loginAsync } from 'actions/auth-actions';
 import { googleOAuth2 } from 'actions/google-actions';
+import { loadToDoList} from '../../actions/index'
 interface StateToProps {
     fetching: boolean;
     renderResetPassword: boolean;

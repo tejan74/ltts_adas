@@ -244,6 +244,7 @@
                 Axios.defaults.headers.common.Authorization = `Token ${token}`;
             }
             async function login(username, password) {
+                console.log(username, password);
                 const authenticationData = [
                     `${encodeURIComponent('username')}=${encodeURIComponent(username)}`,
                     `${encodeURIComponent('password')}=${encodeURIComponent(password)}`,

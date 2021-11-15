@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserList } from 'actions/user-actions';
 import { CombinedState, UserState } from 'reducers/interfaces';
+import Spin from 'antd/lib/spin';
 import { Table, Tag, Space } from 'antd';
 import { Row, Col } from 'antd';
 import './styles.scss';
@@ -53,7 +54,7 @@ export default function UserListComponent(): JSX.Element {
     const dispatch = useDispatch();
 // code added by Raju
  const currentData= useSelector((state: CombinedState)  => state.userList);
-
+ const userFetching = useSelector((state: CombinedState) => state.userList.fetching);
  const [userlist, setValue] = React.useState([]);
  const [FilterdValue, setFilterValue] = React.useState([]);
 
@@ -76,6 +77,10 @@ export default function UserListComponent(): JSX.Element {
              setFilterValue(result);
       }
       const PAGE_SIZE = 5
+      console.log(userFetching);
+      if (userFetching) {
+        return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
+    }
     return (
         <>
             <Row justify='center' align='middle'>

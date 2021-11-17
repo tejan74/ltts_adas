@@ -27,6 +27,7 @@ interface TasksPageProps {
     hideEmptyTasks: (hideEmpty: boolean) => void;
     onImportTask: (file: File) => void;
     taskImporting: boolean;
+    usershow:any
 }
 
 function updateQuery(previousQuery: TasksQuery, searchString: string): TasksQuery {
@@ -56,7 +57,8 @@ function updateQuery(previousQuery: TasksQuery, searchString: string): TasksQuer
 
 class TasksPageComponent extends React.PureComponent<TasksPageProps & RouteComponentProps> {
     public componentDidMount(): void {
-        const { gettingQuery, location, onGetTasks } = this.props;
+        const { gettingQuery, location, onGetTasks, usershow } = this.props;
+        console.log(this.props,"this.props");
         const query = updateQuery(gettingQuery, location.search);
         onGetTasks(query);
     }
@@ -139,7 +141,7 @@ class TasksPageComponent extends React.PureComponent<TasksPageProps & RouteCompo
     public render(): JSX.Element {
         const {
             tasksFetching, gettingQuery, numberOfVisibleTasks, onImportTask, taskImporting,
-        } = this.props;
+            usershow } = this.props;
 
         if (tasksFetching) {
             return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
@@ -152,6 +154,7 @@ class TasksPageComponent extends React.PureComponent<TasksPageProps & RouteCompo
                     query={gettingQuery}
                     onFileUpload={onImportTask}
                     taskImporting={taskImporting}
+                    user={usershow}
                 />
                 {numberOfVisibleTasks ? (
                     <TaskListContainer onSwitchPage={this.handlePagination} />

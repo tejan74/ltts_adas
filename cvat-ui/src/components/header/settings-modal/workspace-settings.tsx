@@ -54,9 +54,9 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
         onSwitchIntelligentPolygonCrop,
         onChangeDefaultApproxPolyAccuracy,
     } = props;
-
-    const minAutoSaveInterval = 1;
-    const maxAutoSaveInterval = 60;
+console.log(props,"props");
+    const minAutoSaveInterval = 0.5;
+    const maxAutoSaveInterval = 5;
     const minAAMMargin = 0;
     const maxAAMMargin = 1000;
 
@@ -82,9 +82,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         min={minAutoSaveInterval}
                         max={maxAutoSaveInterval}
                         step={1}
-                        value={Math.round(autoSaveInterval / (60 * 1000))}
+                        // value={autoSaveInterval / (60 * 1000)}
+                        value={Math.round(autoSaveInterval / (60 * 1000))!== 0 ? Math.round(autoSaveInterval / (60 * 1000)):1}
                         onChange={(value: number | undefined | string): void => {
                             if (typeof value !== 'undefined') {
+                                debugger
                                 onChangeAutoSaveInterval(
                                     Math.floor(clamp(+value, minAutoSaveInterval, maxAutoSaveInterval)) * 60 * 1000,
                                 );

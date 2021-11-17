@@ -18,12 +18,13 @@ interface VisibleTopBarProps {
     onFileUpload(file: File): void;
     query: TasksQuery;
     taskImporting: boolean;
+    user:any;
 }
 
 export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element {
     const {
         query, onSearch, onFileUpload, taskImporting,
-    } = props;
+        user } = props;
 
     const history = useHistory();
 
@@ -35,7 +36,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                         <Text className='cvat-title'>Tasks</Text>
                         <SearchField instance='task' onSearch={onSearch} query={query} />
                     </Col>
-                    <Col>
+                      {user.isSuperuser && <Col>
                         <Row gutter={8}>
                             <Col>
                                 <Upload
@@ -72,7 +73,7 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                                 </Button>
                             </Col>
                         </Row>
-                    </Col>
+                    </Col>}
                 </Row>
             </Col>
         </Row>

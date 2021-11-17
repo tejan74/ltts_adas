@@ -29,9 +29,9 @@ interface TaskPageComponentProps {
 type Props = TaskPageComponentProps & RouteComponentProps<{ id: string }>;
 
 class TaskPageComponent extends React.PureComponent<Props> {
+
     public componentDidMount(): void {
         const { task, fetching, getTask } = this.props;
-
         if (task === null && !fetching) {
             getTask();
         }
@@ -53,7 +53,6 @@ class TaskPageComponent extends React.PureComponent<Props> {
 
     public render(): JSX.Element {
         const { task, updating } = this.props;
-
         if (task === null) {
             return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
         }

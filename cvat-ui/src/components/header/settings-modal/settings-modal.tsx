@@ -40,6 +40,7 @@ const SettingsModal = (props: SettingsModalProps): JSX.Element => {
         notification.success({
             message: 'Settings was successfully saved',
             className: 'cvat-notification-notice-save-settings-success',
+            duration:1
         });
     };
 

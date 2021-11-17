@@ -109,7 +109,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                 Export task
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item>
+            {/* <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item> */}
             <Menu.Item key={Actions.DELETE_TASK}>Delete</Menu.Item>
         </Menu>
     );

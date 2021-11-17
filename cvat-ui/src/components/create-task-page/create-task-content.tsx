@@ -112,7 +112,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
     private validateLabelsOrProject = (): boolean => {
         const { projectId, labels } = this.state;
-        return !!labels.length || !!projectId;
+        return !!labels.length && !!projectId;
     };
 
     private validateFiles = (): boolean => {
@@ -271,34 +271,34 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private renderLabelsBlock(): JSX.Element | null{
         const { projectId, labels } = this.state;
 
-        if (projectId) {
-            return (
-                <>
-                    <Col span={24}>
+        // if (projectId) {
+        //     return (
+        //         <>
+        //             <Col span={24}>
 
-                        <Text className='cvat-text-color'>Labels:</Text>
-                    </Col>
-                    <Col span={24}>
-                        <Text type='secondary'>Project labels will be used</Text>
-                    </Col>
-                </>
-            );
-        }
-             return null;
-        // return (
-            // <Col span={24}>
-            //     <Text type='danger'>* </Text>
-            //     <Text className='cvat-text-color'>Labels:</Text>
-            //     <LabelsEditor
-            //         labels={labels}
-            //         onSubmit={(newLabels): void => {
-            //             this.setState({
-            //                 labels: newLabels,
-            //             });
-            //         }}
-            //     />
-            // </Col>
-        // );
+        //                 <Text className='cvat-text-color'>Labels:</Text>
+        //             </Col>
+        //             <Col span={24}>
+        //                 <Text type='secondary'>Project labels will be used</Text>
+        //             </Col>
+        //         </>
+        //     );
+        // }
+            //  return null;
+        return (
+            <Col span={24}>
+                <Text type='danger'>* </Text>
+                <Text className='cvat-text-color'>Labels:</Text>
+                <LabelsEditor
+                    labels={labels}
+                    onSubmit={(newLabels): void => {
+                        this.setState({
+                            labels: newLabels,
+                        });
+                    }}
+                />
+            </Col>
+        );
     }
 
     private renderFilesBlock(): JSX.Element {

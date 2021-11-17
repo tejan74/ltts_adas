@@ -20,29 +20,69 @@ import { CombinedState } from 'reducers/interfaces';
 import LabelsEditor from 'components/labels-editor/labels-editor';
 import { createProjectAsync } from 'actions/projects-actions';
 import CreateProjectContext from './create-project.context';
-
+// new code added
+import { DatePicker } from 'antd';
 const { Option } = Select;
 
 function NameConfigurationForm({ formRef }: { formRef: RefObject<FormInstance> }): JSX.Element {
+
+   //new code added by raju
     return (
         <Form layout='vertical' ref={formRef}>
             <Form.Item
                 name='name'
                 hasFeedback
-                label='Name'
+                label='Project Name'
                 rules={[
                     {
                         required: true,
-                        message: 'Please, specify a name',
+                        message: 'Please, specify a Project Name',
                     },
                 ]}
             >
-                <Input />
+                <Input placeholder="Project Name"/>
             </Form.Item>
+
+            <Form.Item
+                name='Description'
+                hasFeedback
+                label='Description'
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please, specify a Description'
+                    },
+                ]}
+            >
+                <Input placeholder="Project Description"/>
+            </Form.Item>
+            <Form.Item
+                name='StartDate'
+                hasFeedback
+                label='Start Date'
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please, specify a Start Date',
+                    },
+                ]}
+            >
+                <Input placeholder="Start Date" />
+            </Form.Item>
+            <Form.Item
+        name="Project_type"
+        label="Project Type"
+        rules={[{ required: true, message: 'Please select Project type!' }]}
+      >
+        <Select placeholder="select your Project Type">
+          <Option value="Image">Image</Option>
+          <Option value="Video">Video</Option>
+          <Option value="Lidar">LIDAR</Option>
+        </Select>
+      </Form.Item>
         </Form>
     );
 }
-
 function AdaptiveAutoAnnotationForm({ formRef }: { formRef: RefObject<FormInstance> }): JSX.Element {
     const { projectClass, trainingEnabled } = useContext(CreateProjectContext);
     const projectClassesForTraining = ['OD'];
@@ -138,7 +178,6 @@ export default function CreateProjectContent(): JSX.Element {
     useEffect(() => {
         if (Number.isInteger(newProjectId) && shouldShowNotification.current) {
             const btn = <Button onClick={() => history.push(`/projects/${newProjectId}`)}>Open project</Button>;
-
             // Clear new project forms
             if (nameFormRef.current) nameFormRef.current.resetFields();
             if (advancedFormRef.current) advancedFormRef.current.resetFields();
@@ -157,24 +196,29 @@ export default function CreateProjectContent(): JSX.Element {
 
     const onSumbit = async (): Promise<void> => {
         let projectData: Record<string, any> = {};
-        if (nameFormRef.current && advancedFormRef.current) {
+        // if (nameFormRef.current && advancedFormRef.current && descriptionFormRef.current)
+        if (nameFormRef.current) {
             const basicValues = await nameFormRef.current.validateFields();
-            const advancedValues = await advancedFormRef.current.validateFields();
-            const adaptiveAutoAnnotationValues = await adaptiveAutoAnnotationFormRef.current?.validateFields();
+            console.log(basicValues,"basicValues");
+            // const advancedValues = await advancedFormRef.current.validateFields();
+            // const adaptiveAutoAnnotationValues = await adaptiveAutoAnnotationFormRef.current?.validateFields();
             projectData = {
                 ...projectData,
-                ...advancedValues,
+                // ...advancedValues,
                 name: basicValues.name,
+                description:basicValues.Description,
+                project_type:basicValues.Project_type,
+                start_date:basicValues.StartDate,
             };
-
-            if (adaptiveAutoAnnotationValues) {
-                projectData.training_project = { ...adaptiveAutoAnnotationValues };
-            }
+console.log(projectData,"projectData");
+            // if (adaptiveAutoAnnotationValues) {
+            //     projectData.training_project = { ...adaptiveAutoAnnotationValues };
+            // }
         }
 
-        projectData.labels = projectLabels;
+        // projectData.labels = projectLabels;
 
-        if (!projectData.name) return;
+        if (!projectData.name && !projectData.description) return;
 
         dispatch(createProjectAsync(projectData));
     };
@@ -184,12 +228,12 @@ export default function CreateProjectContent(): JSX.Element {
             <Col span={24}>
                 <NameConfigurationForm formRef={nameFormRef} />
             </Col>
-            {isTrainingActive.value && (
+            {/* {isTrainingActive.value && (
                 <Col span={24}>
                     <AdaptiveAutoAnnotationForm formRef={adaptiveAutoAnnotationFormRef} />
                 </Col>
-            )}
-            <Col span={24}>
+            )} */}
+            {/* <Col span={24}>
                 <Text className='cvat-text-color'>Labels:</Text>
                 <LabelsEditor
                     labels={projectLabels}
@@ -197,10 +241,10 @@ export default function CreateProjectContent(): JSX.Element {
                         setProjectLabels(newLabels);
                     }}
                 />
-            </Col>
-            <Col span={24}>
+            </Col> */}
+            {/* <Col span={24}>
                 <AdvancedConfigurationForm formRef={advancedFormRef} />
-            </Col>
+            </Col> */}
             <Col span={24}>
                 <Button type='primary' onClick={onSumbit}>
                     Submit

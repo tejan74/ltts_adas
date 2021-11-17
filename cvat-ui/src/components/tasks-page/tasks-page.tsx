@@ -12,7 +12,7 @@ import message from 'antd/lib/message';
 import Text from 'antd/lib/typography/Text';
 
 import { TasksQuery } from 'reducers/interfaces';
-import FeedbackComponent from 'components/feedback/feedback';
+//import FeedbackComponent from 'components/feedback/feedback';
 import TaskListContainer from 'containers/tasks-page/tasks-list';
 import TopBar from './top-bar';
 import EmptyListComponent from './empty-list';
@@ -159,7 +159,7 @@ class TasksPageComponent extends React.PureComponent<TasksPageProps & RouteCompo
                 {numberOfVisibleTasks ? (
                     <TaskListContainer onSwitchPage={this.handlePagination} />
                 ) : (
-                    <EmptyListComponent />
+                    <EmptyListComponent  user ={usershow} />
                 )}
                 {/* <FeedbackComponent /> */}
             </div>

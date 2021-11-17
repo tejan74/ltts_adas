@@ -1,31 +1,35 @@
 
-import { all, put, takeEvery,takeLatest,call } from 'redux-saga/effects';
-import{AuthActionTypes} from 'actions/index';
+
+import { all, put, takeLatest, call, delay } from 'redux-saga/effects';
+import { AuthActionTypes } from 'actions/index';
 import getCore from 'cvat-core-wrapper';
+
 const cvat = getCore();
+import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 
+export const authActions = {
+    authorizeSuccess: (user: any) => createAction(AuthActionTypes.AUTHORIZED_SUCCESS, { user }),
+    authorizeFailed: (error: any) => createAction(AuthActionTypes.AUTHORIZED_FAILED, { error }),
+    login: () => createAction(AuthActionTypes.LOGIN),
+    loginSuccess: (user: any) => createAction(AuthActionTypes.LOGIN_SUCCESS, { user }),
+    loginFailed: (error: any) => createAction(AuthActionTypes.LOGIN_FAILED, { error }),
+};
 
-function* login(action:any):any {
-console.log("loginall",action)
-try {
-// const endpoint = cvat.server.login(action.payload.username,action.payload.password);
-// console.log("endpoint",endpoint)
-//  const response = yield call(endpoint);
-const users = cvat.users.get({ self: true });
-// console.log("endpointres",response)
-// const data = yield response.json();
-// const user = yield call());
-// yield put({type: "USER_FETCH_SUCCEEDED", user: user});
-} catch (e) {
-// yield put({type: "USER_FETCH_FAILED", message: e.message});
-}
+export type AuthActions = ActionUnion<typeof authActions>;
 
+function* login(action: any): any {
+    try {
+        yield cvat.server.login(action.payload.username, action.payload.password);
+        yield delay(1000);
+        const users = yield cvat.users.get({ self: true });
+        yield put(authActions.loginSuccess(users[0]));
+    } catch (error) {
+        yield put(authActions.loginFailed(error));
+    }
 }
 function* loginWatcher() {
-yield takeLatest(AuthActionTypes.LOGIN, login)
+    yield takeLatest(AuthActionTypes.LOGIN, login);
 }
 export default function* rootSaga() {
-yield all([
-loginWatcher(),
-]);
+    yield all([loginWatcher()]);
 }

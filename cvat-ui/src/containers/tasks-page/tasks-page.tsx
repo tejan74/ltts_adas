@@ -17,6 +17,7 @@ interface StateToProps {
     numberOfVisibleTasks: number;
     numberOfHiddenTasks: number;
     taskImporting: boolean;
+    usershow:any;
 }
 
 interface DispatchToProps {
@@ -29,6 +30,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
     const { tasks } = state;
 
     return {
+        usershow: state.auth.user,
         tasksFetching: state.tasks.fetching,
         gettingQuery: tasks.gettingQuery,
         numberOfTasks: state.tasks.count,

@@ -22,7 +22,7 @@ import Layout from 'antd/lib/layout';
 import Button from 'antd/lib/button';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
-// import Modal from 'antd/lib/modal';
+import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
 
 import getCore from 'cvat-core-wrapper';
@@ -155,7 +155,23 @@ function HeaderContainer(props: Props): JSX.Element {
     // } = consts;
 
     const history = useHistory();
-
+    // code added by Raju
+    function onLogoutPopConfirm(): void {
+        Modal.confirm({
+            title: `Do you want to logout?`,
+            content: 'All related data (images, annotations) will be lost. Continue?',
+            className: 'cvat-modal-confirm-delete-task',
+            onOk: () => {
+                onLogout();
+            },
+            okButtonProps: {
+                type: 'primary',
+                danger: true,
+            },
+            okText: 'Yes',
+            cancelText: 'No',
+        });
+    }
     // function showAboutModal(): void {
     //     Modal.info({
     //         title: `${tool.name}`,
@@ -178,7 +194,7 @@ function HeaderContainer(props: Props): JSX.Element {
     //                     <Text strong>UI version:</Text>
     //                     <Text type='secondary'>{` ${tool.ui.version}`}</Text>
     //                 </p>
-    //                 <Row justify='space-around'>
+    //                 {/* <Row justify='space-around'>
     //                     <Col>
     //                         <a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>
     //                             What&apos;s new?
@@ -199,7 +215,7 @@ function HeaderContainer(props: Props): JSX.Element {
     //                             Forum on Intel Developer Zone
     //                         </a>
     //                     </Col>
-    //                 </Row>
+    //                 </Row> */}
     //             </div>
     //         ),
     //         width: 800,
@@ -252,7 +268,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 </Menu.Item>
             )}
 
-            <Menu.Item key='logout' onClick={onLogout} disabled={logoutFetching}>
+            <Menu.Item key='logout' onClick={onLogoutPopConfirm} disabled={logoutFetching}>
                 {logoutFetching ? <LoadingOutlined /> : <LogoutOutlined />}
                 Logout
             </Menu.Item>
@@ -290,6 +306,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 >
                     Projects
                 </Button>)}
+                {user.isSuperuser?(
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -301,7 +318,18 @@ function HeaderContainer(props: Props): JSX.Element {
                     }}
                 >
                     Tasks
-                </Button>
+                </Button>):<Button
+                    className='cvat-header-button'
+                    type='link'
+                    value='tasks'
+                    href='/tasks?page=1'
+                    onClick={(event: React.MouseEvent): void => {
+                        event.preventDefault();
+                        history.push('/tasks?page=1');
+                    }}
+                >
+                    My Tasks
+                </Button>}
                 <Button
                     className='cvat-header-button'
                     type='link'

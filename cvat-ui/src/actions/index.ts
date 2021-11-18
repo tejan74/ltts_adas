@@ -11,7 +11,7 @@ LOGIN_SUCCESS = 'LOGIN_SUCCESS',
 LOGIN_FAILED = 'LOGIN_FAILED',
 GET_NEWS ='GET_NEWS',
 }
-export function loadToDoList(username:string,password:string) {
+export function loginwithsaga(username:string,password:string) {
 return {
 type: AuthActionTypes.LOGIN,
 payload:{username,password}

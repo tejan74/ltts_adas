@@ -35,6 +35,9 @@
                 training_project: undefined,
                 task_ids: undefined,
                 dimension: undefined,
+                project_description: undefined,
+                start_date: undefined,
+                project_type: undefined,
             };
 
             for (const property in data) {
@@ -96,7 +99,56 @@
                             if (!value.trim().length) {
                                 throw new ArgumentError('Value must not be empty');
                             }
-                            data.name = value;
+                            // data.name = value;
+                        },
+                    },
+                    // code added by Raju
+                    /**
+                     * @name project_description
+                     * @type {string}
+                     * @memberof module:API.cvat.classes.Project
+                     * @instance
+                     * @throws {module:API.cvat.exceptions.ArgumentError}
+                     */
+                    project_description: {
+                        get: () => data.project_description,
+                        set: (value) => {
+                            if (!value.trim().length) {
+                                throw new ArgumentError('Value must not be empty');
+                            }
+                            data.project_description = value;
+                        },
+                    },
+                    /**
+                     * @name start_date
+                     * @type {string}
+                     * @memberof module:API.cvat.classes.Project
+                     * @instance
+                     * @throws {module:API.cvat.exceptions.ArgumentError}
+                     */
+                    start_date: {
+                        get: () => data.start_date,
+                        set: (value) => {
+                            if (!value.trim().length) {
+                                throw new ArgumentError('Value must not be empty');
+                            }
+                            data.start_date = value;
+                        },
+                    },
+                    /**
+                     * @name project_type
+                     * @type {string}
+                     * @memberof module:API.cvat.classes.Project
+                     * @instance
+                     * @throws {module:API.cvat.exceptions.ArgumentError}
+                     */
+                    project_type: {
+                        get: () => data.project_type,
+                        set: (value) => {
+                            if (!value.trim().length) {
+                                throw new ArgumentError('Value must not be empty');
+                            }
+                            data.project_type = value;
                         },
                     },
 

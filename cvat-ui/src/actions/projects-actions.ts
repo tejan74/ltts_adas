@@ -124,7 +124,6 @@ export function getProjectsAsync(query: Partial<ProjectsQuery>): ThunkAction {
 export function createProjectAsync(data: any): ThunkAction {
     return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
         const projectInstance = new cvat.classes.Project(data);
-
         dispatch(projectActions.createProject());
         try {
             const savedProject = await projectInstance.save();

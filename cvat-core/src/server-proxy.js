@@ -232,7 +232,6 @@
                 } catch (errorData) {
                     throw generateError(errorData);
                 }
-                console.log(payload, 'tokens');
                 if (authenticationResponse.headers['set-cookie']) {
                     // Browser itself setup cookie and header is none
                     // In NodeJS we need do it manually
@@ -244,7 +243,6 @@
                 Axios.defaults.headers.common.Authorization = `Token ${token}`;
             }
             async function login(username, password) {
-                console.log(username, password);
                 const authenticationData = [
                     `${encodeURIComponent('username')}=${encodeURIComponent(username)}`,
                     `${encodeURIComponent('password')}=${encodeURIComponent(password)}`,

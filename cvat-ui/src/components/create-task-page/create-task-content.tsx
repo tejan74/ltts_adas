@@ -212,7 +212,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                                 .map((text: string): JSX.Element => <div>{text}</div>) :
                             error.toString(),
                         className: 'cvat-notification-create-task-fail',
-                        duration:5,
+                        duration:3,
                     });
                 });
         }

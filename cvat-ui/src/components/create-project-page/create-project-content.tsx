@@ -14,7 +14,7 @@ import Form, { FormInstance } from 'antd/lib/form';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import notification from 'antd/lib/notification';
-
+const { TextArea } = Input;
 import patterns from 'utils/validation-patterns';
 import { CombinedState } from 'reducers/interfaces';
 import LabelsEditor from 'components/labels-editor/labels-editor';
@@ -25,7 +25,7 @@ import { DatePicker } from 'antd';
 const { Option } = Select;
 
 function NameConfigurationForm({ formRef }: { formRef: RefObject<FormInstance> }): JSX.Element {
-
+    const dateFormat = 'YYYY/MM/DD';
    //new code added by raju
     return (
         <Form layout='vertical' ref={formRef}>
@@ -54,8 +54,9 @@ function NameConfigurationForm({ formRef }: { formRef: RefObject<FormInstance> }
                     },
                 ]}
             >
-                <Input placeholder="Project Description"/>
+                <TextArea  placeholder="Project Description" allowClear/>
             </Form.Item>
+
             <Form.Item
                 name='StartDate'
                 hasFeedback
@@ -67,7 +68,8 @@ function NameConfigurationForm({ formRef }: { formRef: RefObject<FormInstance> }
                     },
                 ]}
             >
-                <Input placeholder="Start Date" />
+                 <DatePicker size="large" placeholder="Start Date"  format={dateFormat} />
+                {/* <Input placeholder="Start Date" /> */}
             </Form.Item>
             <Form.Item
         name="Project_type"
@@ -199,18 +201,16 @@ export default function CreateProjectContent(): JSX.Element {
         // if (nameFormRef.current && advancedFormRef.current && descriptionFormRef.current)
         if (nameFormRef.current) {
             const basicValues = await nameFormRef.current.validateFields();
-            console.log(basicValues,"basicValues");
             // const advancedValues = await advancedFormRef.current.validateFields();
             // const adaptiveAutoAnnotationValues = await adaptiveAutoAnnotationFormRef.current?.validateFields();
             projectData = {
                 ...projectData,
                 // ...advancedValues,
                 name: basicValues.name,
-                description:basicValues.Description,
+                project_description:basicValues.Description,
                 project_type:basicValues.Project_type,
                 start_date:basicValues.StartDate,
             };
-console.log(projectData,"projectData");
             // if (adaptiveAutoAnnotationValues) {
             //     projectData.training_project = { ...adaptiveAutoAnnotationValues };
             // }

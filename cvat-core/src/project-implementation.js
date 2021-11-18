@@ -32,7 +32,11 @@
             // initial creating
             const projectSpec = {
                 name: this.name,
+                project_description: this.project_description,
+                project_type: this.project_type,
+                start_date: this.start_date,
                 labels: [...this.labels.map((el) => el.toJSON())],
+
             };
 
             if (this.bugTracker) {
@@ -42,7 +46,6 @@
             if (trainingProjectCopy) {
                 projectSpec.training_project = trainingProjectCopy;
             }
-
             const project = await serverProxy.projects.create(projectSpec);
             return new Project(project);
         };

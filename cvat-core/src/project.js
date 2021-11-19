@@ -99,7 +99,7 @@
                             if (!value.trim().length) {
                                 throw new ArgumentError('Value must not be empty');
                             }
-                            // data.name = value;
+                            data.name = value;
                         },
                     },
                     // code added by Raju

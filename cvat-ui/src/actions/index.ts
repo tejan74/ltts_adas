@@ -9,7 +9,9 @@ AUTHORIZED_FAILED = 'AUTHORIZED_FAILED',
 LOGIN = 'LOGIN',
 LOGIN_SUCCESS = 'LOGIN_SUCCESS',
 LOGIN_FAILED = 'LOGIN_FAILED',
-GET_NEWS ='GET_NEWS',
+LOGOUT = 'LOGOUT',
+LOGOUT_SUCCESS = 'LOGOUT_SUCCESS',
+ LOGOUT_FAILED = 'LOGOUT_FAILED',
 }
 export function loginwithsaga(username:string,password:string) {
 return {
@@ -20,9 +22,9 @@ payload:{username,password}
 
 
 
-export function getNews() {
-alert("button")
-return{
-type: 'GET_NEWS',
-}
-}
+export function logoutAsync() {
+    return {
+    type: AuthActionTypes.LOGOUT,
+    };
+
+    }

@@ -34,9 +34,12 @@ import { AccountIcon } from 'icons';
 // New code added by Raju N
 import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
-import { logoutAsync, authActions } from 'actions/auth-actions';
+// import { logoutAsync, authActions } from 'actions/auth-actions';
+import { authActions } from 'actions/auth-actions';
 import { CombinedState } from 'reducers/interfaces';
 import SettingsModal from './settings-modal/settings-modal';
+import { logoutAsync } from 'actions/index'
+
 
 const core = getCore();
 

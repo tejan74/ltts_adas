@@ -194,6 +194,10 @@ class Project(models.Model):
                               default=StatusChoice.ANNOTATION)
     training_project = models.ForeignKey(TrainingProject, null=True, blank=True, on_delete=models.SET_NULL)
 
+    project_description = models.CharField(max_length=1000,null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    project_type =models.CharField(max_length=256, null=True, blank=True)
+
     def get_project_dirname(self):
         return os.path.join(settings.PROJECTS_ROOT, str(self.id))
 

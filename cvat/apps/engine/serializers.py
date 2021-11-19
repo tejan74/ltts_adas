@@ -68,6 +68,7 @@ class AttributeSerializer(serializers.ModelSerializer):
         return attribute
 
 class LabelSerializer(serializers.ModelSerializer):
+    print("adding")
     id = serializers.IntegerField(required=False)
     attributes = AttributeSerializer(many=True, source='attributespec_set',
         default=[])
@@ -79,6 +80,7 @@ class LabelSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'attributes', 'deleted')
 
     def validate(self, attrs):
+        #print("done changing")
         if attrs.get('deleted') == True and attrs.get('id') is None:
             raise serializers.ValidationError('Deleted label must have an ID')
 
@@ -217,7 +219,9 @@ class RemoteFileSerializer(serializers.ModelSerializer):
 class RqStatusSerializer(serializers.Serializer):
     state = serializers.ChoiceField(choices=[
         "Queued", "Started", "Finished", "Failed"])
+    print("com",state)
     message = serializers.CharField(allow_blank=True, default="")
+    print("com",message)
 
 class WriteOnceMixin:
 
@@ -349,6 +353,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     project_id = serializers.IntegerField(required=False)
     dimension = serializers.CharField(allow_blank=True, required=False)
+    
 
     class Meta:
         model = models.Task
@@ -366,8 +371,8 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         if not (validated_data.get("label_set") or validated_data.get("project_id")):
             raise serializers.ValidationError('Label set or project_id must be present')
-        if validated_data.get("label_set") and validated_data.get("project_id"):
-            raise serializers.ValidationError('Project must have only one of Label set or project_id')
+        # if validated_data.get("label_set") and validated_data.get("project_id"):
+        #     raise serializers.ValidationError('Project must have only one of Label set or project_id')
 
         labels = validated_data.pop('label_set', [])
         db_task = models.Task.objects.create(**validated_data)
@@ -395,6 +400,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         response = super().to_representation(instance)
         if instance.project_id:
             response["labels"] = LabelSerializer(many=True).to_representation(instance.project.label_set)
+            # print("response in",response)
         return response
 
     # pylint: disable=no-self-use
@@ -410,7 +416,9 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             for label in labels:
                 LabelSerializer.update_instance(label, instance)
         validated_project_id = validated_data.get('project_id', None)
+
         if validated_project_id is not None and validated_project_id != instance.project_id:
+            print("checking",validated_project_id)
             project = models.Project.objects.get(id=validated_data.get('project_id', None))
             if project.tasks.count() and project.tasks.first().dimension != instance.dimension:
                     raise serializers.ValidationError(f'Dimension ({instance.dimension}) of the task must be the same as other tasks in project ({project.tasks.first().dimension})')
@@ -418,6 +426,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
                 for old_label in instance.label_set.all():
                     try:
                         new_label = project.label_set.filter(name=old_label.name).first()
+                        print("labbeling",new_label)
                     except ValueError:
                         raise serializers.ValidationError(f'Target project does not have label with name "{old_label.name}"')
                     old_label.attributespec_set.all().delete()
@@ -512,7 +521,8 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
         fields = ('url', 'id', 'name', 'labels', 'tasks', 'owner', 'assignee', 'owner_id', 'assignee_id',
-                  'bug_tracker', 'task_subsets', 'created_date', 'updated_date', 'status', 'training_project', 'dimension')
+                  'bug_tracker', 'task_subsets', 'created_date', 'updated_date', 'status', 'training_project', 'dimension',
+                  'project_description','start_date','project_type')
         read_only_fields = ('created_date', 'updated_date', 'status', 'owner', 'asignee', 'task_subsets', 'dimension')
         ordering = ['-id']
 

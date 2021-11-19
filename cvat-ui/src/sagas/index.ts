@@ -13,6 +13,9 @@ export const authActions = {
     login: () => createAction(AuthActionTypes.LOGIN),
     loginSuccess: (user: any) => createAction(AuthActionTypes.LOGIN_SUCCESS, { user }),
     loginFailed: (error: any) => createAction(AuthActionTypes.LOGIN_FAILED, { error }),
+    logout: () => createAction(AuthActionTypes.LOGOUT),
+    logoutSuccess: () => createAction(AuthActionTypes.LOGOUT_SUCCESS),
+    logoutFailed: (error: any) => createAction(AuthActionTypes.LOGOUT_FAILED, { error }),
 };
 
 export type AuthActions = ActionUnion<typeof authActions>;
@@ -30,6 +33,25 @@ function* login(action: any): any {
 function* loginWatcher() {
     yield takeLatest(AuthActionTypes.LOGIN, login);
 }
+function* logout():any{
+     try {
+
+         yield cvat.server.logout();
+
+         yield put(authActions.logoutSuccess());
+
+ } catch (error) {
+
+    yield put(authActions.logoutFailed(error));
+
+ }
+
+ }
+ function* logoutWatcher() {
+
+ yield takeLatest(AuthActionTypes.LOGOUT, logout)
+
+ }
 export default function* rootSaga() {
-    yield all([loginWatcher()]);
+    yield all([loginWatcher(), logoutWatcher()]);
 }

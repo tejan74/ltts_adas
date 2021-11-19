@@ -496,7 +496,8 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
 class ProjectSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
-        fields = ('id', 'name')
+        # code change by savita for sending project type details
+        fields = ('id', 'name', 'project_type')
         read_only_fields = ('name',)
         ordering = ['-id']
 
@@ -520,6 +521,7 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Project
+        # added fileds project_description','start_date','project_type by Savita and Keshav
         fields = ('url', 'id', 'name', 'labels', 'tasks', 'owner', 'assignee', 'owner_id', 'assignee_id',
                   'bug_tracker', 'task_subsets', 'created_date', 'updated_date', 'status', 'training_project', 'dimension',
                   'project_description','start_date','project_type')

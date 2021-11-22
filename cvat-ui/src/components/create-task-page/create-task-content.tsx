@@ -31,6 +31,7 @@ export interface CreateTaskData {
     files: Files;
     activeFileManagerTab: string;
     cloudStorageId: number | null;
+    project_type: string;
 }
 
 interface Props {
@@ -39,12 +40,14 @@ interface Props {
     taskId: number | null;
     projectId: number | null;
     installedGit: boolean;
+    project_type: string;
 }
 
 type State = CreateTaskData;
 
 const defaultState = {
     projectId: null,
+    project_type: '',
     basic: {
         name: '',
     },
@@ -66,6 +69,7 @@ const defaultState = {
 };
 
 class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps, State> {
+
     private basicConfigurationComponent: RefObject<BasicConfigurationForm>;
     private advancedConfigurationComponent: RefObject<AdvancedConfigurationForm>;
     private fileManagerContainer: any;
@@ -81,7 +85,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         const { projectId } = this.props;
 
         if (projectId) {
-            this.handleProjectIdChange(projectId);
+            this.handleProjectIdChange(projectId, '');
         }
     }
 
@@ -95,7 +99,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                 message: 'The task has been created',
                 btn,
                 className: 'cvat-notification-create-task-success',
-                duration:5,
+                duration: 5,
             });
 
             this.basicConfigurationComponent.current?.resetFields();
@@ -116,13 +120,11 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private validateFiles = (): boolean => {
-        const { activeFileManagerTab } = this.state;
+        const { activeFileManagerTab, project_type } = this.state;
         const files = this.fileManagerContainer.getFiles();
-
         this.setState({
             files,
         });
-
         if (activeFileManagerTab === 'cloudStorage') {
             this.setState({
                 cloudStorageId: this.fileManagerContainer.getCloudStorageId(),
@@ -130,16 +132,34 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         }
         const totalLen = Object.keys(files).reduce((acc, key) => acc + files[key].length, 0);
 
-        return !!totalLen;
+        return !!totalLen
     };
-
-    private handleProjectIdChange = (value: null | number): void => {
-        const { projectId, subset } = this.state;
-
+    private validateFilesTypes = (): boolean => {
+        const { activeFileManagerTab, project_type } = this.state;
+        const files = this.fileManagerContainer.getFiles();
+        if (files) {
+            if (files.local[0]?.type !== undefined) {
+                let type = files.local[0].type;
+                let type1 = type.split("/");
+                let type2 = type1[0];
+                let type3 = type2 && type2.charAt(0).toUpperCase() + type2.substring(1);
+                if (project_type !== type3) {
+                    return false;
+                }
+            }
+        }
+        this.setState({
+            files,
+        });
+        return true;
+    };
+    private handleProjectIdChange = (value: null | number, type: string): void => {
+        const { projectId, subset, project_type } = this.state;
         this.setState((state) => ({
             projectId: value,
             subset: value && value === projectId ? subset : '',
             labels: value ? [] : state.labels,
+            project_type: type
         }));
     };
 
@@ -173,7 +193,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         if (!this.validateLabelsOrProject()) {
             notification.error({
                 message: 'Could not create a task',
-                description: 'A task must belong to some project',
+                description: 'A task must belong to one project and one label',
                 duration:5,
                 className: 'cvat-notification-create-task-fail',
             });
@@ -184,12 +204,20 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             notification.error({
                 message: 'Could not create a task',
                 description: 'A task must contain at least one file',
-                duration:5,
+                duration: 5,
                 className: 'cvat-notification-create-task-fail',
             });
             return;
         }
-
+        if (!this.validateFilesTypes()) {
+            notification.error({
+                message: 'Could not create a task',
+                description: 'File type is miss match',
+                duration: 5,
+                className: 'cvat-notification-create-task-fail',
+            });
+            return;
+        }
         if (this.basicConfigurationComponent.current) {
             this.basicConfigurationComponent.current
                 .submit()
@@ -231,11 +259,10 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
     private renderProjectBlock(): JSX.Element {
         const { projectId } = this.state;
-
         return (
             <>
                 <Col span={24}>
-                <Text type='danger'>* </Text>
+                    <Text type='danger'>* </Text>
                     <Text className='cvat-text-color'>Project:</Text>
                 </Col>
                 <Col span={24}>
@@ -268,7 +295,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return null;
     }
 
-    private renderLabelsBlock(): JSX.Element | null{
+    private renderLabelsBlock(): JSX.Element | null {
         const { projectId, labels } = this.state;
 
         // if (projectId) {
@@ -284,7 +311,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         //         </>
         //     );
         // }
-            //  return null;
+        //  return null;
         return (
             <Col span={24}>
                 <Text type='danger'>* </Text>

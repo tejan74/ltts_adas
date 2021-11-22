@@ -12,21 +12,22 @@ const core = getCore();
 
 type Props = {
     value: number | null;
-    onSelect: (id: number | null) => void;
+    onSelect: (id: number | null,project_type:string|'') => void;
     filter?: (value: Project, index: number, array: Project[]) => unknown;
+
 };
 
 type Project = {
     id: number;
     name: string;
+    project_type: string;
 };
 
 export default function ProjectSearchField(props: Props): JSX.Element {
-    const { value, filter, onSelect } = props;
+    const { value, filter, onSelect,} = props;
     const [searchPhrase, setSearchPhrase] = useState('');
 
     const [projects, setProjects] = useState<Project[]>([]);
-
     const handleSearch = (searchValue: string): void => {
         core.projects.searchNames(searchValue).then((result: Project[]) => {
             if (result) {
@@ -34,7 +35,7 @@ export default function ProjectSearchField(props: Props): JSX.Element {
             }
         });
         setSearchPhrase(searchValue);
-        onSelect(null);
+        onSelect(null,'');
     };
 
     const handleFocus = (open: boolean): void => {
@@ -55,8 +56,15 @@ export default function ProjectSearchField(props: Props): JSX.Element {
     };
 
     const handleSelect = (_value: SelectValue): void => {
-        setSearchPhrase(projects.filter((proj) => proj.id === +_value)[0].name);
-        onSelect(_value ? +_value : null);
+       let project_display =  projects.filter((proj) => proj.id === +_value)[0].name;
+       let project_type = projects.filter((proj) => proj.id === +_value)[0].project_type
+        setSearchPhrase(project_display+'_'+ project_type);
+        if(_value){
+            onSelect(+_value, project_type)
+        }else{
+            onSelect(null,'')
+        }
+        // onSelect(_value ? +_value  : null);
     };
 
     useEffect(() => {
@@ -69,10 +77,12 @@ export default function ProjectSearchField(props: Props): JSX.Element {
                         {
                             id: project.id,
                             name: project.name,
+                            project_type:project.project_type
                         },
                     ]);
-                    setSearchPhrase(project.name);
-                    onSelect(project.id);
+                    let project_display = project.name + '_' + project.project_type
+                    setSearchPhrase(project_display);
+                    onSelect(project.id,project.project_type);
                 });
             }
         } else {
@@ -90,7 +100,7 @@ export default function ProjectSearchField(props: Props): JSX.Element {
             onDropdownVisibleChange={handleFocus}
             options={projects.map((proj) => ({
                 value: proj.id.toString(),
-                label: proj.name,
+                label: proj.name + '_' +  proj.project_type,
             }))}
         />
     );

@@ -256,31 +256,40 @@ class ProjectGetQuerySetMixin(object):
         if has_admin_role(user) or has_observer_role(user) or self.detail:
             return queryset
         else:
-            return queryset.filter(Q(owner=user) | Q(assignee=user) |
+            queryset= queryset.filter(Q(owner=user) | Q(assignee=user) |
                 Q(task__owner=user) | Q(task__assignee=user) |
                 Q(task__segment__job__assignee=user) |
-                Q(task__segment__job__reviewer=user)).distinct()
+                Q(task__segment__job__reviewer=user))
+            return queryset
 
 def filter_task_queryset(queryset, user):
-    # Don't filter queryset for admin, observer
+    #Don't filter queryset for admin, observer
     if has_admin_role(user) or has_observer_role(user):
+        print("filter queryset777777777777", queryset, user)
         return queryset
 
     query_filter = Q(owner=user) | Q(assignee=user) | \
         Q(segment__job__assignee=user) | Q(segment__job__reviewer=user)
+    print("queryfilter..............", query_filter )
     if not settings.RESTRICTIONS['reduce_task_visibility']:
         query_filter |= Q(assignee=None)
-
-    return queryset.filter(query_filter).distinct()
+        #distinct not supported by djongo
+    queryset = queryset.filter(query_filter)
+    return queryset
+    #pass
 
 class TaskGetQuerySetMixin(object):
+    print("auth queryset")
     def get_queryset(self):
         queryset = super().get_queryset()
         user = self.request.user
+        print("auth queryset............................", queryset, user)
         # Don't filter queryset for detail methods
         if self.detail:
+            print("queryset######", queryset, user)
             return queryset
         else:
+            print("queryset@@@@@@@@@", queryset, user)
             return filter_task_queryset(queryset, user)
 
 class TaskChangePermission(BasePermission):

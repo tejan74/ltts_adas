@@ -25,7 +25,7 @@ interface Props {
 const useCardHeight = useCardHeightHOC({
     containerClassName: 'cvat-projects-page',
     siblingClassNames: ['cvat-projects-pagination', 'cvat-projects-top-bar'],
-    paddings: 40,
+    paddings: 30,
     numberOfRows: 3,
 });
 
@@ -33,7 +33,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
     const {
         projectInstance: { instance, preview },
     } = props;
-
+console.log(props,"propspropspropsprops");
     const history = useHistory();
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
@@ -64,6 +64,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                     />
                 ) : (
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
+
                         <Empty description='No tasks' />
                     </div>
                 )

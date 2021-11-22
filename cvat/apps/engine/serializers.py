@@ -376,13 +376,15 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
 
         labels = validated_data.pop('label_set', [])
         db_task = models.Task.objects.create(**validated_data)
+        # added line 379 to fetch labels for task by Keshava and Savita
+        project = models.Project.objects.filter(id=validated_data.get("project_id",None)).first()
         label_names = list()
         for label in labels:
             attributes = label.pop('attributespec_set')
             if not label.get('color', None):
                 label['color'] = get_label_color(label['name'], label_names)
             label_names.append(label['name'])
-            db_label = models.Label.objects.create(task=db_task, **label)
+            db_label = models.Label.objects.create(task=db_task, project=project, **label)
             for attr in attributes:
                 models.AttributeSpec.objects.create(label=db_label, **attr)
 

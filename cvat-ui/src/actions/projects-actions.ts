@@ -78,6 +78,7 @@ export function getProjectsAsync(query: Partial<ProjectsQuery>): ThunkAction {
         let result = null;
         try {
             result = await cvat.projects.get(filteredQuery);
+            console.log(result);
         } catch (error) {
             dispatch(projectActions.getProjectsFailed(error));
             return;

@@ -33,14 +33,15 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
     const {
         projectInstance: { instance, preview },
     } = props;
-console.log(props,"propspropspropsprops");
+
+
     const history = useHistory();
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
     const updated = moment(instance.updatedDate).fromNow();
     const deletes = useSelector((state: CombinedState) => state.projects.activities.deletes);
     const deleted = instance.id in deletes ? deletes[instance.id] : false;
-
+    const task_Count = instance.task_ids ? instance.task_ids.length :null
     const onOpenProject = (): void => {
         history.push(`/projects/${instance.id}`);
     };
@@ -55,13 +56,13 @@ console.log(props,"propspropspropsprops");
         <Card
             cover={
                 preview ? (
-                    <img
+                    <><img
                         className='cvat-projects-project-item-card-preview'
                         src={preview}
                         alt='Preview'
                         onClick={onOpenProject}
-                        aria-hidden
-                    />
+                        aria-hidden /><span className='cvat-projects-project-item-card-preview'>task count {task_Count}</span></>
+
                 ) : (
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
 

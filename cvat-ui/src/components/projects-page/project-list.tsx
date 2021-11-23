@@ -16,6 +16,7 @@ export default function ProjectListComponent(): JSX.Element {
     const projectsCount = useSelector((state: CombinedState) => state.projects.count);
     const { page } = useSelector((state: CombinedState) => state.projects.gettingQuery);
     const projects = useSelector((state: CombinedState) => state.projects.current);
+    console.log(projects);
     const gettingQuery = useSelector((state: CombinedState) => state.projects.gettingQuery);
 console.log(projects,"projects");
     function changePage(p: number): void {

@@ -61,12 +61,13 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                         src={preview}
                         alt='Preview'
                         onClick={onOpenProject}
-                        aria-hidden /><span className='cvat-projects-project-item-card-preview'>task count {task_Count}</span></>
+                        aria-hidden /><p className='cvat-projects-project-item-card-preview'
+                        style={{marginTop : "-28px",marginLeft : "65px"}}><strong>Task count: {task_Count}</strong></p></>
 
                 ) : (
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
 
-                        <Empty description='No tasks' />
+                        <Empty style={{marginTop : "-40px",marginLeft : "50px"}} description='No tasks' />
                     </div>
                 )
             }

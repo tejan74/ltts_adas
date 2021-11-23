@@ -315,7 +315,7 @@ function build() {
              */
             async get(filter = {}) {
                 const result = await PluginRegistry.apiWrapper(cvat.projects.get, filter);
-                console.log(result, 'resultresult');
+
                 return result;
             },
 
@@ -824,8 +824,6 @@ function build() {
     };
 
     cvat.server = Object.freeze(cvat.server);
-    console.log("before cvat projects");
-    console.log(cvat.projects)
     cvat.projects = Object.freeze(cvat.projects);
     cvat.tasks = Object.freeze(cvat.tasks);
     cvat.jobs = Object.freeze(cvat.jobs);

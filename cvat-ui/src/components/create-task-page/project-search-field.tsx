@@ -26,7 +26,6 @@ type Project = {
 export default function ProjectSearchField(props: Props): JSX.Element {
     const { value, filter, onSelect,} = props;
     const [searchPhrase, setSearchPhrase] = useState('');
-
     const [projects, setProjects] = useState<Project[]>([]);
     const handleSearch = (searchValue: string): void => {
         core.projects.searchNames(searchValue).then((result: Project[]) => {
@@ -35,7 +34,7 @@ export default function ProjectSearchField(props: Props): JSX.Element {
             }
         });
         setSearchPhrase(searchValue);
-        onSelect(null,'');
+         onSelect(null,'');
     };
 
     const handleFocus = (open: boolean): void => {
@@ -51,20 +50,20 @@ export default function ProjectSearchField(props: Props): JSX.Element {
             });
         }
         if (!open && !value && searchPhrase) {
-            setSearchPhrase('');
+            // setSearchPhrase('');
         }
     };
 
     const handleSelect = (_value: SelectValue): void => {
        let project_display =  projects.filter((proj) => proj.id === +_value)[0].name;
        let project_type = projects.filter((proj) => proj.id === +_value)[0].project_type
-        setSearchPhrase(project_display+'_'+ project_type);
+         setSearchPhrase(project_display+'_'+ project_type);
         if(_value){
             onSelect(+_value, project_type)
         }else{
             onSelect(null,'')
         }
-        // onSelect(_value ? +_value  : null);
+        //  onSelect(_value ? +_value  : null);
     };
 
     useEffect(() => {

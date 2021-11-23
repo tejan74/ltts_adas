@@ -78,14 +78,12 @@ export function getProjectsAsync(query: Partial<ProjectsQuery>): ThunkAction {
         let result = null;
         try {
             result = await cvat.projects.get(filteredQuery);
-            console.log(result);
         } catch (error) {
             dispatch(projectActions.getProjectsFailed(error));
             return;
         }
 
         const array = Array.from(result);
-console.log(result,"array");
         // Appropriate tasks fetching proccess needs with retrieving only a single project
         if (Object.keys(filteredQuery).includes('id')) {
             const tasks: any[] = [];

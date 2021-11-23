@@ -395,7 +395,7 @@
                 } catch (errorData) {
                     throw generateError(errorData);
                 }
-console.log(response.data.results, "response");
+
                 response.data.results.count = response.data.count;
                 return response.data.results;
             }

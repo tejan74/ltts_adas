@@ -84,7 +84,6 @@ export function getProjectsAsync(query: Partial<ProjectsQuery>): ThunkAction {
         }
 
         const array = Array.from(result);
-console.log(result,"array");
         // Appropriate tasks fetching proccess needs with retrieving only a single project
         if (Object.keys(filteredQuery).includes('id')) {
             const tasks: any[] = [];

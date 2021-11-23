@@ -315,7 +315,7 @@ function build() {
              */
             async get(filter = {}) {
                 const result = await PluginRegistry.apiWrapper(cvat.projects.get, filter);
-                console.log(result, 'resultresult');
+
                 return result;
             },
 

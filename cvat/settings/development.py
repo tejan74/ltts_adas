@@ -23,7 +23,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 DATABASES = {
     'default': {
     'ENGINE': 'djongo',
-    'NAME': 'adas_cvatwsl',
+    'NAME': 'new_adas',
     'HOST': '127.0.0.1',
     'PORT': 27017,
     }

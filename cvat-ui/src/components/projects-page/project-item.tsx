@@ -70,8 +70,8 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                        {/* <span>
                          <Empty  description='No tasks' /></span> */}
                          <p style={{display: 'flex',
-                            justifyContent: 'flex-end',padding:'1px'
-                           }}><strong>Task count: {task_Count}</strong></p>
+                            justifyContent: 'flex-end',padding:'0px'
+                           }}><strong>No Task </strong></p>
                     </div>
                 )
             }

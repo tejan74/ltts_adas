@@ -824,6 +824,8 @@ function build() {
     };
 
     cvat.server = Object.freeze(cvat.server);
+    console.log("before cvat projects");
+    console.log(cvat.projects)
     cvat.projects = Object.freeze(cvat.projects);
     cvat.tasks = Object.freeze(cvat.tasks);
     cvat.jobs = Object.freeze(cvat.jobs);

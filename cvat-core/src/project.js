@@ -190,6 +190,9 @@
                     owner: {
                         get: () => data.owner,
                     },
+                    task_ids: {
+                        get: () => data.task_ids,
+                    },
                     /**
                      * @name bugTracker
                      * @type {string}

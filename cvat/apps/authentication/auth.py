@@ -12,6 +12,8 @@ from django.core import signing
 from rest_framework import authentication, exceptions
 from rest_framework.authentication import TokenAuthentication as _TokenAuthentication
 from django.contrib.auth import login
+from cvat.apps.engine.models import Task
+from django.contrib.auth.models import Group
 
 # Even with token authorization it is very important to have a valid session id
 # in cookies because in some cases we cannot use token authorization (e.g. when
@@ -263,14 +265,12 @@ class ProjectGetQuerySetMixin(object):
             return queryset
 
 def filter_task_queryset(queryset, user):
-    #Don't filter queryset for admin, observer
-    if has_admin_role(user) or has_observer_role(user):
-        print("filter queryset777777777777", queryset, user)
+   
+    if has_admin_role(user) or has_observer_role(user) or has_annotator_role(user):
         return queryset
 
     query_filter = Q(owner=user) | Q(assignee=user) | \
         Q(segment__job__assignee=user) | Q(segment__job__reviewer=user)
-    print("queryfilter..............", query_filter )
     if not settings.RESTRICTIONS['reduce_task_visibility']:
         query_filter |= Q(assignee=None)
         #distinct not supported by djongo
@@ -279,14 +279,25 @@ def filter_task_queryset(queryset, user):
     #pass
 
 class TaskGetQuerySetMixin(object):
-    print("auth queryset")
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # new code changes done for filtering tasks based on assignee id 
+        userid = self.request.user.id
         user = self.request.user
-        print("auth queryset............................", queryset, user)
+        queryset = super().get_queryset()
+        #k=Group.objects.filter(id=userid).values('name')
+        if has_admin_role(user):
+            data=Task.objects.filter().values()
+            return queryset
+        else:     
+            data=Task.objects.filter(assignee_id=userid)
+            return data
+        
+        
+        print("user",user)
+        print("auth queryset............................",data)
         # Don't filter queryset for detail methods
         if self.detail:
-            print("queryset######", queryset, user)
+            print("queryset######", queryset, user, self.detail, self)
             return queryset
         else:
             print("queryset@@@@@@@@@", queryset, user)

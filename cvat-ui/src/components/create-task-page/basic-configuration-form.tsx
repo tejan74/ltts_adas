@@ -47,7 +47,7 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                 <Form.Item
                     hasFeedback
                     name='name'
-                    label={<span>Name</span>}
+                    label={<span>Task Name</span>}
                     rules={[
                         {
                             required: true,
@@ -55,7 +55,7 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                         },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="Enter task name"/>
                 </Form.Item>
             </Form>
         );

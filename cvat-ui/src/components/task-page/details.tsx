@@ -299,10 +299,10 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
 
         return (
             <Row>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Text className='cvat-text-color'>Subset:</Text>
-                </Col>
-                <Col span={24}>
+                </Col> */}
+                {/* <Col span={24}>
                     <ProjectSubsetField
                         value={subset}
                         projectId={taskInstance.projectId}
@@ -318,7 +318,7 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
                             }
                         }}
                     />
-                </Col>
+                </Col> */}
             </Row>
         );
     }

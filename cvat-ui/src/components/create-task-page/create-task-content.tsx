@@ -40,7 +40,7 @@ interface Props {
     taskId: number | null;
     projectId: number | null;
     installedGit: boolean;
-    project_type: string;
+    // project_type: string;
 }
 
 type State = CreateTaskData;
@@ -374,7 +374,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
                 {this.renderBasicBlock()}
                 {this.renderProjectBlock()}
-                {this.renderSubsetBlock()}
+                {/* {this.renderSubsetBlock()} */}
                 {this.renderLabelsBlock()}
                 {this.renderFilesBlock()}
                 {this.renderAdvancedBlock()}

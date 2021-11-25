@@ -363,7 +363,18 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                 <GlobalHotKeys keyMap={subKeyMap} handlers={handlers}>
                                     <Switch>
                                         {/* <Route exact path='/projects' component={ProjectsPageComponent} /> */}
-                                        <Route exact path='/projects/create' component={CreateProjectPageComponent} />
+                                        {/* <Route exact path='/projects/create' component={CreateProjectPageComponent} /> */}
+                                        <Route
+                                            exact
+                                            path='/projects/create'
+                                            render={() =>
+                                                user?.isSuperuser ? (
+                                                    <Route component={CreateProjectPageComponent} />
+                                                ) : (
+                                                    <Route component={PageNotFound} />
+                                                )
+                                            }
+                                        />
                                         <Route
                                             exact
                                             path='/projects'
@@ -375,9 +386,31 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                                 )
                                             }
                                         />
-                                        <Route exact path='/projects/:id' component={ProjectPageComponent} />
+                                        <Route
+                                            exact
+                                            path='/tasks/create'
+                                            render={() =>
+                                                user?.isSuperuser ? (
+                                                    <Route component={CreateTaskPageContainer} />
+                                                ) : (
+                                                    <Route component={PageNotFound} />
+                                                )
+                                            }
+                                        />
+                                         <Route
+                                            exact
+                                            path='/projects/:id'
+                                            render={() =>
+                                                user?.isSuperuser ? (
+                                                    <Route component={ProjectPageComponent} />
+                                                ) : (
+                                                    <Route component={PageNotFound} />
+                                                )
+                                            }
+                                        />
+                                        {/* <Route exact path='/projects/:id' component={ProjectPageComponent} /> */}
                                         <Route exact path='/tasks' component={TasksPageContainer} />
-                                        <Route exact path='/tasks/create' component={CreateTaskPageContainer} />
+                                        {/* <Route exact path='/tasks/create' component={CreateTaskPageContainer} /> */}
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />

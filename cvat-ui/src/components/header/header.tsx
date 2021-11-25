@@ -232,7 +232,7 @@ function HeaderContainer(props: Props): JSX.Element {
 
     const menu = (
         <Menu className='cvat-header-menu' mode='vertical'>
-            {user.isStaff && (
+            {user.isSuperuser && (
                 <Menu.Item
                     key='admin_page'
                     onClick={(): void => {

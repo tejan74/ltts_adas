@@ -61,17 +61,16 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                         src={preview}
                         alt='Preview'
                         onClick={onOpenProject}
-                        aria-hidden /><p style={{display: 'flex',
-                            justifyContent: 'flex-end',padding:'10px'
-                           }}><strong>Task count: {task_Count}</strong></p></>
+                        aria-hidden />
+                         <br/><span style={{padding:'3px 12px'}}>task count: {task_Count}</span>
+                        </>
+                        
 
                 ) : (
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
                        {/* <span>
                          <Empty  description='No tasks' /></span> */}
-                         <p style={{display: 'flex',
-                            justifyContent: 'flex-end',padding:'0px'
-                           }}><strong>No Task </strong></p>
+                         <p><strong>No Task </strong></p>
                     </div>
                 )
             }
@@ -84,9 +83,12 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                     <span onClick={onOpenProject} className='cvat-projects-project-item-title' aria-hidden>
                         {instance.name}
                     </span>
+                    
                 )}
+               
                 description={(
                     <div className='cvat-porjects-project-item-description'>
+                         
                         <div>
                             {ownerName && (
                                 <>

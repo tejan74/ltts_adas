@@ -19,17 +19,13 @@ interface DetailsComponentProps {
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { taskInstance } = props;
-
+   
     const history = useHistory();
 
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
-            <Button onClick={() => history.push('/tasks')} type='link' size='large'>
-                        <LeftOutlined />
-                        Back to tasks
-                    </Button>
-                {taskInstance.projectId ? (
+                {taskInstance.projectId == 'null' ? (
                     <Button
                         onClick={() => history.push(`/projects/${taskInstance.projectId}`)}
                         type='link'

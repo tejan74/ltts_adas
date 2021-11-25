@@ -25,8 +25,9 @@ interface Props {
 const useCardHeight = useCardHeightHOC({
     containerClassName: 'cvat-projects-page',
     siblingClassNames: ['cvat-projects-pagination', 'cvat-projects-top-bar'],
-    paddings: 30,
+    paddings: 40,
     numberOfRows: 3,
+   
 });
 
 export default function ProjectItemComponent(props: Props): JSX.Element {
@@ -54,6 +55,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
 
     return (
         <Card
+        hoverable
             cover={
                 preview ? (
                     <><img
@@ -70,7 +72,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
                        {/* <span>
                          <Empty  description='No tasks' /></span> */}
-                         <p><strong>No Task </strong></p>
+                         <span style={{padding:'3px 12px'}}>No Task </span>
                     </div>
                 )
             }
@@ -87,7 +89,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                 )}
                
                 description={(
-                    <div className='cvat-porjects-project-item-description'>
+                    <div className='cvat-porjects-project-item-description' onClick={onOpenProject}>
                          
                         <div>
                             {ownerName && (

@@ -54,7 +54,6 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
         onSwitchIntelligentPolygonCrop,
         onChangeDefaultApproxPolyAccuracy,
     } = props;
-console.log(props,"props");
     const minAutoSaveInterval = 0.5;
     const maxAutoSaveInterval = 5;
     const minAAMMargin = 0;
@@ -65,6 +64,7 @@ console.log(props,"props");
             <Row>
                 <Col>
                     <Checkbox
+                        //  disabled={autoSave}
                         className='cvat-text-color cvat-workspace-settings-auto-save'
                         checked={autoSave}
                         onChange={(event: CheckboxChangeEvent): void => {
@@ -86,7 +86,6 @@ console.log(props,"props");
                         value={Math.round(autoSaveInterval / (60 * 1000))!== 0 ? Math.round(autoSaveInterval / (60 * 1000)):1}
                         onChange={(value: number | undefined | string): void => {
                             if (typeof value !== 'undefined') {
-                                debugger
                                 onChangeAutoSaveInterval(
                                     Math.floor(clamp(+value, minAutoSaveInterval, maxAutoSaveInterval)) * 60 * 1000,
                                 );

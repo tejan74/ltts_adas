@@ -353,7 +353,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             },
         };
         if (readyForRender) {
-            console.log(user,"user");
             if (user && user.isVerified) {
                 return (
                     <GlobalErrorBoundary>

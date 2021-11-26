@@ -58,7 +58,6 @@ function updateQuery(previousQuery: TasksQuery, searchString: string): TasksQuer
 class TasksPageComponent extends React.PureComponent<TasksPageProps & RouteComponentProps> {
     public componentDidMount(): void {
         const { gettingQuery, location, onGetTasks, usershow } = this.props;
-        console.log(this.props,"this.props");
         const query = updateQuery(gettingQuery, location.search);
         onGetTasks(query);
     }

@@ -14,6 +14,7 @@ from cvat.apps.engine import models
 from cvat.apps.engine.cloud_provider import get_cloud_storage_instance, Credentials, Status
 from cvat.apps.engine.log import slogger
 from cvat.apps.engine.utils import parse_specific_attributes
+from cvat.apps.engine.models import Label
 
 class BasicUserSerializer(serializers.ModelSerializer):
     def validate(self, data):
@@ -80,7 +81,7 @@ class LabelSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'attributes', 'deleted')
 
     def validate(self, attrs):
-        #print("done changing")
+        print("done changing")
         if attrs.get('deleted') == True and attrs.get('id') is None:
             raise serializers.ValidationError('Deleted label must have an ID')
 
@@ -110,6 +111,7 @@ class LabelSerializer(serializers.ModelSerializer):
             logger.info("{}({}) label was updated".format(db_label.name, db_label.id))
         else:
             db_label = models.Label.objects.create(name=validated_data.get('name'), **instance)
+            print("line 109",db_label)
             logger.info("New {} label was created".format(db_label.name))
         if validated_data.get('deleted') == True:
             db_label.delete()
@@ -274,6 +276,7 @@ class WriteOnceMixin:
         return extra_kwargs
 
 class DataSerializer(serializers.ModelSerializer):
+    print("update1")
     image_quality = serializers.IntegerField(min_value=0, max_value=100)
     use_zip_chunks = serializers.BooleanField(default=False)
     client_files = ClientFileSerializer(many=True, default=[])
@@ -311,6 +314,7 @@ class DataSerializer(serializers.ModelSerializer):
 
     # pylint: disable=no-self-use
     def create(self, validated_data):
+        print("update2")
         client_files = validated_data.pop('client_files')
         server_files = validated_data.pop('server_files')
         remote_files = validated_data.pop('remote_files')
@@ -328,18 +332,22 @@ class DataSerializer(serializers.ModelSerializer):
         os.makedirs(db_data.get_upload_dirname())
 
         for f in client_files:
+            print("update3")
             client_file = models.ClientFile(data=db_data, **f)
             client_file.save()
 
         for f in server_files:
+            print("update4")
             server_file = models.ServerFile(data=db_data, **f)
             server_file.save()
 
         for f in remote_files:
+            print("update5")
             remote_file = models.RemoteFile(data=db_data, **f)
             remote_file.save()
 
         db_data.save()
+        print("update6")
         return db_data
 
 class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
@@ -408,8 +416,10 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         if instance.project_id:
-            #response["labels"] = LabelSerializer(many=True).to_representation(instance.project.label_set)
-            print("response in 410", instance.project_id)
+            response["labels"] = LabelSerializer(many=True).to_representation(Label.objects.filter(task=instance))
+            # response["labels"] = LabelSerializer(many=True).to_representation(instance.project.label_set)
+            # print("response in",response)
+
         return response
 
     # pylint: disable=no-self-use

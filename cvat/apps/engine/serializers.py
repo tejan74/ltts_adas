@@ -88,18 +88,22 @@ class LabelSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def update_instance(validated_data, parent_instance):
+        print("db_label in line 91")
         attributes = validated_data.pop('attributespec_set', [])
         instance = dict()
         if isinstance(parent_instance, models.Project):
+            print("line number 94")
             instance['project'] = parent_instance
             logger = slogger.project[parent_instance.id]
         else:
             instance['task'] = parent_instance
+            print("line 102 in seri")
             logger = slogger.task[parent_instance.id]
         if not validated_data.get('id') is None:
             try:
                 db_label = models.Label.objects.get(id=validated_data['id'],
                     **instance)
+                print("db_label in line 104", db_label)
             except models.Label.DoesNotExist:
                 raise exceptions.NotFound(detail='Not found label with id #{} to change'.format(validated_data['id']))
             db_label.name = validated_data.get('name', db_label.name)
@@ -375,9 +379,11 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         #     raise serializers.ValidationError('Project must have only one of Label set or project_id')
 
         labels = validated_data.pop('label_set', [])
+        print("labels[] in line 378",labels)
         db_task = models.Task.objects.create(**validated_data)
         # added line 379 to fetch labels for task by Keshava and Savita
-        project = models.Project.objects.filter(id=validated_data.get("project_id",None)).first()
+        project = models.Project.objects.filter(id=validated_data.get("project_id")).first()
+        print("project",project)
         label_names = list()
         for label in labels:
             attributes = label.pop('attributespec_set')
@@ -387,6 +393,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             db_label = models.Label.objects.create(task=db_task, project=project, **label)
             for attr in attributes:
                 models.AttributeSpec.objects.create(label=db_label, **attr)
+            actual_label = Label.objects.filter(task=task, id=label.get('id')).first()
 
         task_path = db_task.get_task_dirname()
         if os.path.isdir(task_path):
@@ -401,8 +408,8 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         if instance.project_id:
-            response["labels"] = LabelSerializer(many=True).to_representation(instance.project.label_set)
-            # print("response in",response)
+            #response["labels"] = LabelSerializer(many=True).to_representation(instance.project.label_set)
+            print("response in 410", instance.project_id)
         return response
 
     # pylint: disable=no-self-use
@@ -414,17 +421,20 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             instance.bug_tracker)
         instance.subset = validated_data.get('subset', instance.subset)
         labels = validated_data.get('label_set', [])
-        if instance.project_id is None:
+        # added not none condition for task labels by Savita
+        if instance.project_id is None or instance.project_id is not None:
             for label in labels:
+                print("line 424 ser")
                 LabelSerializer.update_instance(label, instance)
         validated_project_id = validated_data.get('project_id', None)
+        print("line 427")
 
         if validated_project_id is not None and validated_project_id != instance.project_id:
             print("checking",validated_project_id)
             project = models.Project.objects.get(id=validated_data.get('project_id', None))
             if project.tasks.count() and project.tasks.first().dimension != instance.dimension:
                     raise serializers.ValidationError(f'Dimension ({instance.dimension}) of the task must be the same as other tasks in project ({project.tasks.first().dimension})')
-            if instance.project_id is None:
+            if instance.project_id is None :
                 for old_label in instance.label_set.all():
                     try:
                         new_label = project.label_set.filter(name=old_label.name).first()
@@ -466,6 +476,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     def validate(self, attrs):
         # When moving task labels can be mapped to one, but when not names must be unique
         if 'project_id' in attrs.keys() and self.instance is not None:
+            print("line 474")
             project_id = attrs.get('project_id')
             if project_id is not None:
                 project = models.Project.objects.filter(id=project_id).first()
@@ -473,6 +484,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
                     raise serializers.ValidationError(f'Cannot find project with ID {project_id}')
             # Check that all labels can be mapped
             new_label_names = set()
+            print("line 478")
             old_labels = self.instance.project.label_set.all() if self.instance.project_id else self.instance.label_set.all()
             for old_label in old_labels:
                 new_labels = tuple(filter(lambda x: x.get('id') == old_label.id, attrs.get('label_set', [])))
@@ -480,6 +492,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
                     new_label_names.add(new_labels[0].get('name', old_label.name))
                 else:
                     new_label_names.add(old_label.name)
+                    print("line 486")
             target_project = models.Project.objects.get(id=project_id)
             target_project_label_names = set()
             for label in target_project.label_set.all():

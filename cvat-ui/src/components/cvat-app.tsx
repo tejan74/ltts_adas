@@ -438,10 +438,20 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         {isModelPluginActive && (
                                             <Route exact path='/models' component={ModelsPageContainer} />
                                         )}
-                                        <Redirect
+                                        {/* <Redirect
                                             push
                                             to={new URLSearchParams(location.search).get('next') || '/tasks'}
-                                        />
+                                        /> */}
+                                         { user?.isSuperuser ? (
+                                             <Redirect
+                                             push
+                                             to={'/projects'}
+                                         />
+                                        ):(<Redirect
+                                        push
+                                        to={'/tasks'}
+                                    />)}
+                                        
                                     </Switch>
                                 </GlobalHotKeys>
                                 {/* eslint-disable-next-line */}
@@ -473,8 +483,11 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
 
                         <Route exact path='/auth/email-confirmation' component={EmailConfirmationPage} />
 
-                        <Redirect
+                        {/* <Redirect
                             to={location.pathname.length > 1 ? `/auth/login/?next=${location.pathname}` : '/auth/login'}
+                        /> */}
+                         <Redirect
+                            to={'/auth/login'}
                         />
                     </Switch>
                 </GlobalErrorBoundary>

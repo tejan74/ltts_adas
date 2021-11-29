@@ -62,7 +62,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         }}
                     />
                 </Col>
-                <Col>
+                {/* <Col>
                     <Text type='secondary'>Assigned to</Text>
                     <UserSelector
                         value={project.assignee}
@@ -71,7 +71,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                             dispatch(updateProjectAsync(project));
                         }}
                     />
-                </Col>
+                </Col> */}
             </Row>
             {/* <LabelsEditor
                 labels={project.labels.map((label: any): string => label.toJSON())}

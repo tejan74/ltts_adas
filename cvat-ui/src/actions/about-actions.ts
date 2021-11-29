@@ -6,13 +6,11 @@ import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 import getCore from 'cvat-core-wrapper';
 
 const core = getCore();
-
 export enum AboutActionTypes {
     GET_ABOUT = 'GET_ABOUT',
     GET_ABOUT_SUCCESS = 'GET_ABOUT_SUCCESS',
     GET_ABOUT_FAILED = 'GET_ABOUT_FAILED',
 }
-
 const aboutActions = {
     getAbout: () => createAction(AboutActionTypes.GET_ABOUT),
     getAboutSuccess: (server: any) => createAction(AboutActionTypes.GET_ABOUT_SUCCESS, { server }),

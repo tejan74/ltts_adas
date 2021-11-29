@@ -401,7 +401,6 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             db_label = models.Label.objects.create(task=db_task, project=project, **label)
             for attr in attributes:
                 models.AttributeSpec.objects.create(label=db_label, **attr)
-            actual_label = Label.objects.filter(task=task, id=label.get('id')).first()
 
         task_path = db_task.get_task_dirname()
         if os.path.isdir(task_path):

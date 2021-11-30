@@ -9,14 +9,14 @@ import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
 
-import getCore from 'cvat-core-wrapper';
+// import getCore from 'cvat-core-wrapper';
 import { Project } from 'reducers/interfaces';
 import { updateProjectAsync } from 'actions/projects-actions';
-import LabelsEditor from 'components/labels-editor/labels-editor';
+// import LabelsEditor from 'components/labels-editor/labels-editor';
 import BugTrackerEditor from 'components/task-page/bug-tracker-editor';
-import UserSelector from 'components/task-page/user-selector';
+// import UserSelector from 'components/task-page/user-selector';
 
-const core = getCore();
+// const core = getCore();
 
 interface DetailsComponentProps {
     project: Project;
@@ -51,7 +51,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                 <Col>
                     <Text type='secondary'>
                         {`Project #${project.id} created`}
-                        {project.owner ? ` by ${project.owner.username}` : null}
+                        {project.owner ? ` by ${project.owner?.username}` : null}
                         {` on ${moment(project.createdDate).format('MMMM Do YYYY')}`}
                     </Text>
                     <BugTrackerEditor

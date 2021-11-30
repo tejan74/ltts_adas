@@ -31,7 +31,7 @@ export interface CreateTaskData {
     files: Files;
     activeFileManagerTab: string;
     cloudStorageId: number | null;
-    project_type: string;
+    projectType: string;
 }
 
 interface Props {
@@ -40,14 +40,13 @@ interface Props {
     taskId: number | null;
     projectId: number | null;
     installedGit: boolean;
-    // project_type: string;
 }
 
 type State = CreateTaskData;
 
 const defaultState = {
     projectId: null,
-    project_type: '',
+    projectType: '',
     basic: {
         name: '',
     },
@@ -69,7 +68,6 @@ const defaultState = {
 };
 
 class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps, State> {
-
     private basicConfigurationComponent: RefObject<BasicConfigurationForm>;
     private advancedConfigurationComponent: RefObject<AdvancedConfigurationForm>;
     private fileManagerContainer: any;
@@ -120,7 +118,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private validateFiles = (): boolean => {
-        const { activeFileManagerTab, project_type } = this.state;
+        const { activeFileManagerTab } = this.state;
         const files = this.fileManagerContainer.getFiles();
         this.setState({
             files,
@@ -132,18 +130,18 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         }
         const totalLen = Object.keys(files).reduce((acc, key) => acc + files[key].length, 0);
 
-        return !!totalLen
+        return !!totalLen;
     };
     private validateFilesTypes = (): boolean => {
-        const { activeFileManagerTab, project_type } = this.state;
+        const { projectType } = this.state;
         const files = this.fileManagerContainer.getFiles();
         if (files) {
             if (files.local[0]?.type !== undefined) {
-                let type = files.local[0].type;
-                let type1 = type.split("/");
-                let type2 = type1[0];
-                let type3 = type2 && type2.charAt(0).toUpperCase() + type2.substring(1);
-                if (project_type !== type3) {
+                const { type } = files.local[0];
+                const type1 = type.split('/');
+                const type2 = type1[0];
+                const type3 = type2 && type2.charAt(0).toUpperCase() + type2.substring(1);
+                if (projectType !== type3) {
                     return false;
                 }
             }
@@ -154,12 +152,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return true;
     };
     private handleProjectIdChange = (value: null | number, type: string): void => {
-        const { projectId, subset, project_type } = this.state;
+        const { projectId, subset } = this.state;
         this.setState((state) => ({
             projectId: value,
             subset: value && value === projectId ? subset : '',
             labels: value ? [] : state.labels,
-            project_type: type
+            projectType: type,
         }));
     };
 
@@ -194,7 +192,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             notification.error({
                 message: 'Could not create a task',
                 description: 'A task must belong to one project and one label',
-                duration:5,
+                duration: 5,
                 className: 'cvat-notification-create-task-fail',
             });
             return;
@@ -240,7 +238,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                                 .map((text: string): JSX.Element => <div>{text}</div>) :
                             error.toString(),
                         className: 'cvat-notification-create-task-fail',
-                        duration:3,
+                        duration: 3,
                     });
                 });
         }
@@ -296,7 +294,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderLabelsBlock(): JSX.Element | null {
-        const { projectId, labels } = this.state;
+        // const { projectId, labels } = this.state;
+        const { labels } = this.state;
 
         // if (projectId) {
         //     return (

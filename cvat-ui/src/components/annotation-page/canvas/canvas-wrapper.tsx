@@ -5,9 +5,10 @@
 import React from 'react';
 import Layout from 'antd/lib/layout';
 import Slider from 'antd/lib/slider';
-import Dropdown from 'antd/lib/dropdown';
+// import Dropdown from 'antd/lib/dropdown';
 import { PlusCircleOutlined, UpOutlined } from '@ant-design/icons';
 
+import { Tooltip, Dropdown } from 'antd';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import {
     ColorBy, GridColor, ObjectType, ContextMenuType, Workspace, ShapeType,
@@ -820,10 +821,11 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
                 />
 
                 <ContextImage />
-
-                <Dropdown trigger={['click']} placement='topCenter' overlay={<ImageSetupsContent />}>
-                    <UpOutlined className='cvat-canvas-image-setups-trigger' />
-                </Dropdown>
+                <Tooltip placement='topLeft' title='Image grid and Color settings' arrowPointAtCenter>
+                    <Dropdown trigger={['click']} placement='topCenter' overlay={<ImageSetupsContent />}>
+                        <UpOutlined className='cvat-canvas-image-setups-trigger' />
+                    </Dropdown>
+                </Tooltip>
 
                 <div className='cvat-canvas-z-axis-wrapper'>
                     <Slider

@@ -130,7 +130,9 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
 
         verifyAuthorized();
 
-        const { name, version, engine, os } = platformInfo();
+        const {
+            name, version, engine, os,
+        } = platformInfo();
 
         if (showPlatformNotification()) {
             stopNotifications(false);
@@ -323,7 +325,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             switchSettingsDialog,
             user,
             keyMap,
-            location,
+            // location,
             isModelPluginActive,
         } = this.props;
 
@@ -362,51 +364,52 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                 <ShortcutsDialog />
                                 <GlobalHotKeys keyMap={subKeyMap} handlers={handlers}>
                                     <Switch>
-                                        {/* <Route exact path='/projects' component={ProjectsPageComponent} /> */}
-                                        {/* <Route exact path='/projects/create' component={CreateProjectPageComponent} /> */}
+                                        {/* <Route exact path='/projects'
+                                        component={ProjectsPageComponent} /> */}
+                                        {/* <Route
+                                        exact path='/projects/create'
+                                         component={CreateProjectPageComponent} /> */}
                                         <Route
                                             exact
                                             path='/projects/create'
                                             render={() =>
-                                                user?.isSuperuser ? (
+                                                (user?.isSuperuser ? (
                                                     <Route component={CreateProjectPageComponent} />
                                                 ) : (
                                                     <Route component={PageNotFound} />
-                                                )
-                                            }
+                                                ))}
                                         />
                                         <Route
                                             exact
                                             path='/projects'
                                             render={() =>
-                                                user?.isSuperuser ? (
+                                                (user?.isSuperuser ? (
                                                     <Route component={ProjectsPageComponent} />
                                                 ) : (
                                                     <Route component={PageNotFound} />
-                                                )
-                                            }
+                                                ))}
                                         />
                                         <Route
                                             exact
                                             path='/tasks/create'
                                             render={() =>
-                                                user?.isSuperuser ? (
+                                                (user?.isSuperuser ? (
                                                     <Route component={CreateTaskPageContainer} />
                                                 ) : (
                                                     <Route component={PageNotFound} />
-                                                )
-                                            }
+                                                ))}
                                         />
-                                         <Route
+
+                                        <Route
                                             exact
                                             path='/projects/:id'
                                             render={() =>
-                                                user?.isSuperuser ? (
+                                                (user?.isSuperuser ? (
                                                     <Route component={ProjectPageComponent} />
                                                 ) : (
                                                     <Route component={PageNotFound} />
                                                 )
-                                            }
+                                                )}
                                         />
                                         {/* <Route exact path='/projects/:id' component={ProjectPageComponent} /> */}
                                         <Route exact path='/tasks' component={TasksPageContainer} />
@@ -418,12 +421,11 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                             exact
                                             path='/userlist'
                                             render={() =>
-                                                user?.isSuperuser ? (
+                                                (user?.isSuperuser ? (
                                                     <Route component={UserListComponent} />
                                                 ) : (
                                                     <Route component={PageNotFound} />
-                                                )
-                                            }
+                                                ))}
                                         />
                                         <Route
                                             exact
@@ -442,16 +444,18 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                             push
                                             to={new URLSearchParams(location.search).get('next') || '/tasks'}
                                         /> */}
-                                         { user?.isSuperuser ? (
-                                             <Redirect
-                                             push
-                                             to={'/projects'}
-                                         />
-                                        ):(<Redirect
-                                        push
-                                        to={'/tasks'}
-                                    />)}
-                                        
+                                        { user?.isSuperuser ? (
+                                            <Redirect
+                                                push
+                                                to='/projects'
+                                            />
+                                        ) : (
+                                            <Redirect
+                                                push
+                                                to='/tasks'
+                                            />
+                                        )}
+
                                     </Switch>
                                 </GlobalHotKeys>
                                 {/* eslint-disable-next-line */}
@@ -486,8 +490,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                         {/* <Redirect
                             to={location.pathname.length > 1 ? `/auth/login/?next=${location.pathname}` : '/auth/login'}
                         /> */}
-                         <Redirect
-                            to={'/auth/login'}
+                        <Redirect
+                            to='/auth/login'
                         />
                     </Switch>
                 </GlobalErrorBoundary>

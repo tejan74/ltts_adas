@@ -6,9 +6,9 @@ import React from 'react';
 import Layout from 'antd/lib/layout';
 import Slider from 'antd/lib/slider';
 // import Dropdown from 'antd/lib/dropdown';
+import { Tooltip, Dropdown } from 'antd';
 import { PlusCircleOutlined, UpOutlined } from '@ant-design/icons';
 
-import { Tooltip, Dropdown } from 'antd';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import {
     ColorBy, GridColor, ObjectType, ContextMenuType, Workspace, ShapeType,
@@ -28,7 +28,7 @@ const MAX_DISTANCE_TO_OPEN_SHAPE = 50;
 
 interface Props {
     sidebarCollapsed: boolean;
-    canvasInstance: Canvas | Canvas3d;
+    canvasInstance: Canvas | Canvas3d | null;
     jobInstance: any;
     activatedStateID: number | null;
     activatedAttributeID: number | null;
@@ -58,8 +58,11 @@ interface Props {
     contrastLevel: number;
     saturationLevel: number;
     resetZoom: boolean;
+    smoothImage: boolean;
     aamZoomMargin: number;
     showObjectsTextAlways: boolean;
+    textFontSize: number;
+    textPosition: 'auto' | 'center';
     showAllInterpolationTracks: boolean;
     workspace: Workspace;
     automaticBordering: boolean;
@@ -106,6 +109,9 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             workspace,
             showProjections,
             selectedOpacity,
+            smoothImage,
+            textFontSize,
+            textPosition,
         } = this.props;
         const { canvasInstance } = this.props as { canvasInstance: Canvas };
 
@@ -115,6 +121,7 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
         wrapper.appendChild(canvasInstance.html());
 
         canvasInstance.configure({
+            smoothImage,
             autoborders: automaticBordering,
             undefinedAttrValue: consts.UNDEFINED_ATTRIBUTE_VALUE,
             displayAllText: showObjectsTextAlways,
@@ -122,6 +129,8 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             intelligentPolygonCrop,
             showProjections,
             creationOpacity: selectedOpacity,
+            textFontSize,
+            textPosition,
         });
 
         this.initialSetup();
@@ -145,6 +154,7 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             activatedStateID,
             curZLayer,
             resetZoom,
+            smoothImage,
             grid,
             gridSize,
             gridOpacity,
@@ -155,6 +165,8 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             workspace,
             frameFetching,
             showObjectsTextAlways,
+            textFontSize,
+            textPosition,
             showAllInterpolationTracks,
             automaticBordering,
             intelligentPolygonCrop,
@@ -168,7 +180,10 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             prevProps.automaticBordering !== automaticBordering ||
             prevProps.showProjections !== showProjections ||
             prevProps.intelligentPolygonCrop !== intelligentPolygonCrop ||
-            prevProps.selectedOpacity !== selectedOpacity
+            prevProps.selectedOpacity !== selectedOpacity ||
+            prevProps.smoothImage !== smoothImage ||
+            prevProps.textFontSize !== textFontSize ||
+            prevProps.textPosition !== textPosition
         ) {
             canvasInstance.configure({
                 undefinedAttrValue: consts.UNDEFINED_ATTRIBUTE_VALUE,
@@ -177,6 +192,9 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
                 showProjections,
                 intelligentPolygonCrop,
                 creationOpacity: selectedOpacity,
+                smoothImage,
+                textFontSize,
+                textPosition,
             });
         }
 
@@ -419,7 +437,9 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
 
     private fitCanvas = (): void => {
         const { canvasInstance } = this.props;
-        canvasInstance.fitCanvas();
+        if (canvasInstance) {
+            canvasInstance.fitCanvas();
+        }
     };
 
     private onCanvasMouseDown = (e: MouseEvent): void => {
@@ -526,8 +546,9 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
 
         onEditShape(false);
 
-        const { state, points } = event.detail;
+        const { state, points, rotation } = event.detail;
         state.points = points;
+        state.rotation = rotation;
         onUpdateAnnotations([state]);
     };
 
@@ -677,7 +698,7 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
             curZLayer, annotations, frameData, canvasInstance,
         } = this.props;
 
-        if (frameData !== null) {
+        if (frameData !== null && canvasInstance) {
             canvasInstance.setup(
                 frameData,
                 annotations.filter((e) => e.objectType !== ObjectType.TAG),
@@ -826,7 +847,6 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
                         <UpOutlined className='cvat-canvas-image-setups-trigger' />
                     </Dropdown>
                 </Tooltip>
-
                 <div className='cvat-canvas-z-axis-wrapper'>
                     <Slider
                         disabled={minZLayer === maxZLayer}

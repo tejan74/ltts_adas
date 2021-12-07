@@ -7,7 +7,6 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Text from 'antd/lib/typography/Text';
-import Empty from 'antd/lib/empty';
 import Card from 'antd/lib/card';
 import Meta from 'antd/lib/card/Meta';
 import Dropdown from 'antd/lib/dropdown';
@@ -27,7 +26,6 @@ const useCardHeight = useCardHeightHOC({
     siblingClassNames: ['cvat-projects-pagination', 'cvat-projects-top-bar'],
     paddings: 40,
     numberOfRows: 3,
-   
 });
 
 export default function ProjectItemComponent(props: Props): JSX.Element {
@@ -35,14 +33,13 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
         projectInstance: { instance, preview },
     } = props;
 
-
     const history = useHistory();
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
     const updated = moment(instance.updatedDate).fromNow();
     const deletes = useSelector((state: CombinedState) => state.projects.activities.deletes);
     const deleted = instance.id in deletes ? deletes[instance.id] : false;
-    const task_Count = instance.task_ids ? instance.task_ids.length :null
+    const taskCount = instance.task_ids ? instance.task_ids.length : null;
     const onOpenProject = (): void => {
         history.push(`/projects/${instance.id}`);
     };
@@ -55,24 +52,26 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
 
     return (
         <Card
-        hoverable
+            hoverable
             cover={
                 preview ? (
-                    <><img
-                        className='cvat-projects-project-item-card-preview'
-                        src={preview}
-                        alt='Preview'
-                        onClick={onOpenProject}
-                        aria-hidden />
-                         <br/><span style={{padding:'3px 12px'}}>task count: {task_Count}</span>
-                        </>
-                        
-
+                    <>
+                        <img
+                            className='cvat-projects-project-item-card-preview'
+                            src={preview}
+                            alt='Preview'
+                            onClick={onOpenProject}
+                            aria-hidden
+                        />
+                        <br />
+                        <span style={{ padding: '3px 12px' }}>
+                            task count:
+                            {taskCount}
+                        </span>
+                    </>
                 ) : (
                     <div className='cvat-projects-project-item-card-preview' onClick={onOpenProject} aria-hidden>
-                       {/* <span>
-                         <Empty  description='No tasks' /></span> */}
-                         <span style={{padding:'3px 12px'}}>No Task </span>
+                        <span style={{ padding: '3px 12px' }}>No Task </span>
                     </div>
                 )
             }
@@ -85,12 +84,9 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                     <span onClick={onOpenProject} className='cvat-projects-project-item-title' aria-hidden>
                         {instance.name}
                     </span>
-                    
                 )}
-               
                 description={(
-                    <div className='cvat-porjects-project-item-description' onClick={onOpenProject}>
-                         
+                    <div className='cvat-porjects-project-item-description' onClick={onOpenProject} aria-hidden>
                         <div>
                             {ownerName && (
                                 <>

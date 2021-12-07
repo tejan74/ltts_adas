@@ -636,6 +636,7 @@ export interface PlayerSettingsState {
     frameSpeed: FrameSpeed;
     resetZoom: boolean;
     rotateAll: boolean;
+    smoothImage: boolean;
     grid: boolean;
     gridSize: number;
     gridColor: GridColor;
@@ -655,6 +656,8 @@ export interface WorkspaceSettingsState {
     intelligentPolygonCrop: boolean;
     defaultApproxPolyAccuracy: number;
     toolsBlockerState: ToolsBlockerState;
+    textFontSize: number;
+    textPosition: 'auto' | 'center';
 }
 
 export interface ShapesSettingsState {
@@ -694,6 +697,7 @@ export interface ReviewState {
     activeReview: any | null;
     newIssuePosition: number[] | null;
     issuesHidden: boolean;
+    issuesResolvedHidden: boolean;
     fetching: {
         reviewId: number | null;
         issueId: number | null;

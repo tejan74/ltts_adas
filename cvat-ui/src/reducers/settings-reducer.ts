@@ -25,13 +25,15 @@ const defaultState: SettingsState = {
     },
     workspace: {
         autoSave: false,
-        autoSaveInterval: 1 * 60 * 1000,
+        autoSaveInterval: 15 * 60 * 1000,
         aamZoomMargin: 100,
         automaticBordering: false,
         showObjectsTextAlways: false,
         showAllInterpolationTracks: false,
         intelligentPolygonCrop: true,
         defaultApproxPolyAccuracy: 9,
+        textFontSize: 14,
+        textPosition: 'auto',
         toolsBlockerState: {
             algorithmsLocked: false,
             buttonVisible: false,
@@ -43,6 +45,7 @@ const defaultState: SettingsState = {
         frameSpeed: FrameSpeed.Usual,
         resetZoom: false,
         rotateAll: false,
+        smoothImage: true,
         grid: false,
         gridSize: 100,
         gridColor: GridColor.White,
@@ -180,6 +183,33 @@ export default (state = defaultState, action: AnyAction): SettingsState => {
                 player: {
                     ...state.player,
                     resetZoom: action.payload.resetZoom,
+                },
+            };
+        }
+        case SettingsActionTypes.SWITCH_SMOOTH_IMAGE: {
+            return {
+                ...state,
+                player: {
+                    ...state.player,
+                    smoothImage: action.payload.smoothImage,
+                },
+            };
+        }
+        case SettingsActionTypes.SWITCH_TEXT_FONT_SIZE: {
+            return {
+                ...state,
+                workspace: {
+                    ...state.workspace,
+                    textFontSize: action.payload.fontSize,
+                },
+            };
+        }
+        case SettingsActionTypes.SWITCH_TEXT_POSITION: {
+            return {
+                ...state,
+                workspace: {
+                    ...state.workspace,
+                    textPosition: action.payload.position,
                 },
             };
         }

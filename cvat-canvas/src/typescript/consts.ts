@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2020 Intel Corporation
+// Copyright (C) 2019-2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -17,6 +17,9 @@ const UNDEFINED_ATTRIBUTE_VALUE = '__undefined__';
 const ARROW_PATH = 'M13.162 6.284L.682.524a.483.483 0 0 0-.574.134.477.477 0 '
     + '0 0-.012.59L4.2 6.72.096 12.192a.479.479 0 0 0 .585.724l12.48-5.76a.48.48 0 0 0 0-.872z';
 const BASE_PATTERN_SIZE = 5;
+const SNAP_TO_ANGLE_RESIZE_DEFAULT = 0.1;
+const SNAP_TO_ANGLE_RESIZE_SHIFT = 15;
+const DEFAULT_SHAPE_TEXT_SIZE = 12;
 
 export default {
     BASE_STROKE_WIDTH,
@@ -33,4 +36,7 @@ export default {
     UNDEFINED_ATTRIBUTE_VALUE,
     ARROW_PATH,
     BASE_PATTERN_SIZE,
+    SNAP_TO_ANGLE_RESIZE_DEFAULT,
+    SNAP_TO_ANGLE_RESIZE_SHIFT,
+    DEFAULT_SHAPE_TEXT_SIZE,
 };

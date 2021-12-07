@@ -10,6 +10,7 @@ import InputNumber from 'antd/lib/input-number';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 
+import { Select } from 'antd';
 import {
     MAX_ACCURACY,
     marks,
@@ -25,6 +26,8 @@ interface Props {
     automaticBordering: boolean;
     intelligentPolygonCrop: boolean;
     defaultApproxPolyAccuracy: number;
+    textFontSize: number;
+    textPosition: 'center' | 'auto';
     onSwitchAutoSave(enabled: boolean): void;
     onChangeAutoSaveInterval(interval: number): void;
     onChangeAAMZoomMargin(margin: number): void;
@@ -33,6 +36,8 @@ interface Props {
     onSwitchShowingObjectsTextAlways(enabled: boolean): void;
     onSwitchAutomaticBordering(enabled: boolean): void;
     onSwitchIntelligentPolygonCrop(enabled: boolean): void;
+    onChangeTextFontSize(fontSize: number): void;
+    onChangeTextPosition(position: 'auto' | 'center'): void;
 }
 
 function WorkspaceSettingsComponent(props: Props): JSX.Element {
@@ -45,6 +50,8 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
         automaticBordering,
         intelligentPolygonCrop,
         defaultApproxPolyAccuracy,
+        textFontSize,
+        textPosition,
         onSwitchAutoSave,
         onChangeAutoSaveInterval,
         onChangeAAMZoomMargin,
@@ -53,7 +60,10 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
         onSwitchAutomaticBordering,
         onSwitchIntelligentPolygonCrop,
         onChangeDefaultApproxPolyAccuracy,
+        onChangeTextFontSize,
+        onChangeTextPosition,
     } = props;
+
     const minAutoSaveInterval = 0.5;
     const maxAutoSaveInterval = 5;
     const minAAMMargin = 0;
@@ -64,7 +74,6 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
             <Row>
                 <Col>
                     <Checkbox
-                        //  disabled={autoSave}
                         className='cvat-text-color cvat-workspace-settings-auto-save'
                         checked={autoSave}
                         onChange={(event: CheckboxChangeEvent): void => {
@@ -83,7 +92,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         max={maxAutoSaveInterval}
                         step={1}
                         // value={autoSaveInterval / (60 * 1000)}
-                        value={Math.round(autoSaveInterval / (60 * 1000))!== 0 ? Math.round(autoSaveInterval / (60 * 1000)):1}
+                        value={
+                            Math.round(
+                                autoSaveInterval / (60 * 1000),
+                            ) !== 0 ? Math.round(autoSaveInterval / (60 * 1000)) : 1
+                        }
                         onChange={(value: number | undefined | string): void => {
                             if (typeof value !== 'undefined') {
                                 onChangeAutoSaveInterval(
@@ -127,6 +140,23 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                     <Text type='secondary'>
                         Show text for an object on the canvas not only when the object is activated
                     </Text>
+                </Col>
+            </Row>
+            <Row className='cvat-workspace-settings-text-settings'>
+                <Col span={12}>
+                    <Text>Position of a text</Text>
+                </Col>
+                <Col span={12}>
+                    <Text>Font size of a text</Text>
+                </Col>
+                <Col span={12}>
+                    <Select value={textPosition} onChange={onChangeTextPosition}>
+                        <Select.Option value='auto'>Auto</Select.Option>
+                        <Select.Option value='center'>Center</Select.Option>
+                    </Select>
+                </Col>
+                <Col span={12}>
+                    <InputNumber onChange={onChangeTextFontSize} min={8} max={20} value={textFontSize} />
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-autoborders'>

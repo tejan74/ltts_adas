@@ -37,9 +37,8 @@ import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/sett
 // import { logoutAsync, authActions } from 'actions/auth-actions';
 import { authActions } from 'actions/auth-actions';
 import { CombinedState } from 'reducers/interfaces';
+import { logoutAsync } from 'actions/index';
 import SettingsModal from './settings-modal/settings-modal';
-import { logoutAsync } from 'actions/index'
-
 
 const core = getCore();
 
@@ -159,9 +158,9 @@ function HeaderContainer(props: Props): JSX.Element {
 
     const history = useHistory();
     // code added by Raju
-    function onLogoutPopConfirm(): void {
+    const onLogoutPopConfirm = (): void => {
         Modal.confirm({
-            title: `Do you want to logout?`,
+            title: 'Do you want to logout?',
             content: 'All related data (images, annotations) will be lost. Continue?',
             className: 'cvat-modal-confirm-delete-task',
             onOk: () => {
@@ -174,7 +173,7 @@ function HeaderContainer(props: Props): JSX.Element {
             okText: 'Yes',
             cancelText: 'No',
         });
-    }
+    };
     // function showAboutModal(): void {
     //     Modal.info({
     //         title: `${tool.name}`,
@@ -297,42 +296,46 @@ function HeaderContainer(props: Props): JSX.Element {
                 {/* New code added above by Raju N */}
                 {/* <Icon className='cvat-logo-icon' component={CVATLogo} /> */}
                 {user.isSuperuser && (
-                <Button
-                    className='cvat-header-button'
-                    type='link'
-                    value='projects'
-                    href='/projects'
-                    onClick={(event: React.MouseEvent): void => {
-                        event.preventDefault();
-                        history.push('/projects');
-                    }}
-                >
-                    Projects
-                </Button>)}
-                {user.isSuperuser?(
-                <Button
-                    className='cvat-header-button'
-                    type='link'
-                    value='tasks'
-                    href='/tasks?page=1'
-                    onClick={(event: React.MouseEvent): void => {
-                        event.preventDefault();
-                        history.push('/tasks?page=1');
-                    }}
-                >
-                    Tasks
-                </Button>):<Button
-                    className='cvat-header-button'
-                    type='link'
-                    value='tasks'
-                    href='/tasks?page=1'
-                    onClick={(event: React.MouseEvent): void => {
-                        event.preventDefault();
-                        history.push('/tasks?page=1');
-                    }}
-                >
-                    My Tasks
-                </Button>}
+                    <Button
+                        className='cvat-header-button'
+                        type='link'
+                        value='projects'
+                        href='/projects'
+                        onClick={(event: React.MouseEvent): void => {
+                            event.preventDefault();
+                            history.push('/projects');
+                        }}
+                    >
+                        Projects
+                    </Button>
+                )}
+                {user.isSuperuser ? (
+                    <Button
+                        className='cvat-header-button'
+                        type='link'
+                        value='tasks'
+                        href='/tasks?page=1'
+                        onClick={(event: React.MouseEvent): void => {
+                            event.preventDefault();
+                            history.push('/tasks?page=1');
+                        }}
+                    >
+                        Tasks
+                    </Button>
+                ) : (
+                    <Button
+                        className='cvat-header-button'
+                        type='link'
+                        value='tasks'
+                        href='/tasks?page=1'
+                        onClick={(event: React.MouseEvent): void => {
+                            event.preventDefault();
+                            history.push('/tasks?page=1');
+                        }}
+                    >
+                        My Tasks
+                    </Button>
+                )}
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -346,18 +349,18 @@ function HeaderContainer(props: Props): JSX.Element {
                     Cloud Storages
                 </Button>
                 {user.isSuperuser && (
-                <Button
-                    className='cvat-header-button'
-                    type='link'
-                    value='userlist'
-                    href='/userlist'
-                    onClick={(event: React.MouseEvent): void => {
-                        event.preventDefault();
-                        history.push('/userlist');
-                    }}
-                >
-                    User List
-                </Button>
+                    <Button
+                        className='cvat-header-button'
+                        type='link'
+                        value='userlist'
+                        href='/userlist'
+                        onClick={(event: React.MouseEvent): void => {
+                            event.preventDefault();
+                            history.push('/userlist');
+                        }}
+                    >
+                        User List
+                    </Button>
                 )}
                 {isModelsPluginActive && (
                     <Button

@@ -217,7 +217,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                     className='cvat-job-assignee-selector'
                     value={jobInstance.assignee}
                     onSelect={(value: User | null): void => {
-                        // eslint-disable-next-line
+                        // eslint-disable-next-line no-param-reassign
                         jobInstance.assignee = value;
                         onJobUpdate(jobInstance);
                     }}

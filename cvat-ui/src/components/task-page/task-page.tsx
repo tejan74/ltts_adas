@@ -29,7 +29,6 @@ interface TaskPageComponentProps {
 type Props = TaskPageComponentProps & RouteComponentProps<{ id: string }>;
 
 class TaskPageComponent extends React.PureComponent<Props> {
-
     public componentDidMount(): void {
         const { task, fetching, getTask } = this.props;
         if (task === null && !fetching) {

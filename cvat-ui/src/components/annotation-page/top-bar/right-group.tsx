@@ -14,12 +14,14 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
+import { Modal } from 'antd';
 import {
     FilterIcon, FullscreenIcon, InfoIcon, BrainIcon,
 } from 'icons';
 import {
     CombinedState, DimensionType, Workspace, PredictorState,
 } from 'reducers/interfaces';
+import image from '../../../assets/keyboard-icon.png';
 
 interface Props {
     workspace: Workspace;
@@ -123,6 +125,107 @@ function RightGroup(props: Props): JSX.Element {
 
     const filters = useSelector((state: CombinedState) => state.annotation.annotations.filters);
 
+    // code added by giti
+    function showKeyboardModal(): void {
+        Modal.info({
+            title: 'Keyboard Shortcuts',
+            content: (
+                <div style={{ overflowY: 'scroll', height: 400 }}>
+                    <p>Here are some shortcuts which will help you use the tool faster.</p>
+                    <p>
+                        <Text strong>Cursor:</Text>
+                        <Text type='secondary'>[Esc]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Save the current changes:</Text>
+                        <Text type='secondary'>[Ctrl+S]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Undo created objects:</Text>
+                        <Text type='secondary'>[Ctrl+Z]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Redo created objects:</Text>
+                        <Text type='secondary'>[Ctrl+Shift+Z , [Ctrl+Y]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Roatate the image anticlockwise:</Text>
+                        <Text type='secondary'>[Ctrl+Shift+R]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Roatate the image clockwise:</Text>
+                        <Text type='secondary'>[Ctrl+R]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Fit the image:</Text>
+                        <Text type='secondary'>[Double Click]</Text>
+                    </p>
+                    <p>
+                        <Text strong>To draw shape/track again (all marking type):</Text>
+                        <Text type='secondary'>[Shift+N , N]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Set up Tag again:</Text>
+                        <Text type='secondary'>[Shift+N , N]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Play the frames:</Text>
+                        <Text type='secondary'>[Space]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Go back one frame:</Text>
+                        <Text type='secondary'>[D]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Go back with a step:</Text>
+                        <Text type='secondary'>[C]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Go next frame:</Text>
+                        <Text type='secondary'>[F]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Go next frame with a step:</Text>
+                        <Text type='secondary'>[V]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Switch lock property for all the marking/annotations:</Text>
+                        <Text type='secondary'>[T+L]</Text>
+                    </p>
+
+                    <p>
+                        <Text strong>Switch hidden property for all the marking/annotations:</Text>
+                        <Text type='secondary'>[T+H]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Switch lock property for individual annotated object:</Text>
+                        <Text type='secondary'>[ L ]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Switch occluded property for individual annotated object:</Text>
+                        <Text type='secondary'>[ Q , / ]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Switch hidden property for individual annotated object:</Text>
+                        <Text type='secondary'>[ H ]</Text>
+                    </p>
+                    <p>
+                        <Text strong>Propagate annotation:</Text>
+                        <Text type='secondary'>[ Ctrl + B ]</Text>
+                    </p>
+                </div>
+            ),
+            width: 1000,
+
+            okButtonProps: {
+                style: {
+                    width: '100px',
+                },
+            },
+        });
+    }
+    // code ended by giti
+
     return (
         <Col className='cvat-annotation-header-right-group'>
             {isTrainingActive && (
@@ -139,6 +242,14 @@ function RightGroup(props: Props): JSX.Element {
                     {annotationAmount ? `mAP ${formattedScore}` : 'not trained'}
                 </Button>
             )}
+            <Button
+                className='cvat-annotation-header-button'
+                type='link'
+                onClick={() => showKeyboardModal()}
+            >
+                <img style={{ width: '30px', marginBottom: '5px' }} alt='keyboard' src={image} />
+                Shortcut
+            </Button>
             <Button
                 type='link'
                 className='cvat-annotation-header-button'

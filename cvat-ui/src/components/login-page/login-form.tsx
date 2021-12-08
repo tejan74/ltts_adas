@@ -23,13 +23,10 @@ import Input from 'antd/lib/input';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // new code added
 import { GoogleLogin } from 'react-google-login';
-import { googleOAuth2 } from '../../actions/google-actions';
-import axios from 'axios';
 // new end here
 
 export interface LoginData {
-    username: string;
-
+    username?: string;
     password: string;
 }
 
@@ -40,8 +37,7 @@ interface Props {
 }
 
 function LoginFormComponent(props: Props): JSX.Element {
-
-    const { fetching, onSubmit,successGoogleLogin } = props;
+    const { fetching, onSubmit, successGoogleLogin } = props;
 
     const formItemLayout = {
         labelCol: { span: 6 },
@@ -56,18 +52,6 @@ function LoginFormComponent(props: Props): JSX.Element {
             span: 16,
         },
     };
-    // const successGoogleLogin = (response) => {
-    //     console.log(response);
-
-    //     const payload = {
-    //         access_token: response.accessToken,
-    //     };
-
-    //     axios.post('http://localhost:7000/google/', payload).then((response) => {
-    //         console.log(response);
-    //     });
-    // };
-
     return (
         <>
             <Form onFinish={onSubmit} className='login-form' layout='horizontal'>

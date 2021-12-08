@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -23,7 +23,7 @@ export default function (state = defaultState, action: AuthActions | BoundariesA
             return {
                 ...state,
                 initialized: true,
-                user: action.payload.user,
+                user: action?.payload?.user,
             };
         case AuthActionTypes.AUTHORIZED_FAILED:
             return {
@@ -39,7 +39,7 @@ export default function (state = defaultState, action: AuthActions | BoundariesA
             return {
                 ...state,
                 fetching: false,
-                user: action.payload.user,
+                user: action?.payload?.user,
             };
         case AuthActionTypes.LOGIN_FAILED:
             return {

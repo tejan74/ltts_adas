@@ -8,7 +8,7 @@ import {
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { isDev } from 'utils/enviroment';
-import rootSaga from './sagas/index';
+import { rootSaga } from './sagas/index';
 // new code added by Raju
 const logger = createLogger({
     predicate: isDev,

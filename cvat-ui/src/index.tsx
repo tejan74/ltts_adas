@@ -8,7 +8,8 @@ import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { getAboutAsync } from 'actions/about-actions';
-import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-actions';
+// import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-actions';
+import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-saga-actions';
 import { getFormatsAsync } from 'actions/formats-actions';
 import { getModelsAsync } from 'actions/models-actions';
 import { getPluginsAsync } from 'actions/plugins-actions';

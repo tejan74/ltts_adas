@@ -10,7 +10,8 @@ import Text from 'antd/lib/typography/Text';
 import { Row, Col } from 'antd/lib/grid';
 import { Layout } from 'antd';
 
-import { requestPasswordResetAsync } from 'actions/auth-actions';
+// import { requestPasswordResetAsync } from 'actions/auth-actions';
+import { requestPasswordResetAsync } from 'actions/auth-saga-actions';
 import { CombinedState } from 'reducers/interfaces';
 import FooterDrawer from 'components/login-page/intel-footer-drawer';
 import ResetPasswordForm, { ResetPasswordData } from './reset-password-form';

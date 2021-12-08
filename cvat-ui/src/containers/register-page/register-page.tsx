@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { registerAsync } from 'actions/auth-actions';
+// import { registerAsync } from 'actions/auth-actions';
+import { registerAsync } from 'actions/auth-saga-actions';
 import RegisterPageComponent from 'components/register-page/register-page';
 import { UserConfirmation } from 'components/register-page/register-form';
 import { CombinedState, UserAgreement } from 'reducers/interfaces';

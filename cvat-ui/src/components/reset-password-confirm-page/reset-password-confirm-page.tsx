@@ -9,7 +9,8 @@ import { Row, Col } from 'antd/lib/grid';
 import { Layout } from 'antd';
 
 import { CombinedState } from 'reducers/interfaces';
-import { resetPasswordAsync } from 'actions/auth-actions';
+// import { resetPasswordAsync } from 'actions/auth-actions';
+import { resetPasswordAsync } from 'actions/auth-saga-actions';
 
 import FooterDrawer from 'components/login-page/intel-footer-drawer';
 import ResetPasswordConfirmForm, { ResetPasswordConfirmData } from './reset-password-confirm-form';

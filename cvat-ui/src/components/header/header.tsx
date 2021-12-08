@@ -35,10 +35,12 @@ import { AccountIcon } from 'icons';
 import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 // import { logoutAsync, authActions } from 'actions/auth-actions';
-import { authActions } from 'actions/auth-actions';
+// import { authActions } from 'actions/auth-actions';
+import { authSagaActions } from 'sagas/auth-saga';
 import { CombinedState } from 'reducers/interfaces';
-import { logoutAsync } from 'actions/index';
 import SettingsModal from './settings-modal/settings-modal';
+import { logoutAsync } from 'actions/auth-saga-actions'
+
 
 const core = getCore();
 
@@ -130,7 +132,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
     return {
         onLogout: (): void => dispatch(logoutAsync()),
         switchSettingsDialog: (show: boolean): void => dispatch(switchSettingsDialogAction(show)),
-        switchChangePasswordDialog: (show: boolean): void => dispatch(authActions.switchChangePasswordDialog(show)),
+        switchChangePasswordDialog: (show: boolean): void => dispatch(authSagaActions.switchChangePasswordDialog(show)),
     };
 }
 

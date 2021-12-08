@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import Title from 'antd/lib/typography/Title';
 
-import { changePasswordAsync } from 'actions/auth-actions';
+// import { changePasswordAsync } from 'actions/auth-actions';
+import { changePasswordAsync } from 'actions/auth-saga-actions';
 import { CombinedState } from 'reducers/interfaces';
 import ChangePasswordForm, { ChangePasswordData } from './change-password-form';
 

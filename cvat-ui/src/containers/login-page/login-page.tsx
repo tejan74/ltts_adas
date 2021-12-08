@@ -7,8 +7,7 @@ import LoginPageComponent from 'components/login-page/login-page';
 import { CombinedState } from 'reducers/interfaces';
 // import { loginAsync } from 'actions/auth-actions';
 import { googleOAuth2 } from 'actions/google-actions';
-import { loginwithsaga } from '../../actions/index';
-
+import { loginAsync} from '../../actions/auth-saga-actions'
 interface StateToProps {
     fetching: boolean;
     renderResetPassword: boolean;
@@ -16,8 +15,8 @@ interface StateToProps {
 }
 
 interface DispatchToProps {
-    onLogin: typeof loginwithsaga;
-    onGooglelogin: typeof googleOAuth2;
+    onLogin: typeof loginAsync;
+    onGooglelogin: typeof googleOAuth2
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -29,8 +28,8 @@ function mapStateToProps(state: CombinedState): StateToProps {
 }
 
 const mapDispatchToProps: DispatchToProps = {
-    onLogin: loginwithsaga,
-    onGooglelogin: googleOAuth2,
+    onLogin: loginAsync,
+    onGooglelogin: googleOAuth2
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPageComponent);

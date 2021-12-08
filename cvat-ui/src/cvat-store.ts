@@ -8,7 +8,7 @@ import {
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { isDev } from 'utils/enviroment';
-import { rootSaga } from './sagas/index';
+import rootSaga from './sagas/index';
 // new code added by Raju
 const logger = createLogger({
     predicate: isDev,
@@ -37,7 +37,7 @@ export default function createCVATStore(createRootReducer: () => Reducer): void 
 
 export function getCVATStore(): Store {
     if (store) {
-        sagaMiddleware.run(rootSaga)
+        sagaMiddleware.run(rootSaga);
         return store;
     }
 

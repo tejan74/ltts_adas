@@ -1,11 +1,14 @@
-
-
-import { all, put, takeLatest, call, delay } from 'redux-saga/effects';
+// Copyright (C) 2021 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+import {
+    all, put, takeLatest, delay,
+} from 'redux-saga/effects';
 import { AuthActionTypes } from 'actions/index';
 import getCore from 'cvat-core-wrapper';
+import { ActionUnion, createAction } from 'utils/redux';
 
 const cvat = getCore();
-import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 
 export const authActions = {
     authorizeSuccess: (user: any) => createAction(AuthActionTypes.AUTHORIZED_SUCCESS, { user }),
@@ -33,25 +36,18 @@ function* login(action: any): any {
 function* loginWatcher() {
     yield takeLatest(AuthActionTypes.LOGIN, login);
 }
-function* logout():any{
-     try {
+function* logout():any {
+    try {
+        yield cvat.server.logout();
 
-         yield cvat.server.logout();
-
-         yield put(authActions.logoutSuccess());
-
- } catch (error) {
-
-    yield put(authActions.logoutFailed(error));
-
- }
-
- }
- function* logoutWatcher() {
-
- yield takeLatest(AuthActionTypes.LOGOUT, logout)
-
- }
+        yield put(authActions.logoutSuccess());
+    } catch (error) {
+        yield put(authActions.logoutFailed(error));
+    }
+}
+function* logoutWatcher() {
+    yield takeLatest(AuthActionTypes.LOGOUT, logout);
+}
 export default function* rootSaga() {
     yield all([loginWatcher(), logoutWatcher()]);
 }

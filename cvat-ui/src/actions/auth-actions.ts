@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -99,15 +99,16 @@ export const registerAsync = (
 };
 
 export const loginAsync = (username: string, password: string): ThunkAction => async (dispatch) => {
-    dispatch(authActions.login());
+    if (username !== undefined) {
+        dispatch(authActions.login());
+        try {
+            await cvat.server.login(username, password);
+            const users = await cvat.users.get({ self: true });
 
-    try {
-        await cvat.server.login(username, password);
-        const users = await cvat.users.get({ self: true });
-
-        dispatch(authActions.loginSuccess(users[0]));
-    } catch (error) {
-        dispatch(authActions.loginFailed(error));
+            dispatch(authActions.loginSuccess(users[0]));
+        } catch (error) {
+            dispatch(authActions.loginFailed(error));
+        }
     }
 };
 

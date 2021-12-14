@@ -24,6 +24,7 @@ interface TaskPageComponentProps {
     deleteActivity: boolean | null;
     installedGit: boolean;
     getTask: () => void;
+    userShowjob: any;
 }
 
 type Props = TaskPageComponentProps & RouteComponentProps<{ id: string }>;
@@ -51,7 +52,7 @@ class TaskPageComponent extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
-        const { task, updating } = this.props;
+        const { task, updating, userShowjob } = this.props;
         if (task === null) {
             return <Spin size='large' className='cvat-spinner' tip='Loading...' />;
         }
@@ -78,7 +79,7 @@ class TaskPageComponent extends React.PureComponent<Props> {
                     <Col md={22} lg={18} xl={16} xxl={14}>
                         <TopBarComponent taskInstance={(task as Task).instance} />
                         <DetailsContainer task={task as Task} />
-                        <JobListContainer task={task as Task} />
+                        <JobListContainer task={task as Task} user={userShowjob} />
                     </Col>
                 </Row>
                 <ModelRunnerModal />

@@ -19,6 +19,7 @@ interface StateToProps {
     updating: boolean;
     deleteActivity: boolean | null;
     installedGit: boolean;
+    userShowjob: any;
 }
 
 interface DispatchToProps {
@@ -28,9 +29,10 @@ interface DispatchToProps {
 function mapStateToProps(state: CombinedState, own: Props): StateToProps {
     const { list } = state.plugins;
     const { tasks } = state;
+
     const { gettingQuery, fetching, updating } = tasks;
     const { deletes } = tasks.activities;
-
+    const userShowjob = state.auth.user;
     const id = +own.match.params.id;
 
     const filteredTasks = state.tasks.current.filter((task) => task.instance.id === id);
@@ -48,6 +50,7 @@ function mapStateToProps(state: CombinedState, own: Props): StateToProps {
         fetching,
         updating,
         installedGit: list.GIT_INTEGRATION,
+        userShowjob,
     };
 }
 

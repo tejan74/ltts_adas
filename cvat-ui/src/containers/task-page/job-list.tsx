@@ -11,6 +11,8 @@ import { Task } from 'reducers/interfaces';
 
 interface OwnProps {
     task: Task;
+    // added by giti
+    user: any ;
 }
 
 interface DispatchToProps {
@@ -24,9 +26,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 }
 
 function TaskPageContainer(props: DispatchToProps & OwnProps): JSX.Element {
-    const { task, onJobUpdate } = props;
-
-    return <JobListComponent taskInstance={task.instance} onJobUpdate={onJobUpdate} />;
+    // added user as a props by giti
+    const { task, onJobUpdate, user } = props;
+    return <JobListComponent taskInstance={task.instance} onJobUpdate={onJobUpdate} user={user} />;
 }
 
 export default connect(null, mapDispatchToProps)(TaskPageContainer);

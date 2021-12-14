@@ -20,6 +20,7 @@ import UserSelector, { User } from './user-selector';
 interface Props {
     taskInstance: any;
     onJobUpdate(jobInstance: any): void;
+    user: any ;
 }
 
 function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Element {
@@ -93,6 +94,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
         taskInstance,
         onJobUpdate,
         history: { push },
+        user,
     } = props;
 
     const { jobs, id: taskId } = taskInstance;
@@ -252,7 +254,14 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
     ];
 
     let completed = 0;
-    const data = jobs.reduce((acc: any[], job: any) => {
+    // let jobsAssignee : any ;
+    const assigneeId = user.id;
+
+    const jobsFilter = user.isSuperuser ? (jobs) :
+        (jobs.filter((item: any) => item.assignee !== null && item.assignee.id === assigneeId));
+    const data = jobsFilter.reduce((acc: any[], job: any) => {
+    // const data = jobsAssignee.reduce((acc: any[], job: any) => {
+
         if (job.status === 'completed') {
             completed++;
         }
@@ -270,7 +279,6 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
             assignee: job,
             reviewer: job,
         });
-
         return acc;
     }, []);
 

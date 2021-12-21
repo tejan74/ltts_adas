@@ -417,12 +417,14 @@ class DjangoFilterInspector(CoreAPICompatInspector):
 @method_decorator(name='destroy', decorator=swagger_auto_schema(operation_summary='Method deletes a specific task, all attached jobs, annotations, and data'))
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a task'))
 class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
+    print("here")
     queryset = Task.objects.all().prefetch_related(
             "label_set__attributespec_set",
             "segment_set__job_set",
         ).order_by('-id')
     serializer_class = TaskSerializer
-    search_fields = ("name", "owner__username", "mode", "status")
+    
+    search_fields = ("name",  "owner__username", "mode", "status")
     filterset_class = TaskFilter
     ordering_fields = ("id", "name", "owner", "status", "assignee")
 
@@ -514,22 +516,29 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         db_task = self.get_object() # force to call check_object_permissions
         action = self.request.query_params.get('action', None)
+        print("line 518", db_task, action )
         if action is None:
             return super().retrieve(request, pk)
         elif action in ('export', 'download'):
+            
             queue = django_rq.get_queue("default")
             rq_id = "/api/v1/tasks/{}/export".format(pk)
+            print("line 521",pk, rq_id,queue)
 
             rq_job = queue.fetch_job(rq_id)
+            print("Redisss", rq_job)
             if rq_job:
                 last_task_update_time = timezone.localtime(db_task.updated_date)
                 request_time = rq_job.meta.get('request_time', None)
+                print("request_time",request_time)
                 if request_time is None or request_time < last_task_update_time:
                     rq_job.cancel()
                     rq_job.delete()
                 else:
+                    print(">>>>>>>>>>>>",rq_job.is_finished)
                     if rq_job.is_finished:
                         file_path = rq_job.return_value
+                        print("line 549",file_path)
                         if action == "download" and osp.exists(file_path):
                             rq_job.delete()
 
@@ -538,6 +547,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                             filename = "task_{}_backup_{}{}".format(
                                 db_task.name, timestamp,
                                 osp.splitext(file_path)[1])
+                            print("line 549",file_path)
                             return sendfile(request, file_path, attachment=True,
                                 attachment_filename=filename.lower())
                         else:
@@ -558,7 +568,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                 job_id=rq_id,
                 meta={ 'request_time': timezone.localtime() },
                 result_ttl=ttl, failure_ttl=ttl)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return Response(pk,status=status.HTTP_202_ACCEPTED)
 
         else:
             raise serializers.ValidationError(
@@ -585,12 +595,38 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
         responses={'200': JobSerializer(many=True)})
     @action(detail=True, methods=['GET'], serializer_class=JobSerializer)
     def jobs(self, request, pk):
+        # print("we are here")
         self.get_object() # force to call check_object_permissions
-        queryset = Job.objects.filter(segment__task_id=pk)
+        queryset = Job.objects.filter(segment__task_id=pk)#request.user.username
         serializer = JobSerializer(queryset, many=True,
             context={"request": request})
-
+        #print(serializer.data)
         return Response(serializer.data)
+
+    # @swagger_auto_schema(method='get', operation_summary='Returns a list of jobs for a specific task',
+
+    #                      manual_parameters=[
+    #         openapi.Parameter('assignee_id', openapi.IN_QUERY, description="This is an optional parameter. Find all Jobs where assignee id is parameter value", type=openapi.TYPE_NUMBER)
+    #     ],
+
+    #     responses={'200': JobSerializer(many=True)})
+    # @action(detail=True, methods=['GET'], serializer_class=JobSerializer)
+    # def jobs(self, request, pk):
+    #     assignee_id = request.query_params.get('assignee_id', None)
+    #     print("assignee id ", assignee_id)
+    #     self.get_object() # force to call check_object_permissions
+    #     # new code changes are done for jobs assignment to logged in users
+    #     if assignee_id is not None:
+    #     # find if current requestor is admin ?
+    #      # if yes go to else
+    #      # if not an admin fetch his user id as assignee id
+    #         queryset = Job.objects.filter(segment__task_id=pk, assignee__id=assignee_id)
+    #     else:
+    #         queryset = Job.objects.filter(segment__task_id=pk)
+    #     serializer = JobSerializer(queryset, many=True,
+    #         context={"request": request})
+    #     return Response(serializer.data)
+    
 
     @swagger_auto_schema(method='post', operation_summary='Method permanently attaches images or video to a task',
         request_body=DataSerializer,
@@ -615,6 +651,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                 return Response(data='Adding more data is not supported',
                     status=status.HTTP_400_BAD_REQUEST)
             serializer = DataSerializer(data=request.data)
+            print("{{{{{",request)
             serializer.is_valid(raise_exception=True)
             db_data = serializer.save()
             db_task.data = db_data
@@ -754,6 +791,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
         db_task = self.get_object() # force to call check_object_permissions
         if request.method == 'GET':
             format_name = request.query_params.get('format')
+            print("//annotat//",format_name)
             if format_name:
                 return _export_annotations(db_instance=db_task,
                     rq_id="/api/v1/tasks/{}/annotations/{}".format(pk, format_name),
@@ -949,11 +987,13 @@ class JobViewSet(viewsets.GenericViewSet,
             dm.task.delete_job_data(pk)
             return Response(status=status.HTTP_204_NO_CONTENT)
         elif request.method == 'PATCH':
-            action = self.request.query_params.get("action", None)
+            print(" line 979 of view")
+            action = self.request.query_params.get("action", None) 
             if action not in dm.task.PatchAction.values():
                 raise serializers.ValidationError(
                     "Please specify a correct 'action' for the request")
             serializer = LabeledDataSerializer(data=request.data)
+            #print("985",serializer)
             if serializer.is_valid(raise_exception=True):
                 try:
                     data = dm.task.patch_job_data(pk, serializer.data, action)
@@ -1003,6 +1043,7 @@ class ReviewViewSet(viewsets.GenericViewSet, mixins.DestroyModelMixin, mixins.Cr
 
     def create(self, request, *args, **kwargs):
         job_id = request.data['job']
+        print("line",job_id)
         db_job = get_object_or_404(Job, pk=job_id)
         self.check_object_permissions(self.request, db_job)
 
@@ -1143,17 +1184,20 @@ class UserFilter(filters.FilterSet):
     operation_summary='Method deletes a specific user from the server'))
 class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
-    # queryset = User.objects.prefetch_related('groups').all().order_by('id')
+    #queryset = User.objects.prefetch_related('groups').all().order_by('id')
+    print("line 1148")
     queryset = User.objects.all().order_by('id')
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
     search_fields = ('username', 'first_name', 'last_name')
     filterset_class = UserFilter
 
     def get_serializer_class(self):
+        print("line 1155")
         user = self.request.user
         if user.is_staff:
             return UserSerializer
         else:
+            print("line 1160")
             is_self = int(self.kwargs.get("pk", 0)) == user.id or \
                 self.action == "self"
             if is_self and self.request.method in SAFE_METHODS:

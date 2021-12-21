@@ -47,6 +47,7 @@ class _TaskBackupBase():
     def _prepare_task_meta(self, task):
         allowed_fields = {
             'name',
+            'project_id',
             'bug_tracker',
             'status',
             'subset',
@@ -193,6 +194,7 @@ class TaskExporter(_TaskBackupBase):
         self._db_task = models.Task.objects.prefetch_related('data__images').select_related('data__video').get(pk=pk)
         self._db_data = self._db_task.data
         self._version = version
+        # self._db_task = self._db_task.project_id 
 
         db_labels = (self._db_task.project if self._db_task.project_id else self._db_task).label_set.all().prefetch_related(
             'attributespec_set')
@@ -280,6 +282,7 @@ class TaskExporter(_TaskBackupBase):
             task_serializer.fields.pop('segments')
 
             task = self._prepare_task_meta(task_serializer.data)
+            print("displayin taskk",task)
             task['labels'] = [self._prepare_label_meta(l) for l in task['labels']]
             for label in task['labels']:
                 label['attributes'] = [self._prepare_attribute_meta(a) for a in label['attributes']]
@@ -479,6 +482,7 @@ class TaskImporter(_TaskBackupBase):
         jobs = self._manifest.pop('jobs')
 
         self._prepare_task_meta(self._manifest)
+        print('********************************************')
         self._manifest['segment_size'], self._manifest['overlap'] = self._calculate_segment_size(jobs)
         self._manifest["owner_id"] = self._user_id
 

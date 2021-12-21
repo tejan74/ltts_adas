@@ -42,7 +42,7 @@ TASK_CACHE_TTL = DEFAULT_CACHE_TTL
 PROJECT_CACHE_TTL = DEFAULT_CACHE_TTL / 3
 
 
-def export(dst_format, task_id=None, project_id=None, server_url=None, save_images=False):
+def export(dst_format, task_id=None, project_id=True, server_url=None, save_images=False):
     try:
         if task_id is not None:
             db_instance = Task.objects.get(pk=task_id)
@@ -99,8 +99,8 @@ def export(dst_format, task_id=None, project_id=None, server_url=None, save_imag
 def export_task_as_dataset(task_id, dst_format=None, server_url=None):
     return export(dst_format, task_id=task_id, server_url=server_url, save_images=True)
 
-def export_task_annotations(task_id, dst_format=None, server_url=None):
-    return export(dst_format,task_id=task_id, server_url=server_url, save_images=False)
+def export_task_annotations(task_id, dst_format=None, project_id = True, server_url=None):
+    return export(dst_format,task_id=task_id, project_id= project_id, server_url=server_url, save_images=False)
 
 def export_project_as_dataset(project_id, dst_format=None, server_url=None):
     return export(dst_format, project_id=project_id, server_url=server_url, save_images=True)

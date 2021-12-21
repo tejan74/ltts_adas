@@ -712,6 +712,7 @@ class ShapeSerializer(serializers.Serializer):
     )
 
 class LabeledShapeSerializer(ShapeSerializer, AnnotationSerializer):
+    print("line 715")
     attributes = AttributeValSerializer(many=True,
         source="labeledshapeattributeval_set")
 
@@ -732,6 +733,7 @@ class LabeledDataSerializer(serializers.Serializer):
     version = serializers.IntegerField()
     tags   = LabeledImageSerializer(many=True)
     shapes = LabeledShapeSerializer(many=True)
+    print("Line 735")
     tracks = LabeledTrackSerializer(many=True)
 
 class FileInfoSerializer(serializers.Serializer):

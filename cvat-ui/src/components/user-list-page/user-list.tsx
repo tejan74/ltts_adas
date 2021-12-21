@@ -8,7 +8,8 @@ import Spin from 'antd/lib/spin';
 import { Table, Row, Col } from 'antd';
 import './styles.scss';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
-import { getUserList } from 'actions/user-actions';
+// import { getUserList } from 'actions/user-actions';
+import { getUserList } from 'actions/user-saga-actions';
 import { CombinedState } from 'reducers/interfaces';
 
 export default function UserListComponent(): JSX.Element {

@@ -19,7 +19,8 @@ import {
     switchSubmitReviewDialog as switchSubmitReviewDialogAction,
     setForceExitAnnotationFlag as setForceExitAnnotationFlagAction,
 } from 'actions/annotation-actions';
-import { exportActions } from 'actions/export-actions';
+// import { exportActions } from 'actions/export-actions';
+import { exportSagaActions } from 'sagas/export-saga';
 
 interface StateToProps {
     annotationFormats: any;
@@ -69,7 +70,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
             dispatch(uploadJobAnnotationsAsync(job, loader, file));
         },
         showExportModal(task: any): void {
-            dispatch(exportActions.openExportModal(task));
+            dispatch(exportSagaActions.openExportModal(task));
         },
         removeAnnotations(sessionInstance: any): void {
             dispatch(removeAnnotationsAsync(sessionInstance));

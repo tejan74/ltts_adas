@@ -6,7 +6,8 @@ import { AnyAction } from 'redux';
 import { omit } from 'lodash';
 import { BoundariesActionTypes } from 'actions/boundaries-actions';
 import { TasksActionTypes } from 'actions/tasks-actions';
-import { AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 
 import { TasksState, Task } from './interfaces';
 
@@ -332,7 +333,7 @@ export default (state: TasksState = defaultState, action: AnyAction): TasksState
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default:

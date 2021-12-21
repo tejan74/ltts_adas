@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: MIT
 
 import { BoundariesActions, BoundariesActionTypes } from 'actions/boundaries-actions';
-import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActions } from 'sagas/auth-saga';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { ShortcutsActions, ShortcutsActionsTypes } from 'actions/shortcuts-actions';
 import { KeyMap, KeyMapItem } from 'utils/mousetrap-react';
 import { DimensionType, ShortcutsState } from './interfaces';
@@ -432,7 +434,7 @@ const defaultState: ShortcutsState = {
     }, {}),
 };
 
-export default (state = defaultState, action: ShortcutsActions | BoundariesActions | AuthActions): ShortcutsState => {
+export default (state = defaultState, action: ShortcutsActions | BoundariesActions | AuthSagaActions): ShortcutsState => {
     switch (action.type) {
         case ShortcutsActionsTypes.SWITCH_SHORTCUT_DIALOG: {
             return {
@@ -441,7 +443,7 @@ export default (state = defaultState, action: ShortcutsActions | BoundariesActio
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default: {

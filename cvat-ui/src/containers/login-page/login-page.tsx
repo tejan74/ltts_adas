@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import LoginPageComponent from 'components/login-page/login-page';
 import { CombinedState } from 'reducers/interfaces';
 // import { loginAsync } from 'actions/auth-actions';
-import { googleOAuth2 } from 'actions/google-actions';
+// import { googleOAuth2 } from 'actions/google-actions';
+import { googleOAuth2 } from 'actions/google-saga-actions';
 import { loginAsync} from '../../actions/auth-saga-actions'
 interface StateToProps {
     fetching: boolean;

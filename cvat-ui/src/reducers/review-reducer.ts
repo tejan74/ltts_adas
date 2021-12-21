@@ -5,7 +5,8 @@
 import consts from 'consts';
 import { AnnotationActionTypes } from 'actions/annotation-actions';
 import { ReviewActionTypes } from 'actions/review-actions';
-import { AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { ReviewState } from './interfaces';
 
 const defaultState: ReviewState = {
@@ -177,7 +178,7 @@ export default function (state: ReviewState = defaultState, action: any): Review
             };
         }
         case AnnotationActionTypes.CLOSE_JOB:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default:

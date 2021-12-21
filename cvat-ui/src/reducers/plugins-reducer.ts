@@ -2,7 +2,9 @@
 //
 // SPDX-License-Identifier: MIT
 
-import { PluginsActionTypes, PluginActions } from 'actions/plugins-actions';
+// import { PluginsSagaActionTypes, PluginActions } from 'actions/plugins-actions';
+import { PluginsSagaActionTypes } from 'actions/plugins-saga-actions';
+import { PluginSagaActions } from 'sagas/plugins-saga';
 import { registerGitPlugin } from 'utils/git-utils';
 import { PluginsState } from './interfaces';
 
@@ -17,16 +19,16 @@ const defaultState: PluginsState = {
     },
 };
 
-export default function (state: PluginsState = defaultState, action: PluginActions): PluginsState {
+export default function (state: PluginsState = defaultState, action: PluginSagaActions): PluginsState {
     switch (action.type) {
-        case PluginsActionTypes.GET_PLUGINS: {
+        case PluginsSagaActionTypes.GET_PLUGINS: {
             return {
                 ...state,
                 initialized: false,
                 fetching: true,
             };
         }
-        case PluginsActionTypes.GET_PLUGINS_SUCCESS: {
+        case PluginsSagaActionTypes.GET_PLUGINS_SUCCESS: {
             const { list } = action.payload;
 
             if (!state.list.GIT_INTEGRATION && list.GIT_INTEGRATION) {
@@ -40,7 +42,7 @@ export default function (state: PluginsState = defaultState, action: PluginActio
                 list,
             };
         }
-        case PluginsActionTypes.GET_PLUGINS_FAILED: {
+        case PluginsSagaActionTypes.GET_PLUGINS_FAILED: {
             return {
                 ...state,
                 initialized: true,

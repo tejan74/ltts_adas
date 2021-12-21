@@ -2,7 +2,9 @@
 //
 // SPDX-License-Identifier: MIT
 
-import { ExportActions, ExportActionTypes } from 'actions/export-actions';
+// import { ExportActions, ExportSagaActionTypes } from 'actions/export-actions';
+import { ExportSagaActionTypes } from 'actions/export-saga-actions';
+import { ExportSagaActions } from 'sagas/export-saga';
 import getCore from 'cvat-core-wrapper';
 import deepCopy from 'utils/deep-copy';
 
@@ -17,21 +19,21 @@ const defaultState: ExportState = {
     modalVisible: false,
 };
 
-export default (state: ExportState = defaultState, action: ExportActions): ExportState => {
+export default (state: ExportState = defaultState, action: ExportSagaActions): ExportState => {
     switch (action.type) {
-        case ExportActionTypes.OPEN_EXPORT_MODAL:
+        case ExportSagaActionTypes.OPEN_EXPORT_MODAL:
             return {
                 ...state,
                 modalVisible: true,
                 instance: action.payload.instance,
             };
-        case ExportActionTypes.CLOSE_EXPORT_MODAL:
+        case ExportSagaActionTypes.CLOSE_EXPORT_MODAL:
             return {
                 ...state,
                 modalVisible: false,
                 instance: null,
             };
-        case ExportActionTypes.EXPORT_DATASET: {
+        case ExportSagaActionTypes.EXPORT_DATASET: {
             const { instance, format } = action.payload;
             const activities = deepCopy(instance instanceof core.classes.Project ? state.projects : state.tasks);
 
@@ -46,8 +48,8 @@ export default (state: ExportState = defaultState, action: ExportActions): Expor
                 projects: instance instanceof core.classes.Project ? activities : state.projects,
             };
         }
-        case ExportActionTypes.EXPORT_DATASET_FAILED:
-        case ExportActionTypes.EXPORT_DATASET_SUCCESS: {
+        case ExportSagaActionTypes.EXPORT_DATASET_FAILED:
+        case ExportSagaActionTypes.EXPORT_DATASET_SUCCESS: {
             const { instance, format } = action.payload;
             const activities = deepCopy(instance instanceof core.classes.Project ? state.projects : state.tasks);
 

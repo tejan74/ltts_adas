@@ -15,7 +15,9 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 
 import { CombinedState } from 'reducers/interfaces';
-import { exportActions, exportDatasetAsync } from 'actions/export-actions';
+// import { exportActions, exportDatasetAsync } from 'actions/export-actions';
+import { exportDatasetAsync } from 'actions/export-saga-actions';
+import { exportSagaActions } from 'sagas/export-saga';
 import getCore from 'cvat-core-wrapper';
 
 const core = getCore();
@@ -59,7 +61,7 @@ function ExportDatasetModal(): JSX.Element {
 
     const closeModal = (): void => {
         form.resetFields();
-        dispatch(exportActions.closeExportModal());
+        dispatch(exportSagaActions.closeExportModal());
     };
 
     const handleExport = useCallback(

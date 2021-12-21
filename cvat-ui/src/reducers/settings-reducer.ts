@@ -5,7 +5,8 @@
 import { AnyAction } from 'redux';
 
 import { BoundariesActionTypes } from 'actions/boundaries-actions';
-import { AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { SettingsActionTypes } from 'actions/settings-actions';
 import { AnnotationActionTypes } from 'actions/annotation-actions';
 
@@ -375,7 +376,7 @@ export default (state = defaultState, action: AnyAction): SettingsState => {
                 },
             };
         }
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default: {

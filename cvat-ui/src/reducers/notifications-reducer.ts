@@ -4,19 +4,24 @@
 
 import { AnyAction } from 'redux';
 
-import { AuthActionTypes } from 'actions/auth-actions';
-import { FormatsActionTypes } from 'actions/formats-actions';
+// import { AuthSagaActionTypes } from 'actions/auth-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
+// import { FormatsActionTypes } from 'actions/formats-actions';
+import { FormatsSagaActionTypes } from 'actions/formats-saga-actions';
 import { ModelsActionTypes } from 'actions/models-actions';
 import { ShareActionTypes } from 'actions/share-actions';
 import { TasksActionTypes } from 'actions/tasks-actions';
 import { ProjectsActionTypes } from 'actions/projects-actions';
-import { AboutActionTypes } from 'actions/about-actions';
+// import { AboutActionTypes } from 'actions/about-actions';
+import { AboutSagaActionTypes } from 'actions/about-saga-actions';
 import { AnnotationActionTypes } from 'actions/annotation-actions';
 import { NotificationsActionType } from 'actions/notification-actions';
 import { BoundariesActionTypes } from 'actions/boundaries-actions';
-import { UserAgreementsActionTypes } from 'actions/useragreements-actions';
+// import { UserAgreementsActionTypes } from 'actions/useragreements-actions';
+import { UserAgreementsSagaActionTypes } from 'actions/useragreements-saga-actions';
 import { ReviewActionTypes } from 'actions/review-actions';
-import { ExportActionTypes } from 'actions/export-actions';
+// import { ExportActionTypes } from 'actions/export-actions';
+import { ExportSagaActionTypes } from 'actions/export-saga-actions';
 import { CloudStorageActionTypes } from 'actions/cloud-storage-actions';
 
 import getCore from 'cvat-core-wrapper';
@@ -141,7 +146,7 @@ const defaultState: NotificationsState = {
 
 export default function (state = defaultState, action: AnyAction): NotificationsState {
     switch (action.type) {
-        case AuthActionTypes.AUTHORIZED_FAILED: {
+        case AuthSagaActionTypes.AUTHORIZED_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -156,7 +161,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.LOGIN_FAILED: {
+        case AuthSagaActionTypes.LOGIN_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -172,7 +177,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.LOGOUT_FAILED: {
+        case AuthSagaActionTypes.LOGOUT_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -187,7 +192,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.REGISTER_FAILED: {
+        case AuthSagaActionTypes.REGISTER_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -202,7 +207,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.REGISTER_SUCCESS: {
+        case AuthSagaActionTypes.REGISTER_SUCCESS: {
             if (!action.payload.user.isVerified) {
                 return {
                     ...state,
@@ -221,7 +226,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 ...state,
             };
         }
-        case AuthActionTypes.CHANGE_PASSWORD_SUCCESS: {
+        case AuthSagaActionTypes.CHANGE_PASSWORD_SUCCESS: {
             return {
                 ...state,
                 messages: {
@@ -233,7 +238,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.CHANGE_PASSWORD_FAILED: {
+        case AuthSagaActionTypes.CHANGE_PASSWORD_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -249,7 +254,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.REQUEST_PASSWORD_RESET_SUCCESS: {
+        case AuthSagaActionTypes.REQUEST_PASSWORD_RESET_SUCCESS: {
             return {
                 ...state,
                 messages: {
@@ -262,7 +267,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.REQUEST_PASSWORD_RESET_FAILED: {
+        case AuthSagaActionTypes.REQUEST_PASSWORD_RESET_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -277,7 +282,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.RESET_PASSWORD_SUCCESS: {
+        case AuthSagaActionTypes.RESET_PASSWORD_SUCCESS: {
             return {
                 ...state,
                 messages: {
@@ -289,7 +294,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.RESET_PASSWORD_FAILED: {
+        case AuthSagaActionTypes.RESET_PASSWORD_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -304,7 +309,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AuthActionTypes.LOAD_AUTH_ACTIONS_FAILED: {
+        case AuthSagaActionTypes.LOAD_AUTH_ACTIONS_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -319,7 +324,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case ExportActionTypes.EXPORT_DATASET_FAILED: {
+        case ExportSagaActionTypes.EXPORT_DATASET_FAILED: {
             const instanceID = action.payload.instance.id;
             const instanceType = action.payload.instance instanceof core.classes.Project ? 'project' : 'task';
             return {
@@ -552,7 +557,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case FormatsActionTypes.GET_FORMATS_FAILED: {
+        case FormatsSagaActionTypes.GET_FORMATS_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -567,7 +572,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case AboutActionTypes.GET_ABOUT_FAILED: {
+        case AboutSagaActionTypes.GET_ABOUT_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -1031,7 +1036,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
-        case UserAgreementsActionTypes.GET_USER_AGREEMENTS_FAILED: {
+        case UserAgreementsSagaActionTypes.GET_USER_AGREEMENTS_FAILED: {
             return {
                 ...state,
                 errors: {
@@ -1304,7 +1309,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default: {

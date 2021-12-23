@@ -38,9 +38,8 @@ import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/sett
 // import { authActions } from 'actions/auth-actions';
 import { authSagaActions } from 'sagas/auth-saga';
 import { CombinedState } from 'reducers/interfaces';
+import { logoutAsync } from 'actions/auth-saga-actions';
 import SettingsModal from './settings-modal/settings-modal';
-import { logoutAsync } from 'actions/auth-saga-actions'
-
 
 const core = getCore();
 
@@ -246,15 +245,16 @@ function HeaderContainer(props: Props): JSX.Element {
                     Admin page
                 </Menu.Item>
             )}
-
-            <Menu.Item
-                key='settings'
-                title={`Press ${switchSettingsShortcut} to switch`}
-                onClick={() => switchSettingsDialog(true)}
-            >
-                <SettingOutlined />
-                Settings
-            </Menu.Item>
+            {user.isSuperuser && (
+                <Menu.Item
+                    key='settings'
+                    title={`Press ${switchSettingsShortcut} to switch`}
+                    onClick={() => switchSettingsDialog(true)}
+                >
+                    <SettingOutlined />
+                    Settings
+                </Menu.Item>
+            )}
             {/* <Menu.Item key='about' onClick={showAboutModal}>
                 <InfoCircleOutlined />
                 About
@@ -431,7 +431,9 @@ function HeaderContainer(props: Props): JSX.Element {
                     </span>
                 </Dropdown>
             </div>
-            <SettingsModal visible={settingsDialogShown} onClose={() => switchSettingsDialog(false)} />
+            {user.isSuperuser && (
+                <SettingsModal visible={settingsDialogShown} onClose={() => switchSettingsDialog(false)} />
+            )}
             {renderChangePasswordItem && <ChangePasswordDialog onClose={() => switchChangePasswordDialog(false)} />}
         </Layout.Header>
     );

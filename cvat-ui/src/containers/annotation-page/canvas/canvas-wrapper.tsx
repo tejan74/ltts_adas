@@ -27,6 +27,7 @@ import {
     switchZLayer,
     fetchAnnotationsAsync,
     getDataFailed,
+    zoomCanvasButton,
 } from 'actions/annotation-actions';
 import {
     switchGrid,
@@ -101,6 +102,8 @@ interface DispatchToProps {
     onSetupCanvas(): void;
     onDragCanvas: (enabled: boolean) => void;
     onZoomCanvas: (enabled: boolean) => void;
+    // new code added by raju
+    onButtonZoomCanvas: (enabled: boolean) => void;
     onResetCanvas: () => void;
     onShapeDrawn: () => void;
     onMergeObjects: (enabled: boolean) => void;
@@ -242,6 +245,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         },
         onZoomCanvas(enabled: boolean): void {
             dispatch(zoomCanvas(enabled));
+        },
+        onButtonZoomCanvas(enabled: boolean): void {
+            dispatch(zoomCanvasButton(enabled));
         },
         onResetCanvas(): void {
             dispatch(resetCanvas());

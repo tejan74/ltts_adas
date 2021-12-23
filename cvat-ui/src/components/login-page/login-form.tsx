@@ -19,7 +19,7 @@ import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
 
 import Input from 'antd/lib/input';
-
+import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // new code added
 import { GoogleLogin } from 'react-google-login';
@@ -33,7 +33,7 @@ export interface LoginData {
 interface Props {
     fetching: boolean;
     onSubmit(loginData: LoginData): void;
-    successGoogleLogin(response:any):void
+    successGoogleLogin(response: any): void;
 }
 
 function LoginFormComponent(props: Props): JSX.Element {
@@ -41,29 +41,26 @@ function LoginFormComponent(props: Props): JSX.Element {
 
     const formItemLayout = {
         labelCol: { span: 6 },
-
         wrapperCol: { span: 10 },
     };
 
     const tailLayout = {
         wrapperCol: {
-            offset: 8,
-
+            offset: 6,
             span: 16,
         },
     };
     return (
         <>
-            <Form onFinish={onSubmit} className='login-form' layout='horizontal'>
+            <Form onFinish={onSubmit} className='login-form' layout='horizontal' autoComplete='off'>
                 <Form.Item
                     {...formItemLayout}
                     label='Username'
-                    hasFeedback
+                    // hasFeedback
                     name='username'
                     rules={[
                         {
                             required: true,
-
                             message: 'Please specify a username',
                         },
                     ]}
@@ -78,7 +75,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                 <Form.Item
                     {...formItemLayout}
                     label='Password'
-                    hasFeedback
+                    // hasFeedback
                     name='password'
                     rules={[
                         {
@@ -105,6 +102,12 @@ function LoginFormComponent(props: Props): JSX.Element {
                         className='login-form-button'
                     >
                         Sign in
+                    </Button>
+                     &nbsp;
+                    <Button type='primary' className='login-form-button'>
+                        <Link to='/auth/register' style={{ color: '#FFF' }}>
+                            Create an account
+                        </Link>
                     </Button>
                 </Form.Item>
             </Form>

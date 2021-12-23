@@ -5,7 +5,7 @@
 import React from 'react';
 import { Col } from 'antd/lib/grid';
 import Icon, {
-    StopOutlined, CheckOutlined, ZoomInOutlined, ZoomOutOutlined,
+    StopOutlined, CheckOutlined,
 } from '@ant-design/icons';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
@@ -142,22 +142,22 @@ function LeftGroup(props: Props): JSX.Element {
                     </CVATTooltip>
                 ) : null}
                 {/* <CVATTooltip> */}
-                <Button
+                {/* <Button
                     type='link'
                     className='cvat-annotation-header-button'
-                    // onClick={onUndoClick}
+                    onClick={onUndoClick}
                 >
                     <ZoomInOutlined />
-                    {/* <span>Undo</span> */}
+                    <span>Undo</span>
                 </Button>
                 <Button
                     type='link'
                     className='cvat-annotation-header-button'
-                    // onClick={onUndoClick}
+                    onClick={onUndoClick}
                 >
                     <ZoomOutOutlined />
-                    {/* <span>Undo</span> */}
-                </Button>
+                    <span>Undo</span>
+                </Button> */}
                 {/* </CVATTooltip> */}
             </Col>
         </>

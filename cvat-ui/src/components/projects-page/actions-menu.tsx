@@ -8,7 +8,8 @@ import Modal from 'antd/lib/modal';
 import Menu from 'antd/lib/menu';
 
 import { deleteProjectAsync } from 'actions/projects-actions';
-import { exportActions } from 'actions/export-actions';
+// import { exportActions } from 'actions/export-actions';
+import { exportSagaActions} from 'sagas/export-saga';
 
 interface Props {
     projectInstance: any;
@@ -38,7 +39,8 @@ export default function ProjectActionsMenuComponent(props: Props): JSX.Element {
     return (
         <Menu className='cvat-project-actions-menu'>
             <Menu.Item
-                onClick={() => dispatch(exportActions.openExportModal(projectInstance))}
+                onClick={() =>
+                    dispatch(exportSagaActions.openExportModal(projectInstance))}
             >
                 Export project dataset
             </Menu.Item>

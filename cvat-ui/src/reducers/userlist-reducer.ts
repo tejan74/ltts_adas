@@ -3,7 +3,8 @@
 import { BoundariesActionTypes } from '../actions/boundaries-actions';
 // import { TasksActionTypes } from 'actions/tasks-actions';
 // import { AuthActionTypes } from 'actions/auth-actions';
-import { UserActionTypes } from  '../actions/user-actions'
+// import { UserSagaActionTypes } from  '../actions/user-actions'
+import { UserSagaActionTypes } from 'actions/user-saga-actions';
 
 import { UserState } from './interfaces';
 
@@ -16,20 +17,20 @@ const defaultState: UserState = {
 export default function (state = defaultState, action: any ): UserState {
 
     switch (action.type) {
-        case UserActionTypes.GET_UERS:
+        case UserSagaActionTypes.GET_UERS:
             return {
                 ...state,
                 fetching: true,
                 count: 0,
             };
-        case UserActionTypes.LIST_FETCH_SUCCESS:
+        case UserSagaActionTypes.LIST_FETCH_SUCCESS:
             return {
                 ...state,
                 users: action.payload.users,
                 count:action.payload.count,
                 fetching: false,
             };
-            case UserActionTypes.LIST_FETCH_FAILED: {
+            case UserSagaActionTypes.LIST_FETCH_FAILED: {
                 return {
                     ...state,
                 fetching: true,

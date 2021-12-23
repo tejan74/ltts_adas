@@ -5,8 +5,12 @@
 import getCore from 'cvat-core-wrapper';
 import { CanvasVersion } from 'cvat-canvas-wrapper';
 import { BoundariesActions, BoundariesActionTypes } from 'actions/boundaries-actions';
-import { AboutActions, AboutActionTypes } from 'actions/about-actions';
-import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
+// import { AboutActions, AboutSagaActionTypes } from 'actions/about-actions';
+import { AboutSagaActions } from 'sagas/about-saga';
+import { AboutSagaActionTypes } from 'actions/about-saga-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
+import { AuthSagaActions } from 'sagas/auth-saga';
+// import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
 import { AboutState } from './interfaces';
 import pjson from '../../package.json';
 
@@ -23,30 +27,30 @@ const defaultState: AboutState = {
 
 export default function (
     state: AboutState = defaultState,
-    action: AboutActions | AuthActions | BoundariesActions,
+    action: AboutSagaActions | AuthSagaActions | BoundariesActions,
 ): AboutState {
     switch (action.type) {
-        case AboutActionTypes.GET_ABOUT: {
+        case AboutSagaActionTypes.GET_ABOUT: {
             return {
                 ...state,
                 fetching: true,
                 initialized: false,
             };
         }
-        case AboutActionTypes.GET_ABOUT_SUCCESS:
+        case AboutSagaActionTypes.GET_ABOUT_SUCCESS:
             return {
                 ...state,
                 fetching: false,
                 initialized: true,
                 server: action.payload.server,
             };
-        case AboutActionTypes.GET_ABOUT_FAILED:
+        case AboutSagaActionTypes.GET_ABOUT_FAILED:
             return {
                 ...state,
                 fetching: false,
                 initialized: true,
             };
-        case AuthActionTypes.LOGOUT_SUCCESS:
+        case AuthSagaActionTypes.LOGOUT_SUCCESS:
         case BoundariesActionTypes.RESET_AFTER_ERROR: {
             return {
                 ...defaultState,

@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: MIT
 
 import { CloudStorageActions, CloudStorageActionTypes } from 'actions/cloud-storage-actions';
-import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActions, AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActions } from 'sagas/auth-saga';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { CloudStoragesState, CloudStorage } from './interfaces';
 
 const defaultState: CloudStoragesState = {
@@ -48,7 +50,7 @@ const defaultState: CloudStoragesState = {
 
 export default (
     state: CloudStoragesState = defaultState,
-    action: CloudStorageActions | AuthActions,
+    action: CloudStorageActions | AuthSagaActions,
 ): CloudStoragesState => {
     switch (action.type) {
         case CloudStorageActionTypes.UPDATE_CLOUD_STORAGES_GETTING_QUERY:
@@ -348,7 +350,7 @@ export default (
                 previews,
             };
         }
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default:

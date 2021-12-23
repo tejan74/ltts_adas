@@ -4,7 +4,9 @@
 
 import { BoundariesActions, BoundariesActionTypes } from 'actions/boundaries-actions';
 import { ModelsActionTypes, ModelsActions } from 'actions/models-actions';
-import { AuthActionTypes, AuthActions } from 'actions/auth-actions';
+// import { AuthActionTypes, AuthActions } from 'actions/auth-actions';
+import { AuthSagaActions } from 'sagas/auth-saga';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { ModelsState, Model } from './interfaces';
 
 const defaultState: ModelsState = {
@@ -20,7 +22,7 @@ const defaultState: ModelsState = {
     inferences: {},
 };
 
-export default function (state = defaultState, action: ModelsActions | AuthActions | BoundariesActions): ModelsState {
+export default function (state = defaultState, action: ModelsActions | AuthSagaActions | BoundariesActions): ModelsState {
     switch (action.type) {
         case ModelsActionTypes.GET_MODELS: {
             return {
@@ -103,7 +105,7 @@ export default function (state = defaultState, action: ModelsActions | AuthActio
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default: {

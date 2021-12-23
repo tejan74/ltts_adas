@@ -5,7 +5,8 @@
 import { AnyAction } from 'redux';
 import { ProjectsActionTypes } from 'actions/projects-actions';
 import { BoundariesActionTypes } from 'actions/boundaries-actions';
-import { AuthActionTypes } from 'actions/auth-actions';
+// import { AuthActionTypes } from 'actions/auth-actions';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 
 import { Project, ProjectsState } from './interfaces';
 
@@ -191,7 +192,7 @@ export default (state: ProjectsState = defaultState, action: AnyAction): Project
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default:

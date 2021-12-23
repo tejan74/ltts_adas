@@ -4,7 +4,9 @@
 
 import { BoundariesActionTypes, BoundariesActions } from 'actions/boundaries-actions';
 import { ShareActionTypes, ShareActions } from 'actions/share-actions';
-import { AuthActionTypes, AuthActions } from 'actions/auth-actions';
+// import { AuthActionTypes, AuthActions } from 'actions/auth-actions';
+import { AuthSagaActions } from 'sagas/auth-saga';
+import { AuthSagaActionTypes } from 'actions/auth-saga-actions';
 import { ShareState, ShareFileInfo, ShareItem } from './interfaces';
 
 const defaultState: ShareState = {
@@ -17,7 +19,7 @@ const defaultState: ShareState = {
 
 export default function (
     state: ShareState = defaultState,
-    action: ShareActions | AuthActions | BoundariesActions,
+    action: ShareActions | AuthSagaActions | BoundariesActions,
 ): ShareState {
     switch (action.type) {
         case ShareActionTypes.LOAD_SHARE_DATA_SUCCESS: {
@@ -45,7 +47,7 @@ export default function (
             };
         }
         case BoundariesActionTypes.RESET_AFTER_ERROR:
-        case AuthActionTypes.LOGOUT_SUCCESS: {
+        case AuthSagaActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };
         }
         default:

@@ -17,7 +17,8 @@ import {
     exportTaskAsync,
     switchMoveTaskModalVisible,
 } from 'actions/tasks-actions';
-import { exportActions } from 'actions/export-actions';
+// import { exportActions } from 'actions/export-actions';
+import { exportSagaActions } from 'sagas/export-saga';
 
 interface OwnProps {
     taskInstance: any;
@@ -65,7 +66,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
             dispatch(loadAnnotationsAsync(taskInstance, loader, file));
         },
         showExportModal: (taskInstance: any): void => {
-            dispatch(exportActions.openExportModal(taskInstance));
+            dispatch(exportSagaActions.openExportModal(taskInstance));
         },
         deleteTask: (taskInstance: any): void => {
             dispatch(deleteTaskAsync(taskInstance));

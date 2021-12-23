@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Col } from 'antd/lib/grid';
-import Icon, { StopOutlined, CheckOutlined } from '@ant-design/icons';
+import Icon, {
+    StopOutlined, CheckOutlined, ZoomInOutlined, ZoomOutOutlined,
+} from '@ant-design/icons';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import Timeline from 'antd/lib/timeline';
@@ -139,6 +141,24 @@ function LeftGroup(props: Props): JSX.Element {
                         </Button>
                     </CVATTooltip>
                 ) : null}
+                {/* <CVATTooltip> */}
+                <Button
+                    type='link'
+                    className='cvat-annotation-header-button'
+                    // onClick={onUndoClick}
+                >
+                    <ZoomInOutlined />
+                    {/* <span>Undo</span> */}
+                </Button>
+                <Button
+                    type='link'
+                    className='cvat-annotation-header-button'
+                    // onClick={onUndoClick}
+                >
+                    <ZoomOutOutlined />
+                    {/* <span>Undo</span> */}
+                </Button>
+                {/* </CVATTooltip> */}
             </Col>
         </>
     );

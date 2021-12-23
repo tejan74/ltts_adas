@@ -122,6 +122,7 @@ export enum AnnotationActionTypes {
     CONFIRM_CANVAS_READY = 'CONFIRM_CANVAS_READY',
     DRAG_CANVAS = 'DRAG_CANVAS',
     ZOOM_CANVAS = 'ZOOM_CANVAS',
+    ZOOM_Button_CANVAS = 'ZOOM_Button_CANVAS',
     SELECT_ISSUE_POSITION = 'SELECT_ISSUE_POSITION',
     MERGE_OBJECTS = 'MERGE_OBJECTS',
     GROUP_OBJECTS = 'GROUP_OBJECTS',
@@ -920,6 +921,15 @@ export function dragCanvas(enabled: boolean): AnyAction {
 export function zoomCanvas(enabled: boolean): AnyAction {
     return {
         type: AnnotationActionTypes.ZOOM_CANVAS,
+        payload: {
+            enabled,
+        },
+    };
+}
+// new code added by raju
+export function zoomCanvasButton(enabled: boolean): AnyAction {
+    return {
+        type: AnnotationActionTypes.ZOOM_Button_CANVAS,
         payload: {
             enabled,
         },

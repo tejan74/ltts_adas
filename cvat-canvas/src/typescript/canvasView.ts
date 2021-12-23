@@ -1380,7 +1380,9 @@ export class CanvasViewImpl implements CanvasView, Listener {
             }
         } else if (reason === UpdateReasons.DRAW) {
             const data: DrawData = this.controller.drawData;
+            /* eslint no-empty: "error" */
             if (data.enabled && this.mode === Mode.IDLE) {
+                /* eslint no-empty: "error" */
                 this.canvas.style.cursor = 'crosshair';
                 this.mode = Mode.DRAW;
                 if (typeof data.redraw === 'number') {

@@ -4,13 +4,12 @@
 
 import React from 'react';
 import { Col } from 'antd/lib/grid';
-import Icon from '@ant-design/icons';
+import Icon, { DeleteOutlined } from '@ant-design/icons';
 import Select from 'antd/lib/select';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
 import Tooltip from 'antd/lib/tooltip';
 import Moment from 'react-moment';
-
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
@@ -130,6 +129,10 @@ function RightGroup(props: Props): JSX.Element {
         document.dispatchEvent(evt);
     }
     // code ended by giti
+    function DeleteObject(): void {
+        const evt = new KeyboardEvent('keydown', { keyCode: 46, which: 46 });
+        document.dispatchEvent(evt);
+    }
 
     return (
         <Col className='cvat-annotation-header-right-group'>
@@ -154,6 +157,14 @@ function RightGroup(props: Props): JSX.Element {
             >
                 <img style={{ width: '30px', marginBottom: '5px' }} alt='keyboard' src={image} />
                 Shortcut
+            </Button>
+            <Button
+                className='cvat-annotation-header-button'
+                type='link'
+                onClick={() => DeleteObject()}
+            >
+                <DeleteOutlined />
+                Delete
             </Button>
             <Button
                 type='link'

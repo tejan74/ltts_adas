@@ -104,6 +104,7 @@ interface DispatchToProps {
     onZoomCanvas: (enabled: boolean) => void;
     // new code added by raju
     onZoomInCanvas: (enabled: boolean) => void;
+    onZoomOutCanvas: (enabled: boolean) => void;
     onResetCanvas: () => void;
     onShapeDrawn: () => void;
     onMergeObjects: (enabled: boolean) => void;
@@ -247,6 +248,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
             dispatch(zoomCanvas(enabled));
         },
         onZoomInCanvas(enabled: boolean): void {
+            dispatch(zoomInCanvas(enabled));
+        },
+        onZoomOutCanvas(enabled: boolean): void {
             dispatch(zoomInCanvas(enabled));
         },
         onResetCanvas(): void {

@@ -163,8 +163,8 @@ function RightGroup(props: Props): JSX.Element {
                 type='link'
                 onClick={() => DeleteObject()}
             >
-                <DeleteOutlined />
-                Delete
+                <DeleteOutlined style={{ fontSize: '18px' }} />
+                <span style={{ marginBottom: '-6px' }}> Delete </span>
             </Button>
             <Button
                 type='link'

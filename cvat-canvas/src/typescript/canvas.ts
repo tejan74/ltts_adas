@@ -49,7 +49,7 @@ interface Canvas {
     dragCanvas(enable: boolean): void;
     zoomCanvas(enable: boolean): void;
     zoomInCanvas(enable: boolean): void;
-
+    zoomOutCanvas(enable: boolean): void;
     mode(): Mode;
     cancel(): void;
     configure(configuration: Configuration): void;
@@ -100,11 +100,15 @@ class CanvasImpl implements Canvas {
     }
 
     public zoomCanvas(enable: boolean): void {
-        this.model.zoomInCanvas(enable);
+        this.model.zoomCanvas(enable);
     }
 
     public zoomInCanvas(enable: boolean): void {
         this.model.zoomInCanvas(enable);
+    }
+
+    public zoomOutCanvas(enable: boolean): void {
+        this.model.zoomOutCanvas(enable);
     }
 
     public activate(clientID: number | null, attributeID: number | null = null): void {

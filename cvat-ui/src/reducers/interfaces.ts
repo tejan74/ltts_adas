@@ -454,6 +454,7 @@ export enum ActiveControl {
     AI_TOOLS = 'ai_tools',
     PHOTO_CONTEXT = 'PHOTO_CONTEXT',
     OPENCV_TOOLS = 'opencv_tools',
+    ZOOM_IN_CANVAS = 'zoom_in_canvas',
 }
 
 export enum ShapeType {

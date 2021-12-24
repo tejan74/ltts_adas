@@ -482,6 +482,22 @@ export default (state = defaultState, action: AnyAction): AnnotationState => {
                 },
             };
         }
+        case AnnotationActionTypes.ZOOM_OUT_CANVAS: {
+            const { enabled } = action.payload;
+            const activeControl = enabled ? ActiveControl.ZOOM_OUT_CANVAS : ActiveControl.CURSOR;
+
+            return {
+                ...state,
+                annotations: {
+                    ...state.annotations,
+                    activatedStateID: null,
+                },
+                canvas: {
+                    ...state.canvas,
+                    activeControl,
+                },
+            };
+        }
         case AnnotationActionTypes.REMEMBER_CREATED_OBJECT: {
             const { payload } = action;
 

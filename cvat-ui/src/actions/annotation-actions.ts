@@ -123,6 +123,7 @@ export enum AnnotationActionTypes {
     DRAG_CANVAS = 'DRAG_CANVAS',
     ZOOM_CANVAS = 'ZOOM_CANVAS',
     ZOOM_IN_CANVAS = 'ZOOM_IN_CANVAS',
+    ZOOM_OUT_CANVAS = 'ZOOM_OUT_CANVAS',
     SELECT_ISSUE_POSITION = 'SELECT_ISSUE_POSITION',
     MERGE_OBJECTS = 'MERGE_OBJECTS',
     GROUP_OBJECTS = 'GROUP_OBJECTS',
@@ -930,6 +931,14 @@ export function zoomCanvas(enabled: boolean): AnyAction {
 export function zoomInCanvas(enabled: boolean): AnyAction {
     return {
         type: AnnotationActionTypes.ZOOM_IN_CANVAS,
+        payload: {
+            enabled,
+        },
+    };
+}
+export function zoomOutCanvas(enabled: boolean): AnyAction {
+    return {
+        type: AnnotationActionTypes.ZOOM_OUT_CANVAS,
         payload: {
             enabled,
         },

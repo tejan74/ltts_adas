@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -48,6 +48,7 @@ interface Canvas {
     selectRegion(enable: boolean): void;
     dragCanvas(enable: boolean): void;
     zoomCanvas(enable: boolean): void;
+    zoomInCanvas(enable: boolean): void;
 
     mode(): Mode;
     cancel(): void;
@@ -59,7 +60,9 @@ interface Canvas {
 
 class CanvasImpl implements Canvas {
     private model: CanvasModel & Master;
+
     private controller: CanvasController;
+
     private view: CanvasView;
 
     public constructor() {
@@ -97,7 +100,11 @@ class CanvasImpl implements Canvas {
     }
 
     public zoomCanvas(enable: boolean): void {
-        this.model.zoomCanvas(enable);
+        this.model.zoomInCanvas(enable);
+    }
+
+    public zoomInCanvas(enable: boolean): void {
+        this.model.zoomInCanvas(enable);
     }
 
     public activate(clientID: number | null, attributeID: number | null = null): void {
@@ -108,7 +115,7 @@ class CanvasImpl implements Canvas {
         this.model.rotate(rotationAngle);
     }
 
-    public focus(clientID: number, padding: number = 0): void {
+    public focus(clientID: number, padding = 0): void {
         this.model.focus(clientID, padding);
     }
 

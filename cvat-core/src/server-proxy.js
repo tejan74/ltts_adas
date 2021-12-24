@@ -188,9 +188,10 @@
                         proxy: config.proxy,
                     });
                 } catch (errorData) {
-                    throw generateError(errorData);
+                    // throw generateError('errorData');
+                    // eslint-disable-next-line no-throw-literal
+                    throw 'Request failed with status code 504';
                 }
-
                 return response.data;
             }
 
@@ -257,7 +258,10 @@
                         proxy: config.proxy,
                     });
                 } catch (errorData) {
-                    throw generateError(errorData);
+                    //  return error.response;
+                    throw generateError(errorData.response);
+                    // eslint-disable-next-line no-throw-literal
+                    // throw 'Request failed with status code 504';
                 }
 
                 if (authenticationResponse.headers['set-cookie']) {
@@ -346,7 +350,8 @@
                         return false;
                     }
 
-                    throw serverError;
+                    // eslint-disable-next-line no-throw-literal
+                    throw 'Request failed with status code 504';
                 }
 
                 return true;
@@ -1165,8 +1170,7 @@
 
                     const closureId = Date.now();
                     predictAnnotations.latestRequest.id = closureId;
-                    const predicate = () =>
-                        !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
+                    const predicate = () => !predictAnnotations.latestRequest.fetching || predictAnnotations.latestRequest.id !== closureId;
                     if (predictAnnotations.latestRequest.fetching) {
                         waitFor(5, predicate).then(() => {
                             if (predictAnnotations.latestRequest.id !== closureId) {

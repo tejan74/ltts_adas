@@ -9,8 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 // import { getAboutAsync } from 'actions/about-actions';
 import { getAboutAsync } from 'actions/about-saga-actions';
-// import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-actions';
-import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-saga-actions';
+import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-actions';
+// import { authorizedAsync, loadAuthActionsAsync } from 'actions/auth-saga-actions';
 // import { getFormatsAsync } from 'actions/formats-actions';
 import { getFormatsAsync } from 'actions/formats-saga-actions';
 import { getModelsAsync } from 'actions/models-actions';

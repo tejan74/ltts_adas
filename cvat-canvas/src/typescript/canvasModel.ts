@@ -150,6 +150,7 @@ export enum UpdateReasons {
     CONFIG_UPDATED = 'config_updated',
     DATA_FAILED = 'data_failed',
     DESTROY = 'destroy',
+    ZOOM_IN_CANVAS = 'zoom_in_canvas',
 }
 
 export enum Mode {
@@ -165,6 +166,8 @@ export enum Mode {
     SELECT_REGION = 'select_region',
     DRAG_CANVAS = 'drag_canvas',
     ZOOM_CANVAS = 'zoom_canvas',
+    ZOOM_IN_CANVAS = 'zoom_in_canvas',
+
 }
 
 export interface CanvasModel {
@@ -210,7 +213,7 @@ export interface CanvasModel {
     selectRegion(enabled: boolean): void;
     dragCanvas(enable: boolean): void;
     zoomCanvas(enable: boolean): void;
-
+    zoomInCanvas(enable: boolean): void;
     isAbleToChangeFrame(): boolean;
     configure(configuration: Configuration): void;
     cancel(): void;
@@ -392,6 +395,18 @@ export class CanvasModelImpl extends MasterImpl implements CanvasModel {
 
         this.data.mode = enable ? Mode.ZOOM_CANVAS : Mode.IDLE;
         this.notify(UpdateReasons.ZOOM_CANVAS);
+    }
+
+    // new code added  by raj
+    public zoomInCanvas(enable: boolean): void {
+        if (enable && this.data.mode !== Mode.IDLE) {
+            throw Error(`Canvas is busy. Action: ${this.data.mode}`);
+        }
+        if (!enable && this.data.mode !== Mode.ZOOM_IN_CANVAS) {
+            throw Error(`Canvas is not in the zoom mode. Action: ${this.data.mode}`);
+        }
+        this.data.mode = enable ? Mode.ZOOM_IN_CANVAS : Mode.IDLE;
+        this.notify(UpdateReasons.ZOOM_IN_CANVAS);
     }
 
     public setup(frameData: any, objectStates: any[], zLayer: number): void {

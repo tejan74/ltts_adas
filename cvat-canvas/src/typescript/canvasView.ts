@@ -1378,6 +1378,18 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 this.canvas.style.cursor = '';
                 this.zoomHandler.cancel();
             }
+        } else if (reason === UpdateReasons.ZOOM_IN_CANVAS) {
+            if (this.mode === Mode.ZOOM_IN_CANVAS) {
+                const { offset } = this.controller.geometry;
+                const point = translateToSVG(this.content, [540, 230]);
+                this.controller.zoom(point[0] - offset, point[1] - offset, 1);
+                this.canvas.dispatchEvent(
+                    new CustomEvent('canvas.zoom', {
+                        bubbles: false,
+                        cancelable: true,
+                    }),
+                );
+            }
         } else if (reason === UpdateReasons.DRAW) {
             const data: DrawData = this.controller.drawData;
             /* eslint no-empty: "error" */

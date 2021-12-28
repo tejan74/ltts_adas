@@ -1389,6 +1389,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                         cancelable: true,
                     }),
                 );
+                this.zoomHandler.cancel();
             }
         } else if (reason === UpdateReasons.ZOOM_OUT_CANVAS) {
             if (this.mode === Mode.ZOOM_OUT_CANVAS) {
@@ -1401,6 +1402,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                         cancelable: true,
                     }),
                 );
+                this.zoomHandler.cancel();
             }
         } else if (reason === UpdateReasons.DRAW) {
             const data: DrawData = this.controller.drawData;

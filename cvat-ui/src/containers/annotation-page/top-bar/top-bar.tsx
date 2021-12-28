@@ -25,6 +25,8 @@ import {
     showStatistics as showStatisticsAction,
     switchPlay,
     undoActionAsync,
+
+    removeAnnotationsAsync,
 } from 'actions/annotation-actions';
 import AnnotationTopBarComponent from 'components/annotation-page/top-bar/top-bar';
 import { Canvas } from 'cvat-canvas-wrapper';
@@ -82,6 +84,7 @@ interface DispatchToProps {
     changeWorkspace(workspace: Workspace): void;
     switchPredictor(predictorEnabled: boolean): void;
     onSwitchToolsBlockerState(toolsBlockerState: ToolsBlockerState): void;
+    removeAnnotations(params:any): void;
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -180,6 +183,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         },
         onSwitchToolsBlockerState(toolsBlockerState: ToolsBlockerState): void {
             dispatch(switchToolsBlockerState(toolsBlockerState));
+        },
+        removeAnnotations(sessionInstance: any): void {
+            dispatch(removeAnnotationsAsync(sessionInstance));
         },
     };
 }
@@ -571,6 +577,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
             changeWorkspace,
             switchPredictor,
             toolsBlockerState,
+            removeAnnotations,
         } = this.props;
 
         const preventDefault = (event: KeyboardEvent | undefined): void => {
@@ -715,6 +722,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
                     jobInstance={jobInstance}
                     isTrainingActive={isTrainingActive}
                     activeControl={activeControl}
+                    removeAnnotations={removeAnnotations}
                 />
             </>
         );

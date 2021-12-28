@@ -42,12 +42,12 @@ function ResizeControl(props: Props): JSX.Element {
                 type='link'
                 className='cvat-annotation-header-button'
                 onClick={(): void => {
-                    if (activeControl === ActiveControl.ZOOM_IN_CANVAS) {
-                        canvasInstance.zoomInCanvas(false);
-                    } else {
-                        canvasInstance.cancel();
-                        canvasInstance.zoomInCanvas(true);
-                    }
+                    // if (activeControl === ActiveControl.ZOOM_IN_CANVAS) {
+                    //     canvasInstance.zoomInCanvas(false);
+                    // } else {
+                    //     canvasInstance.cancel();
+                    canvasInstance.zoomInCanvas(true);
+                    // }
                 }}
             >
                 <ZoomInOutlined style={{ fontSize: '20px' }} />

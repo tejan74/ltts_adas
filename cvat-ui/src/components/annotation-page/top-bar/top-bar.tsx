@@ -12,7 +12,8 @@ import {
 import LeftGroup from './left-group';
 import PlayerButtons from './player-buttons';
 import PlayerNavigation from './player-navigation';
-import RightGroup from './right-group';
+// import RightGroup from './right-group';
+import RightGroup, { Actions } from './right-group';
 
 interface Props {
     playing: boolean;
@@ -65,6 +66,7 @@ interface Props {
     onFinishDraw(): void;
     onSwitchToolsBlockerState(): void;
     jobInstance: any;
+    removeAnnotations(params: any): void;
 }
 
 export default function AnnotationTopBarComponent(props: Props): JSX.Element {
@@ -119,8 +121,15 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
         onSwitchToolsBlockerState,
         jobInstance,
         isTrainingActive,
+        removeAnnotations,
     } = props;
 
+    const onClickMenu = (params: any): void => {
+        const action = params;
+        if (action === Actions.REMOVE_ANNO) {
+            removeAnnotations(jobInstance);
+        }
+    };
     return (
         <Row justify='space-between'>
             <LeftGroup
@@ -184,6 +193,7 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
                 showStatistics={showStatistics}
                 isTrainingActive={isTrainingActive}
                 showFilters={showFilters}
+                onClickMenu={onClickMenu}
             />
         </Row>
     );

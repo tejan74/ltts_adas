@@ -64,34 +64,14 @@ class RegisterView(_RegisterView):
         data = self.get_serializer(user).data
         data['email_verification_required'] = allauth_settings.EMAIL_VERIFICATION == \
             allauth_settings.EmailVerificationMethod.MANDATORY
-        # subject ='welcome to adastool'
-
-        # message =f'hi {user.username}, Welcome to ADAS tool'
-
-        # # email_from = settings.development.EMAIL_HOST_USER
-
-        email_from = 'keshavadk@gmail.com'
-
+         
+        # code changes done for new user registration email notification feature by Keshava and Savita    
         recipient_list =user.email
-
-        # send_mail(subject, message,email_from,recipient_list)
-
-        # print("checking mail ",email_from,user)
-
-        
-        # EMAIL_HOST = 'smtp.gmail.com'
-        # EMAIL_HOST_USER = 'adasltts@gmail.com'
-        # EMAIL_HOST_PASSWORD = 'ibahsrokbbtuzsxs'
-        # EMAIL_PORT = 587
-
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
         msg['Subject'] = "Welcome from ADAS LTTS team"
         msg['From'] = EMAIL_HOST_USER
         msg['To'] = recipient_list
-
-        # Create the body of the message (a plain-text and an HTML version).
-        # text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
         html = """\
         <html>
         <head></head>
@@ -105,7 +85,6 @@ class RegisterView(_RegisterView):
         </body>
         </html>
         """.format(user.username)
-        # print("\n\n\n\n\n\n\trying for user",user)
         # Record the MIME types of both parts - text/plain and text/html.
         # part1 = MIMEText(text, 'plain')
         part2 = MIMEText(html, 'html')
@@ -117,7 +96,7 @@ class RegisterView(_RegisterView):
         msg.attach(part2)
 
         port = 465  # For SSL
-        # password = input("Type your password and press enter: ")
+    
 
         # Create a secure SSL context
         context = ssl.create_default_context()
@@ -130,11 +109,8 @@ class RegisterView(_RegisterView):
         # # sendmail function takes 3 arguments: sender's address, recipient's address
         # # and message to send - here it is sent as one string.
         
-            server.sendmail(email_from, recipient_list, msg.as_string())
+            server.sendmail(EMAIL_HOST_USER, recipient_list, msg.as_string())
             server.quit()
-
-        data['email_verification_required'] = allauth_settings.EMAIL_VERIFICATION == \
-        allauth_settings.EmailVerificationMethod.MANDATORY
         return data
 
 

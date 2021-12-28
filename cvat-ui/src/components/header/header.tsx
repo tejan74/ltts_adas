@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 // import { Row, Col } from 'antd/lib/grid';
@@ -25,6 +25,7 @@ import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
 
+import IdleTimer from 'react-idle-timer';
 import getCore from 'cvat-core-wrapper';
 // import consts from 'consts';
 
@@ -152,7 +153,7 @@ function HeaderContainer(props: Props): JSX.Element {
         isAnalyticsPluginActive,
         isModelsPluginActive,
     } = props;
-
+    const [IsVisible, setIsVisible] = useState(true);
     // const {
     //     CHANGELOG_URL, LICENSE_URL, GITTER_URL, FORUM_URL, GITHUB_URL,
     // } = consts;
@@ -174,6 +175,38 @@ function HeaderContainer(props: Props): JSX.Element {
             okText: 'Yes',
             cancelText: 'No',
         });
+    };
+
+    const onIdle = (): void => {
+        // onLogout();
+        if (IsVisible) {
+            setIsVisible(false);
+            Modal.confirm({
+                title: 'You Have Been Idle',
+                content: 'You Will Get Timed Out. You want to stay?',
+                className: 'cvat-modal-confirm-delete-task',
+                visible: false,
+                onOk: () => {
+                    onLogout();
+                },
+                onCancel: () => {
+                    setIsVisible(true);
+                    // onLogout();
+                },
+                okButtonProps: {
+                    type: 'primary',
+                    danger: true,
+                },
+                cancelButtonProps: {
+                    type: 'ghost',
+                    danger: true,
+                },
+                okText: 'Logout',
+                cancelText: 'Stay',
+            });
+        }
+
+        // Do some things with props or state
     };
     // function showAboutModal(): void {
     //     Modal.info({
@@ -281,6 +314,11 @@ function HeaderContainer(props: Props): JSX.Element {
 
     return (
         <Layout.Header className='cvat-header'>
+            <IdleTimer
+                // ref={ref => { this.idleTimer = ref }}
+                onIdle={onIdle}
+                timeout={10 * 1000}
+            />
             <div className='cvat-left-header'>
                 {/* New code added below by Raju N */}
                 <Button

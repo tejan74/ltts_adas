@@ -12,7 +12,9 @@ import Tooltip from 'antd/lib/tooltip';
 import Moment from 'react-moment';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-
+import Modal from 'antd/lib/modal';
+// eslint-disable-next-line import/no-extraneous-dependencies
+// import { MenuInfo } from 'rc-menu/lib/interface';
 import {
     FilterIcon, FullscreenIcon, InfoIcon, BrainIcon,
 } from 'icons';
@@ -29,10 +31,13 @@ interface Props {
     switchPredictor(predictorEnabled: boolean): void;
     showFilters(): void;
     changeWorkspace(workspace: Workspace): void;
-
     jobInstance: any;
-}
+    onClickMenu(params:any): void;
 
+}
+export enum Actions {
+    REMOVE_ANNO = 'remove_anno',
+}
 function RightGroup(props: Props): JSX.Element {
     const {
         showStatistics,
@@ -43,6 +48,7 @@ function RightGroup(props: Props): JSX.Element {
         jobInstance,
         isTrainingActive,
         showFilters,
+        onClickMenu,
     } = props;
     const annotationAmount = predictor.annotationAmount || 0;
     const mediaAmount = predictor.mediaAmount || 0;
@@ -133,6 +139,25 @@ function RightGroup(props: Props): JSX.Element {
         const evt = new KeyboardEvent('keydown', { keyCode: 46, which: 46 });
         document.dispatchEvent(evt);
     }
+    function DeleteAllObject(key:any): void {
+        if (key === Actions.REMOVE_ANNO) {
+            Modal.confirm({
+                title: 'All the annotations will be removed',
+                content:
+                    'You are going to remove all the annotations from the client. ' +
+                    'It will stay on the server till you save the job. Continue?',
+                className: 'cvat-modal-confirm-remove-annotation',
+                onOk: () => {
+                    onClickMenu('remove_anno');
+                },
+                okButtonProps: {
+                    type: 'primary',
+                    danger: true,
+                },
+                okText: 'Delete',
+            });
+        }
+    }
 
     return (
         <Col className='cvat-annotation-header-right-group'>
@@ -165,6 +190,14 @@ function RightGroup(props: Props): JSX.Element {
             >
                 <DeleteOutlined style={{ fontSize: '18px' }} />
                 <span style={{ marginBottom: '-6px' }}> Delete </span>
+            </Button>
+            <Button
+                className='cvat-annotation-header-button'
+                type='link'
+                onClick={() => DeleteAllObject('remove_anno')}
+            >
+                <DeleteOutlined style={{ fontSize: '17px' }} />
+                <span style={{ marginBottom: '-6px' }}> Delete All </span>
             </Button>
             <Button
                 type='link'

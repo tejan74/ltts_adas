@@ -188,9 +188,9 @@
                         proxy: config.proxy,
                     });
                 } catch (errorData) {
-                    // throw generateError('errorData');
+                    throw generateError('errorData');
                     // eslint-disable-next-line no-throw-literal
-                    throw 'Request failed with status code 504';
+                    // throw 'Request failed with status code 504';
                 }
                 return response.data;
             }
@@ -259,7 +259,7 @@
                     });
                 } catch (errorData) {
                     //  return error.response;
-                    throw generateError(errorData.response);
+                    throw generateError(errorData);
                     // eslint-disable-next-line no-throw-literal
                     // throw 'Request failed with status code 504';
                 }

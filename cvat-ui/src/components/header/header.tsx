@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 // import { Row, Col } from 'antd/lib/grid';
@@ -37,7 +37,7 @@ import ChangePasswordDialog from 'components/change-password-modal/change-passwo
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 // import { logoutAsync, authActions } from 'actions/auth-actions';
 // import { authActions } from 'actions/auth-actions';
-import { authSagaActions } from 'sagas/auth-saga';
+// import { authSagaActions } from 'sagas/auth-saga';
 import { CombinedState } from 'reducers/interfaces';
 import { logoutAsync } from 'actions/auth-saga-actions';
 import SettingsModal from './settings-modal/settings-modal';
@@ -153,12 +153,17 @@ function HeaderContainer(props: Props): JSX.Element {
         isAnalyticsPluginActive,
         isModelsPluginActive,
     } = props;
-    const [IsVisible, setIsVisible] = useState(true);
+    const [IsVisible, setIsVisible] = useState(false);
+    const [idleTimer, setidleTimer] = useState(0);
+    const [logoutTimer, setlogoutTimer] = useState(0);
+    const idleTimerRef = useRef(idleTimer);
     // const {
     //     CHANGELOG_URL, LICENSE_URL, GITTER_URL, FORUM_URL, GITHUB_URL,
     // } = consts;
-
+    const active = true;
     const history = useHistory();
+    const sessionTimeoutPeriod = 1;
+    let timeout: any;
     // code added by Raju
     const onLogoutPopConfirm = (): void => {
         Modal.confirm({
@@ -176,38 +181,27 @@ function HeaderContainer(props: Props): JSX.Element {
             cancelText: 'No',
         });
     };
-
-    const onIdle = (): void => {
-        // onLogout();
-        if (IsVisible) {
-            setIsVisible(false);
-            Modal.confirm({
-                title: 'You Have Been Idle',
-                content: 'You Will Get Timed Out. You want to stay?',
-                className: 'cvat-modal-confirm-delete-task',
-                visible: false,
-                onOk: () => {
-                    onLogout();
-                },
-                onCancel: () => {
-                    setIsVisible(true);
-                    // onLogout();
-                },
-                okButtonProps: {
-                    type: 'primary',
-                    danger: true,
-                },
-                cancelButtonProps: {
-                    type: 'ghost',
-                    danger: true,
-                },
-                okText: 'Logout',
-                cancelText: 'Stay',
-            });
-        }
-
-        // Do some things with props or state
+    // code added by Raju
+    const showSessionModal = (): void => {
+        setIsVisible(true);
     };
+    const handleStayLoggedIn = (): void => {
+        if (logoutTimer) {
+            clearTimeout(logoutTimer);
+            setlogoutTimer(0);
+        }
+        setidleTimer(0);
+        setIsVisible(false);
+    };
+    const onIdle = (): void => {
+        showSessionModal();
+        timeout = setTimeout(() => {
+            onLogout();
+            setIsVisible(false);
+        }, 1000 * 20 * 1); // 20 seconds
+        setlogoutTimer(timeout);
+    };
+    // code ended above added by Raju
     // function showAboutModal(): void {
     //     Modal.info({
     //         title: `${tool.name}`,
@@ -314,10 +308,25 @@ function HeaderContainer(props: Props): JSX.Element {
 
     return (
         <Layout.Header className='cvat-header'>
+            <Modal
+                title='Session Timeout!'
+                visible={IsVisible}
+                onOk={onLogout}
+                onCancel={handleStayLoggedIn}
+                okText='Logout'
+                cancelText='Stay'
+            >
+                <p>
+                    Your session is about to expire in 5 seconds due to inactivity. You will be redirected to the login
+                    page.
+                </p>
+            </Modal>
             <IdleTimer
-                // ref={ref => { this.idleTimer = ref }}
+                crossTab={active}
+                ref={idleTimerRef}
+                timeout={1000 * 60 * sessionTimeoutPeriod}
                 onIdle={onIdle}
-                timeout={10 * 1000}
+                // stopOnIdle={active}
             />
             <div className='cvat-left-header'>
                 {/* New code added below by Raju N */}
@@ -459,7 +468,7 @@ function HeaderContainer(props: Props): JSX.Element {
                     <QuestionCircleOutlined />
                     Help
                 </Button>
-                <Dropdown overlay={menu} className='cvat-header-menu-dropdown'>
+                <Dropdown overlay={menu} className='cvat-header-menu-dropdown' trigger={['click']}>
                     <span>
                         <Icon className='cvat-header-account-icon' component={AccountIcon} />
                         <Text strong>

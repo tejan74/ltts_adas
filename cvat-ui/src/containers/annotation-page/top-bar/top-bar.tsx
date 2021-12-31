@@ -25,7 +25,6 @@ import {
     showStatistics as showStatisticsAction,
     switchPlay,
     undoActionAsync,
-
     removeAnnotationsAsync,
 } from 'actions/annotation-actions';
 import AnnotationTopBarComponent from 'components/annotation-page/top-bar/top-bar';
@@ -68,6 +67,7 @@ interface StateToProps {
     predictor: PredictorState;
     activeControl: ActiveControl;
     isTrainingActive: boolean;
+    userGroup: any;
 }
 
 interface DispatchToProps {
@@ -84,7 +84,7 @@ interface DispatchToProps {
     changeWorkspace(workspace: Workspace): void;
     switchPredictor(predictorEnabled: boolean): void;
     onSwitchToolsBlockerState(toolsBlockerState: ToolsBlockerState): void;
-    removeAnnotations(params:any): void;
+    removeAnnotations(params: any): void;
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -110,7 +110,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         shortcuts: { keyMap, normalizedKeyMap },
         plugins: { list },
     } = state;
-
+    const userGroup = state.auth.user;
     return {
         frameStep,
         frameSpeed,
@@ -135,6 +135,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         predictor,
         activeControl,
         isTrainingActive: list.PREDICT,
+        userGroup,
     };
 }
 
@@ -578,8 +579,8 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
             switchPredictor,
             toolsBlockerState,
             removeAnnotations,
+            userGroup,
         } = this.props;
-
         const preventDefault = (event: KeyboardEvent | undefined): void => {
             if (event) {
                 event.preventDefault();
@@ -723,6 +724,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
                     isTrainingActive={isTrainingActive}
                     activeControl={activeControl}
                     removeAnnotations={removeAnnotations}
+                    userGroup={userGroup}
                 />
             </>
         );

@@ -33,7 +33,7 @@ interface Props {
     changeWorkspace(workspace: Workspace): void;
     jobInstance: any;
     onClickMenu(params:any): void;
-
+    userGroup: any;
 }
 export enum Actions {
     REMOVE_ANNO = 'remove_anno',
@@ -49,10 +49,12 @@ function RightGroup(props: Props): JSX.Element {
         isTrainingActive,
         showFilters,
         onClickMenu,
+        userGroup,
     } = props;
     const annotationAmount = predictor.annotationAmount || 0;
     const mediaAmount = predictor.mediaAmount || 0;
     const formattedScore = `${(predictor.projectScore * 100).toFixed(0)}%`;
+    const role = userGroup.groups['0'];
     const predictorTooltip = (
         <div className='cvat-predictor-tooltip'>
             <span>Adaptive auto annotation is</span>
@@ -233,6 +235,7 @@ function RightGroup(props: Props): JSX.Element {
                     className='cvat-workspace-selector'
                     onChange={changeWorkspace}
                     value={workspace}
+                    disabled={role === 'annotator' || role === 'observer' || role === undefined}
                 >
                     {Object.values(Workspace).map((ws) => {
                         if (jobInstance.task.dimension === DimensionType.DIM_3D) {

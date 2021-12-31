@@ -67,6 +67,7 @@ interface Props {
     onSwitchToolsBlockerState(): void;
     jobInstance: any;
     removeAnnotations(params: any): void;
+    userGroup: any;
 }
 
 export default function AnnotationTopBarComponent(props: Props): JSX.Element {
@@ -122,6 +123,7 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
         jobInstance,
         isTrainingActive,
         removeAnnotations,
+        userGroup,
     } = props;
 
     const onClickMenu = (params: any): void => {
@@ -194,6 +196,7 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
                 isTrainingActive={isTrainingActive}
                 showFilters={showFilters}
                 onClickMenu={onClickMenu}
+                userGroup={userGroup}
             />
         </Row>
     );

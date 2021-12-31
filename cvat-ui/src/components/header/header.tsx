@@ -37,7 +37,7 @@ import ChangePasswordDialog from 'components/change-password-modal/change-passwo
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 // import { logoutAsync, authActions } from 'actions/auth-actions';
 // import { authActions } from 'actions/auth-actions';
-// import { authSagaActions } from 'sagas/auth-saga';
+import { authSagaActions } from 'sagas/auth-saga';
 import { CombinedState } from 'reducers/interfaces';
 import { logoutAsync } from 'actions/auth-saga-actions';
 import SettingsModal from './settings-modal/settings-modal';

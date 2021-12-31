@@ -150,7 +150,7 @@ Other ways to ask questions and get our support:
 - [\#cvat](https://stackoverflow.com/search?q=%23cvat) tag on StackOverflow\*
 - [Forum on Intel Developer Zone](https://software.intel.com/en-us/forums/computer-vision)
 
-## Links
+### Links
 
 - [Intel AI blog: New Computer Vision Tool Accelerates Annotation of Digital Images and Video](https://www.intel.ai/introducing-cvat)
 - [Intel Software: Computer Vision Annotation Tool: A Universal Approach to Data Annotation](https://software.intel.com/en-us/articles/computer-vision-annotation-tool-a-universal-approach-to-data-annotation)

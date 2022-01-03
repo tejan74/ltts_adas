@@ -22,14 +22,10 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'djongo',
-    'NAME': 'new_adas',
-    'HOST': '127.0.0.1',
-    'PORT': 27017,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-
 
 # Cross-Origin Resource Sharing settings for CVAT UI
 UI_SCHEME = os.environ.get('UI_SCHEME', 'http')

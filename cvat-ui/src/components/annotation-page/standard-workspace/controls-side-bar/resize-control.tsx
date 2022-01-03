@@ -57,7 +57,7 @@ function ResizeControl(props: Props): JSX.Element {
                 className='cvat-annotation-header-button'
                 onClick={(): void => {
                     if (activeControl === ActiveControl.ZOOM_OUT_CANVAS) {
-                        canvasInstance.zoomInCanvas(false);
+                        canvasInstance.zoomOutCanvas(false);
                     } else {
                         canvasInstance.cancel();
                         canvasInstance.zoomOutCanvas(true);

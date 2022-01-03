@@ -68,6 +68,7 @@ interface StateToProps {
     activeControl: ActiveControl;
     isTrainingActive: boolean;
     userGroup: any;
+    ObjectActivatID: any;
 }
 
 interface DispatchToProps {
@@ -111,6 +112,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         plugins: { list },
     } = state;
     const userGroup = state.auth.user;
+    const ObjectActivatID = state.annotation.annotations;
     return {
         frameStep,
         frameSpeed,
@@ -136,6 +138,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         activeControl,
         isTrainingActive: list.PREDICT,
         userGroup,
+        ObjectActivatID,
     };
 }
 
@@ -580,6 +583,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
             toolsBlockerState,
             removeAnnotations,
             userGroup,
+            ObjectActivatID,
         } = this.props;
         const preventDefault = (event: KeyboardEvent | undefined): void => {
             if (event) {
@@ -725,6 +729,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
                     activeControl={activeControl}
                     removeAnnotations={removeAnnotations}
                     userGroup={userGroup}
+                    ObjectActivatID={ObjectActivatID}
                 />
             </>
         );

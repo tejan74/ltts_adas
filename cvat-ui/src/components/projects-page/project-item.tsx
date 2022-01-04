@@ -86,8 +86,8 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                     </span>
                 )}
                 description={(
-                    <div className='cvat-porjects-project-item-description' onClick={onOpenProject} aria-hidden>
-                        <div>
+                    <div className='cvat-porjects-project-item-description'>
+                        <div onClick={onOpenProject} aria-hidden>
                             {ownerName && (
                                 <>
                                     <Text type='secondary'>{`Created ${ownerName ? `by ${ownerName}` : ''}`}</Text>

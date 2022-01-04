@@ -36,6 +36,7 @@ export default function ProjectPageComponent(): JSX.Element {
     const taskDeletes = useSelector((state: CombinedState) => state.tasks.activities.deletes);
     const tasksActiveInferences = useSelector((state: CombinedState) => state.models.inferences);
     const tasks = useSelector((state: CombinedState) => state.tasks.current);
+    const userRole = useSelector((state: CombinedState) => state.auth.user);
 
     const [project] = projects.filter((_project) => _project.id === id);
     const projectSubsets = [''];
@@ -106,6 +107,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                     }}
                                     previewImage={task.preview}
                                     taskInstance={task.instance}
+                                    userRole={userRole}
                                 />
                             ))}
                     </React.Fragment>

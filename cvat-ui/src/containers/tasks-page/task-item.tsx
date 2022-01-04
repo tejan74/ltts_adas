@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -17,6 +17,7 @@ interface StateToProps {
     previewImage: string;
     taskInstance: any;
     activeInference: ActiveInference | null;
+    userRole:any;
 }
 
 interface DispatchToProps {
@@ -33,13 +34,14 @@ function mapStateToProps(state: CombinedState, own: OwnProps): StateToProps {
     const task = state.tasks.current[own.idx];
     const { deletes } = state.tasks.activities;
     const id = own.taskID;
-
+    const userRoles = state.auth.user;
     return {
         hidden: state.tasks.hideEmpty && task.instance.jobs.length === 0,
         deleted: id in deletes ? deletes[id] === true : false,
         previewImage: task.preview,
         taskInstance: task.instance,
         activeInference: state.models.inferences[id] || null,
+        userRole: userRoles,
     };
 }
 

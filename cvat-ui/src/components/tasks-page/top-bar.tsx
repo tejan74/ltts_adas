@@ -18,13 +18,13 @@ interface VisibleTopBarProps {
     onFileUpload(file: File): void;
     query: TasksQuery;
     taskImporting: boolean;
-    user:any;
+    user: any;
 }
 
 export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element {
     const {
-        query, onSearch, onFileUpload, taskImporting,
-        user } = props;
+        query, onSearch, onFileUpload, taskImporting, user,
+    } = props;
 
     const history = useHistory();
 
@@ -36,44 +36,46 @@ export default function TopBarComponent(props: VisibleTopBarProps): JSX.Element 
                         <Text className='cvat-title'>Tasks</Text>
                         <SearchField instance='task' onSearch={onSearch} query={query} />
                     </Col>
-                      {user.isSuperuser && <Col>
-                        <Row gutter={8}>
-                            <Col>
-                                <Upload
-                                    accept='.zip'
-                                    multiple={false}
-                                    showUploadList={false}
-                                    beforeUpload={(file: File): boolean => {
-                                        onFileUpload(file);
-                                        return false;
-                                    }}
-                                    className='cvat-import-task'
-                                >
+                    {user.isSuperuser && (
+                        <Col>
+                            <Row gutter={8}>
+                                <Col>
+                                    <Upload
+                                        accept='.zip'
+                                        multiple={false}
+                                        showUploadList={false}
+                                        beforeUpload={(file: File): boolean => {
+                                            onFileUpload(file);
+                                            return false;
+                                        }}
+                                        className='cvat-import-task'
+                                    >
+                                        <Button
+                                            size='large'
+                                            id='cvat-import-task-button'
+                                            type='primary'
+                                            disabled={taskImporting}
+                                            icon={<UploadOutlined />}
+                                        >
+                                            Import Task
+                                            {taskImporting && <LoadingOutlined id='cvat-import-task-button-loading' />}
+                                        </Button>
+                                    </Upload>
+                                </Col>
+                                <Col>
                                     <Button
                                         size='large'
-                                        id='cvat-import-task-button'
+                                        id='cvat-create-task-button'
                                         type='primary'
-                                        disabled={taskImporting}
-                                        icon={<UploadOutlined />}
+                                        onClick={(): void => history.push('/tasks/create')}
+                                        icon={<PlusOutlined />}
                                     >
-                                        Import Task
-                                        {taskImporting && <LoadingOutlined id='cvat-import-task-button-loading' />}
+                                        Create new task
                                     </Button>
-                                </Upload>
-                            </Col>
-                            <Col>
-                                <Button
-                                    size='large'
-                                    id='cvat-create-task-button'
-                                    type='primary'
-                                    onClick={(): void => history.push('/tasks/create')}
-                                    icon={<PlusOutlined />}
-                                >
-                                    Create new task
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Col>}
+                                </Col>
+                            </Row>
+                        </Col>
+                    )}
                 </Row>
             </Col>
         </Row>

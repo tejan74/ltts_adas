@@ -52,22 +52,22 @@ function validateURL(_: RuleObject, value: string): Promise<void> {
     return Promise.resolve();
 }
 
-function validateRepositoryPath(_: RuleObject, value: string): Promise<void> {
-    if (value && !patterns.validatePath.pattern.test(value)) {
-        return Promise.reject(new Error('Repository path is not a valid path'));
-    }
+// function validateRepositoryPath(_: RuleObject, value: string): Promise<void> {
+//     if (value && !patterns.validatePath.pattern.test(value)) {
+//         return Promise.reject(new Error('Repository path is not a valid path'));
+//     }
 
-    return Promise.resolve();
-}
+//     return Promise.resolve();
+// }
 
-function validateRepository(_: RuleObject, value: string): Promise<[void, void]> | Promise<void> {
-    if (value) {
-        const [url, path] = value.split(/\s+/);
-        return Promise.all([validateURL(_, url), validateRepositoryPath(_, path)]);
-    }
+// function validateRepository(_: RuleObject, value: string): Promise<[void, void]> | Promise<void> {
+//     if (value) {
+//         const [url, path] = value.split(/\s+/);
+//         return Promise.all([validateURL(_, url), validateRepositoryPath(_, path)]);
+//     }
 
-    return Promise.resolve();
-}
+//     return Promise.resolve();
+// }
 
 const isInteger = ({ min, max }: { min?: number; max?: number }) => (
     _: RuleObject,
@@ -262,26 +262,27 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
         );
     }
 
-    private renderGitRepositoryURL(): JSX.Element {
-        return (
-            <Form.Item
-                hasFeedback
-                name='repository'
-                label='Dataset repository URL'
-                extra='Attach a repository to store annotations there'
-                rules={[{ validator: validateRepository }]}
-            >
-                <Input size='large' placeholder='e.g. https//github.com/user/repos [annotation/<anno_file_name>.zip]' />
-            </Form.Item>
-        );
-    }
+    // private renderGitRepositoryURL(): JSX.Element {
+    //     return (
+    //         <Form.Item
+    //             hasFeedback
+    //             name='repository'
+    //             label='Dataset repository URL'
+    //             extra='Attach a repository to store annotations there'
+    //             rules={[{ validator: validateRepository }]}
+    //         >
+    //             <Input size='large'
+    //                  placeholder='e.g. https//github.com/user/repos [annotation/<anno_file_name>.zip]' />
+    //         </Form.Item>
+    //     );
+    // }
 
     private renderGit(): JSX.Element {
         return (
             <>
-                <Row>
+                {/* <Row>
                     <Col span={24}>{this.renderGitRepositoryURL()}</Col>
-                </Row>
+                </Row> */}
                 <Row>
                     <Col span={24}>{this.renderGitLFSBox()}</Col>
                 </Row>
@@ -348,7 +349,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
                 )}
             >
                 <Form.Item label='Chunk size' name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' />
+                    <Input size='large' type='number' defaultValue='1' readOnly />
                 </Form.Item>
             </CVATTooltip>
         );

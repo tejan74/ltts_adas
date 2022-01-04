@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -15,17 +15,18 @@ import { MenuIcon } from 'icons';
 
 interface DetailsComponentProps {
     taskInstance: any;
+    userRole: any;
 }
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
-    const { taskInstance } = props;
-   
+    console.log(props, 'props');
+    const { taskInstance, userRole } = props;
     const history = useHistory();
-
+    const isUseraction = userRole?.isSuperuser;
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
-                {taskInstance.projectId == 'null' ? (
+                {taskInstance.projectId === 'null' ? (
                     <Button
                         onClick={() => history.push(`/projects/${taskInstance.projectId}`)}
                         type='link'
@@ -41,14 +42,16 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     </Button>
                 )}
             </Col>
-            <Col>
-                <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
-                    <Button size='large'>
-                        <Text className='cvat-text-color'>Actions</Text>
-                        <Icon className='cvat-menu-icon' component={MenuIcon} />
-                    </Button>
-                </Dropdown>
-            </Col>
+            {isUseraction ? (
+                <Col>
+                    <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
+                        <Button size='large'>
+                            <Text className='cvat-text-color'>Actions</Text>
+                            <Icon className='cvat-menu-icon' component={MenuIcon} />
+                        </Button>
+                    </Dropdown>
+                </Col>
+            ) : null}
         </Row>
     );
 }

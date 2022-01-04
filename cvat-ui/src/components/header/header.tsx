@@ -198,7 +198,7 @@ function HeaderContainer(props: Props): JSX.Element {
         timeout = setTimeout(() => {
             onLogout();
             setIsVisible(false);
-        }, 1000 * 20 * 1); // 20 seconds
+        }, 1000 * 30 * 1); // 30 seconds
         setlogoutTimer(timeout);
     };
     // code ended above added by Raju
@@ -317,7 +317,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 cancelText='Stay'
             >
                 <p>
-                    Your session is about to expire in 5 seconds due to inactivity. You will be redirected to the login
+                    Your session is about to expire in 30 seconds due to inactivity. You will be redirected to the login
                     page.
                 </p>
             </Modal>

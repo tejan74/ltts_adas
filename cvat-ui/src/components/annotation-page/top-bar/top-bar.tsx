@@ -68,6 +68,7 @@ interface Props {
     jobInstance: any;
     removeAnnotations(params: any): void;
     userGroup: any;
+    ObjectActivatID : any;
 }
 
 export default function AnnotationTopBarComponent(props: Props): JSX.Element {
@@ -124,6 +125,7 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
         isTrainingActive,
         removeAnnotations,
         userGroup,
+        ObjectActivatID,
     } = props;
 
     const onClickMenu = (params: any): void => {
@@ -197,6 +199,7 @@ export default function AnnotationTopBarComponent(props: Props): JSX.Element {
                 showFilters={showFilters}
                 onClickMenu={onClickMenu}
                 userGroup={userGroup}
+                ObjectActivatID={ObjectActivatID}
             />
         </Row>
     );

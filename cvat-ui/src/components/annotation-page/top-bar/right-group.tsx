@@ -32,8 +32,9 @@ interface Props {
     showFilters(): void;
     changeWorkspace(workspace: Workspace): void;
     jobInstance: any;
-    onClickMenu(params:any): void;
+    onClickMenu(params: any): void;
     userGroup: any;
+    ObjectActivatID: any;
 }
 export enum Actions {
     REMOVE_ANNO = 'remove_anno',
@@ -50,6 +51,7 @@ function RightGroup(props: Props): JSX.Element {
         showFilters,
         onClickMenu,
         userGroup,
+        ObjectActivatID,
     } = props;
     const annotationAmount = predictor.annotationAmount || 0;
     const mediaAmount = predictor.mediaAmount || 0;
@@ -137,11 +139,43 @@ function RightGroup(props: Props): JSX.Element {
         document.dispatchEvent(evt);
     }
     // code ended by giti
-    function DeleteObject(): void {
+    // code added by Raju
+    function onClickdelete(): void {
         const evt = new KeyboardEvent('keydown', { keyCode: 46, which: 46 });
         document.dispatchEvent(evt);
     }
-    function DeleteAllObject(key:any): void {
+    function DeleteObject(): void {
+        if (ObjectActivatID.activatedStateID !== null) {
+            Modal.confirm({
+                title: 'annotation will be removed',
+                content:
+                    'You are going to remove the annotation from the client. ' +
+                    'It will stay on the server till you save the job. Continue?',
+                className: 'cvat-modal-confirm-remove-annotation',
+                onOk: () => {
+                    onClickdelete();
+                },
+                okButtonProps: {
+                    type: 'primary',
+                    danger: true,
+                },
+                okText: 'Delete',
+            });
+        } else {
+            Modal.info({
+                title: 'annotation will not be removed',
+                content:
+                    'Please Select One annotation Object' +
+                    '',
+                className: 'cvat-modal-confirm-remove-annotation',
+                okButtonProps: {
+                    type: 'primary',
+                    danger: true,
+                },
+            });
+        }
+    }
+    function DeleteAllObject(key: any): void {
         if (key === Actions.REMOVE_ANNO) {
             Modal.confirm({
                 title: 'All the annotations will be removed',
@@ -177,19 +211,11 @@ function RightGroup(props: Props): JSX.Element {
                     {annotationAmount ? `mAP ${formattedScore}` : 'not trained'}
                 </Button>
             )}
-            <Button
-                className='cvat-annotation-header-button'
-                type='link'
-                onClick={() => showKeyboardModal()}
-            >
+            <Button className='cvat-annotation-header-button' type='link' onClick={() => showKeyboardModal()}>
                 <img style={{ width: '30px', marginBottom: '5px' }} alt='keyboard' src={image} />
                 Shortcut
             </Button>
-            <Button
-                className='cvat-annotation-header-button'
-                type='link'
-                onClick={() => DeleteObject()}
-            >
+            <Button className='cvat-annotation-header-button' type='link' onClick={() => DeleteObject()}>
                 <DeleteOutlined style={{ fontSize: '18px' }} />
                 <span style={{ marginBottom: '-6px' }}> Delete </span>
             </Button>

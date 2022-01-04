@@ -25,6 +25,7 @@ export interface TaskItemProps {
     hidden: boolean;
     activeInference: ActiveInference | null;
     cancelAutoAnnotation(): void;
+    userRole: any;
 }
 
 class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteComponentProps> {
@@ -136,9 +137,9 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
     }
 
     private renderNavigation(): JSX.Element {
-        const { taskInstance, history } = this.props;
+        const { taskInstance, history, userRole } = this.props;
         const { id } = taskInstance;
-
+        const isUseraction = userRole?.isSuperuser;
         return (
             <Col span={4}>
                 <Row justify='end'>
@@ -158,14 +159,16 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                         </Button>
                     </Col>
                 </Row>
-                <Row justify='end'>
-                    <Col className='cvat-item-open-task-actions'>
-                        <Text className='cvat-text-color'>Actions</Text>
-                        <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
-                            <Icon className='cvat-menu-icon' component={MenuIcon} />
-                        </Dropdown>
-                    </Col>
-                </Row>
+                {isUseraction ? (
+                    <Row justify='end'>
+                        <Col className='cvat-item-open-task-actions'>
+                            <Text className='cvat-text-color'>Actions</Text>
+                            <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
+                                <Icon className='cvat-menu-icon' component={MenuIcon} />
+                            </Dropdown>
+                        </Col>
+                    </Row>
+                ) : null}
             </Col>
         );
     }

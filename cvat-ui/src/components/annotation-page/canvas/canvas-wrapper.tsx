@@ -848,7 +848,9 @@ export default class CanvasWrapperComponent extends React.PureComponent<Props> {
                         <UpOutlined className='cvat-canvas-image-setups-trigger' />
                     </Dropdown>
                 </Tooltip>
-                {/* <div className='cvat-canvas-z-axis-wrapper'>
+
+                {// below code commented for hiding the layer slider in annotation page
+                /* <div className='cvat-canvas-z-axis-wrapper'>
                     <Slider
                         disabled={minZLayer === maxZLayer}
                         min={minZLayer}

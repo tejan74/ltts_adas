@@ -12,15 +12,15 @@ import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import moment from 'moment';
 
+import Descriptions from 'antd/lib/descriptions';
 import getCore from 'cvat-core-wrapper';
 import { getReposData, syncRepos } from 'utils/git-utils';
 import { ActiveInference } from 'reducers/interfaces';
 import AutomaticAnnotationProgress from 'components/tasks-page/automatic-annotation-progress';
-import Descriptions from 'antd/lib/descriptions';
 import UserSelector, { User } from './user-selector';
 import BugTrackerEditor from './bug-tracker-editor';
 import LabelsEditorComponent from '../labels-editor/labels-editor';
-import ProjectSubsetField from '../create-task-page/project-subset-field';
+// import ProjectSubsetField from '../create-task-page/project-subset-field';
 
 const core = getCore();
 
@@ -58,7 +58,7 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
         this.previewWrapperRef = React.createRef<HTMLDivElement>();
         this.state = {
             name: taskInstance.name,
-            subset: taskInstance.subset,
+            // subset: taskInstance.subset,
             repository: '',
             repositoryStatus: '',
         };
@@ -292,36 +292,36 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
             </Row>
         );
     }
+    // renderSubsetField method is commented by Raj
+    // private renderSubsetField(): JSX.Element {
+    //     // const { subset } = this.state;
+    //     // const { taskInstance, projectSubsets, onTaskUpdate } = this.props;
 
-    private renderSubsetField(): JSX.Element {
-        const { subset } = this.state;
-        const { taskInstance, projectSubsets, onTaskUpdate } = this.props;
+    //     return (
+    //         <Row>
+    //             {/* <Col span={24}>
+    //                 <Text className='cvat-text-color'>Subset:</Text>
+    //             </Col> */}
+    //             {/* <Col span={24}>
+    //                 <ProjectSubsetField
+    //                     value={subset}
+    //                     projectId={taskInstance.projectId}
+    //                     projectSubsets={projectSubsets}
+    //                     onChange={(value) => {
+    //                         this.setState({
+    //                             subset: value,
+    //                         });
 
-        return (
-            <Row>
-                {/* <Col span={24}>
-                    <Text className='cvat-text-color'>Subset:</Text>
-                </Col> */}
-                {/* <Col span={24}>
-                    <ProjectSubsetField
-                        value={subset}
-                        projectId={taskInstance.projectId}
-                        projectSubsets={projectSubsets}
-                        onChange={(value) => {
-                            this.setState({
-                                subset: value,
-                            });
-
-                            if (taskInstance.subset !== value) {
-                                taskInstance.subset = value;
-                                onTaskUpdate(taskInstance);
-                            }
-                        }}
-                    />
-                </Col> */}
-            </Row>
-        );
-    }
+    //                         if (taskInstance.subset !== value) {
+    //                             taskInstance.subset = value;
+    //                             onTaskUpdate(taskInstance);
+    //                         }
+    //                     }}
+    //                 />
+    //             </Col> */}
+    //         </Row>
+    //     );
+    // }
 
     public render(): JSX.Element {
         const {
@@ -364,7 +364,7 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
                         {this.renderDatasetRepository()}
                         {/* {!taskInstance.projectId && this.renderLabelsEditor()} */}
                         {taskInstance.projectId && this.renderLabelsEditor()}
-                        {taskInstance.projectId && this.renderSubsetField()}
+                        {/* {taskInstance.projectId && this.renderSubsetField()} */}
                     </Col>
                 </Row>
             </div>

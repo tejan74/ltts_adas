@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -15,17 +15,17 @@ import { MenuIcon } from 'icons';
 
 interface DetailsComponentProps {
     taskInstance: any;
+    userRole: any;
 }
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { taskInstance } = props;
-   
     const history = useHistory();
 
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
-                {taskInstance.projectId == 'null' ? (
+                {taskInstance.projectId === 'null' ? (
                     <Button
                         onClick={() => history.push(`/projects/${taskInstance.projectId}`)}
                         type='link'

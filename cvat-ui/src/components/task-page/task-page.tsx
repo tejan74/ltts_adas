@@ -77,7 +77,7 @@ class TaskPageComponent extends React.PureComponent<Props> {
                     className='cvat-task-details-wrapper'
                 >
                     <Col md={22} lg={18} xl={16} xxl={14}>
-                        <TopBarComponent taskInstance={(task as Task).instance} />
+                        <TopBarComponent taskInstance={(task as Task).instance} userRole={userShowjob} />
                         <DetailsContainer task={task as Task} />
                         <JobListContainer task={task as Task} user={userShowjob} />
                     </Col>

@@ -19,9 +19,10 @@ interface DetailsComponentProps {
 }
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
-    const { taskInstance } = props;
+    console.log(props, 'props');
+    const { taskInstance, userRole } = props;
     const history = useHistory();
-
+    const isUseraction = userRole?.isSuperuser;
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
@@ -41,14 +42,16 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     </Button>
                 )}
             </Col>
-            <Col>
-                <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
-                    <Button size='large'>
-                        <Text className='cvat-text-color'>Actions</Text>
-                        <Icon className='cvat-menu-icon' component={MenuIcon} />
-                    </Button>
-                </Dropdown>
-            </Col>
+            {isUseraction ? (
+                <Col>
+                    <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
+                        <Button size='large'>
+                            <Text className='cvat-text-color'>Actions</Text>
+                            <Icon className='cvat-menu-icon' component={MenuIcon} />
+                        </Button>
+                    </Dropdown>
+                </Col>
+            ) : null}
         </Row>
     );
 }

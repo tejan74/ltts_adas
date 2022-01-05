@@ -34,19 +34,19 @@ interface Props {
     userAgreements: UserAgreement[];
     onSubmit(registerData: RegisterData): void;
 }
-// code commented by raju
+// code commented by raju due to as of now not required this feature.
 
-function validateUsername(_: RuleObject, value: string): Promise<void> {
-    if (!patterns.validateUsernameLength.pattern.test(value)) {
-        return Promise.reject(new Error(patterns.validateUsernameLength.message));
-    }
+// function validateUsername(_: RuleObject, value: string): Promise<void> {
+//     if (!patterns.validateUsernameLength.pattern.test(value)) {
+//         return Promise.reject(new Error(patterns.validateUsernameLength.message));
+//     }
 
-    if (!patterns.validateUsernameCharacters.pattern.test(value)) {
-        return Promise.reject(new Error(patterns.validateUsernameCharacters.message));
-    }
+//     if (!patterns.validateUsernameCharacters.pattern.test(value)) {
+//         return Promise.reject(new Error(patterns.validateUsernameCharacters.message));
+//     }
 
-    return Promise.resolve();
-}
+//     return Promise.resolve();
+// }
 
 export const validatePassword: RuleRender = (): RuleObject => ({
     validator(_: RuleObject, value: string): Promise<void> {
@@ -157,8 +157,8 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     </Form.Item>
                 </Col>
             </Row>
-            {/* code commented by raju */}
-            <Form.Item
+            {/* code commented by raju as per new requirement */}
+            {/* <Form.Item
                 label='Username'
                 // hasFeedback
                 name='username'
@@ -176,7 +176,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     prefix={<UserAddOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                     placeholder='Username'
                 />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
                 // hasFeedback

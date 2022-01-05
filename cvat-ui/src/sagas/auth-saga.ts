@@ -139,7 +139,7 @@ function* registerAsync(action: any): any {
 
     try {
         const user = yield cvat.server.register(
-            action.payload.username,
+            action.payload.email,
             action.payload.firstName,
             action.payload.lastName,
             action.payload.email,

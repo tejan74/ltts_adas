@@ -36,6 +36,7 @@ const initialValues: AdvancedConfiguration = {
     useZipChunks: true,
     useCache: true,
     copyData: false,
+    dataChunkSize: 1,
 };
 
 interface Props {
@@ -51,7 +52,7 @@ function validateURL(_: RuleObject, value: string): Promise<void> {
 
     return Promise.resolve();
 }
-
+// below code commented by giti for hiding dataset repository field in advance configuration form while creting task
 // function validateRepositoryPath(_: RuleObject, value: string): Promise<void> {
 //     if (value && !patterns.validatePath.pattern.test(value)) {
 //         return Promise.reject(new Error('Repository path is not a valid path'));
@@ -261,7 +262,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
             </Form.Item>
         );
     }
-
+    // below code commented by giti for hiding gitrepository field in advance configuration form
     // private renderGitRepositoryURL(): JSX.Element {
     //     return (
     //         <Form.Item
@@ -349,7 +350,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
                 )}
             >
                 <Form.Item label='Chunk size' name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' defaultValue='1' readOnly />
+                    <Input size='large' type='number' readOnly />
                 </Form.Item>
             </CVATTooltip>
         );

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -9,10 +9,10 @@ import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Checkbox from 'antd/lib/checkbox';
 
+import { Row, Col } from 'antd/lib/grid';
 import patterns from 'utils/validation-patterns';
 
 import { UserAgreement } from 'reducers/interfaces';
-import { Row, Col } from 'antd/lib/grid';
 
 export interface UserConfirmation {
     name: string;
@@ -34,6 +34,7 @@ interface Props {
     userAgreements: UserAgreement[];
     onSubmit(registerData: RegisterData): void;
 }
+// code commented by raju
 
 function validateUsername(_: RuleObject, value: string): Promise<void> {
     if (!patterns.validateUsernameLength.pattern.test(value)) {
@@ -116,9 +117,10 @@ function RegisterFormComponent(props: Props): JSX.Element {
             className='register-form'
         >
             <Row gutter={8}>
-                <Col span={12}>
+                <Col>
                     <Form.Item
-                        hasFeedback
+                        label='FirstName'
+                        // hasFeedback
                         name='firstName'
                         rules={[
                             {
@@ -134,9 +136,11 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         />
                     </Form.Item>
                 </Col>
-                <Col span={12}>
+                {/* span={12} */}
+                <Col>
                     <Form.Item
-                        hasFeedback
+                        // hasFeedback
+                        label='LastName'
                         name='lastName'
                         rules={[
                             {
@@ -153,8 +157,10 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     </Form.Item>
                 </Col>
             </Row>
+            {/* code commented by raju */}
             <Form.Item
-                hasFeedback
+                label='Username'
+                // hasFeedback
                 name='username'
                 rules={[
                     {
@@ -173,7 +179,8 @@ function RegisterFormComponent(props: Props): JSX.Element {
             </Form.Item>
 
             <Form.Item
-                hasFeedback
+                // hasFeedback
+                label='Email'
                 name='email'
                 rules={[
                     {
@@ -194,7 +201,8 @@ function RegisterFormComponent(props: Props): JSX.Element {
             </Form.Item>
 
             <Form.Item
-                hasFeedback
+                // hasFeedback
+                label='Password'
                 name='password1'
                 rules={[
                     {
@@ -211,7 +219,8 @@ function RegisterFormComponent(props: Props): JSX.Element {
             </Form.Item>
 
             <Form.Item
-                hasFeedback
+                // hasFeedback
+                label='Confirm Password'
                 name='password2'
                 dependencies={['password1']}
                 rules={[

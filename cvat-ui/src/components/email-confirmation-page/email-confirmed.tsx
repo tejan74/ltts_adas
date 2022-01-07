@@ -8,10 +8,10 @@ import { Col, Row } from 'antd/lib/grid';
 import Layout from 'antd/lib/layout';
 import Statistic from 'antd/lib/statistic';
 import './styles.scss';
+import FooterDrawer from 'components/login-page/intel-footer-drawer';
 
 const { Content } = Layout;
 const { Countdown } = Statistic;
-
 /**
  * Component for displaying email confirmation message and then redirecting to the login page
  */
@@ -32,6 +32,7 @@ function EmailConfirmationPage(): JSX.Element {
                     </Col>
                 </Row>
             </Content>
+            <FooterDrawer />
         </Layout>
     );
 }

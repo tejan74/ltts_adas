@@ -955,6 +955,44 @@ class JobViewSet(viewsets.GenericViewSet,
         if http_method in SAFE_METHODS:
             permissions.append(auth.JobAccessPermission)
         elif http_method in ['PATCH', 'PUT', 'DELETE']:
+            # assignee_id = json.loads(self.request.body).get('assignee_id',False)
+            # reviewer_id = json.loads(self.request.body).get('reviewer_id',False)
+            # msg = MIMEMultipart('alternative')
+            # msg['From'] = EMAIL_HOST_USER
+            # mess = ''
+            # print("hfhhfh", self.request.data)
+        
+            # if assignee_id:
+            #     task_id =6
+            #     segment_id = Segment.objects.filter(task_id=task_id).values('id')[0].get('id')
+            #     job_id = Job.objects.filter(assignee_id=assignee_id, segment_id=segment_id).values('id')
+            #     jobid= job_id.values('id')[0]
+            #     idg= jobid.get('id')
+            #     print("///////////", job_id.values(), jobid, idg)
+                
+            #     assignee_queryset = User.objects.filter(id=assignee_id).values()[0]
+            #     assignee_email, assignee_username = assignee_queryset.get('email'),assignee_queryset.get('username')
+            #     msg['Subject'] = "Job assignment notification"
+            #     msg['To'] = assignee_email
+            #     mess = admin_annot.format(assignee_username, idg)
+            
+            # elif reviewer_id:
+            #     reviewer_queryset = User.objects.filter(id=reviewer_id).values()[0]
+            #     reviewer_email, reviewer_username = reviewer_queryset.get('email'),reviewer_queryset.get('username')
+            #     msg['Subject'] = "Job Review notification on "
+            #     msg['To'] = reviewer_email
+            #     mess = annot_review.format(reviewer_username)
+            
+            # part = MIMEText(mess, 'html')
+            # msg.attach(part)
+            # port = 465 
+            # context = ssl.create_default_context()
+
+            # with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            #     server.login(EMAIL_HOST_USER,EMAIL_HOST_PASSWORD)
+            #     if msg.get('To') is not None:
+            #         server.sendmail(EMAIL_HOST_USER, msg.get('To'), msg.as_string())
+            #         server.quit()
             permissions.append(auth.JobChangePermission)
         
         else:
@@ -1235,19 +1273,19 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(request.user, context={ "request": request })
         
-        """code changes for email verification required by Savita and Kalaiselvi"""
-        emailid = serializer.data['email'] 
-        isverified = EmailAddress.objects.filter(email=emailid).values('email','verified')
+        # """code changes for email verification required by Savita and Kalaiselvi"""
+        # emailid = serializer.data['email'] 
+        # isverified = EmailAddress.objects.filter(email=emailid).values('email','verified')
         response = Response(serializer.data)
-        print(response.data.get('is_superuser'))
-        if response.data.get('is_superuser'):
-            response.data['email_verification_required']= True
+        # print(response.data.get('is_superuser'))
+        # if response.data.get('is_superuser'):
+        response.data['email_verification_required']= True
             
-        try:
-            response.data['email_verification_required']= isverified[0].get('verified')
+        # try:
+        #     response.data['email_verification_required']= isverified[0].get('verified')
         
-        except:
-            pass
+        # except:
+        #     pass
         return response
 
 class RedefineDescriptionField(FieldInspector):
@@ -1691,3 +1729,5 @@ def _export_annotations(db_instance, rq_id, request, format_name, action, callba
         meta={ 'request_time': timezone.localtime() },
         result_ttl=ttl, failure_ttl=ttl)
     return Response(status=status.HTTP_202_ACCEPTED)
+
+

@@ -46,12 +46,13 @@ import showPlatformNotification, {
 } from 'utils/platform-checker';
 import '../styles.scss';
 import EmailConfirmationPage from './email-confirmation-page/email-confirmed';
+import AgreementConfirmationPage from './useragreements-acceptance-page/NDA-acceptance-form';
 
 interface CVATAppProps {
     loadFormats: () => void;
     loadAbout: () => void;
     verifyAuthorized: () => void;
-    loadUserAgreements: () => void;
+    // loadUserAgreements: () => void;
     initPlugins: () => void;
     initModels: () => void;
     resetErrors: () => void;
@@ -179,7 +180,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             verifyAuthorized,
             loadFormats,
             loadAbout,
-            loadUserAgreements,
+            // loadUserAgreements,
             initPlugins,
             initModels,
             loadAuthActions,
@@ -194,8 +195,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             modelsInitialized,
             modelsFetching,
             user,
-            userAgreementsFetching,
-            userAgreementsInitialized,
+            // userAgreementsFetching,
+            // userAgreementsInitialized,
             authActionsFetching,
             authActionsInitialized,
             isModelPluginActive,
@@ -208,11 +209,11 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             verifyAuthorized();
             return;
         }
-
-        if (!userAgreementsInitialized && !userAgreementsFetching) {
-            loadUserAgreements();
-            return;
-        }
+        // code commented by raju
+        // if (!userAgreementsInitialized && !userAgreementsFetching) {
+        //     loadUserAgreements();
+        //     return;
+        // }
 
         if (!authActionsInitialized && !authActionsFetching) {
             loadAuthActions();
@@ -286,7 +287,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                         }}
                     />
                 ),
-                // duration: null,
                 duration: 5,
                 description: error.length > 200 ? 'Open the Browser Console get details' : error,
             });
@@ -355,7 +355,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             },
         };
         if (readyForRender) {
-            if (user && user.isVerified) {
+            if (user && user.isVerified && user.acceptanceVerified) {
                 return (
                     <GlobalErrorBoundary>
                         <Layout>
@@ -459,14 +459,27 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                     </GlobalErrorBoundary>
                 );
             }
-            if (user && !user.isVerified) {
+            if (user && user.isVerified) {
                 return (
                     <GlobalErrorBoundary>
                         <Switch>
-                            {/* {!user.isverified && ( */}
                             <Route exact path='/auth/email-confirmation' component={EmailConfirmationPage} />
-                            {/* )} */}
                             <Redirect to='/auth/email-confirmation' />
+                        </Switch>
+                    </GlobalErrorBoundary>
+                );
+            }
+            if (user && user.acceptanceVerified) {
+                return (
+                    <GlobalErrorBoundary>
+                        <Switch>
+                            <Route
+                                exact
+                                path='/auth/Termsandconditions-confirmation'
+                                component={AgreementConfirmationPage}
+                            />
+                            {/* )} */}
+                            <Redirect to='/auth/Termsandconditions-confirmation' />
                         </Switch>
                     </GlobalErrorBoundary>
                 );

@@ -20,7 +20,7 @@ import UserSelector, { User } from './user-selector';
 interface Props {
     taskInstance: any;
     onJobUpdate(jobInstance: any): void;
-    user: any ;
+    user: any;
 }
 
 function ReviewSummaryComponent({ jobInstance }: { jobInstance: any }): JSX.Element {
@@ -257,11 +257,11 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
     let completed = 0;
     // let jobsAssignee : any ;
     const assigneeId = user.id;
-
-    const jobsFilter = user.isSuperuser ? (jobs) :
-        (jobs.filter((item: any) => item.assignee !== null && item.assignee.id === assigneeId));
+    const jobsFilter = user.isSuperuser ?
+        jobs :
+        jobs.filter((item: any) => item.assignee !== null && item.assignee.id === assigneeId);
     const data = jobsFilter.reduce((acc: any[], job: any) => {
-    // const data = jobsAssignee.reduce((acc: any[], job: any) => {
+        // const data = jobsAssignee.reduce((acc: any[], job: any) => {
 
         if (job.status === 'completed') {
             completed++;
@@ -273,7 +273,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
         acc.push({
             key: job.id,
             job: job.id,
-            frames: `${job.startFrame}-${job.stopFrame}`,
+            frames: `${job.startFrame + 1}-${job.stopFrame + 1}`,
             status: job,
             started: `${created.format('MMMM Do YYYY HH:MM')}`,
             duration: `${moment.duration(now.diff(created)).humanize()}`,
@@ -325,7 +325,11 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                     </CVATTooltip>
                 </Col>
                 <Col>
-                    <Text className='cvat-text-color'>{`${completed} of ${data.length} jobs`}</Text>
+                    <Text className='cvat-text-color'>
+                        <strong>Completion status</strong>
+                        &nbsp;
+                        {`${completed} of ${data.length} jobs`}
+                    </Text>
                 </Col>
             </Row>
             <Table

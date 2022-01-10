@@ -23,6 +23,7 @@
                 is_superuser: null,
                 is_active: null,
                 email_verification_required: null,
+                accepted_status: null,
             };
 
             for (const property in data) {
@@ -154,6 +155,16 @@
                          */
                         get: () => data.email_verification_required,
                     },
+                    acceptanceVerified: {
+                        /**
+                         * @name acceptanceVerified
+                         * @type {boolean}
+                         * @memberof module:API.cvat.classes.User
+                         * @readonly
+                         * @instance
+                         */
+                        get: () => data.accepted_status,
+                    },
                 }),
             );
         }
@@ -172,6 +183,7 @@
                 is_superuser: this.isSuperuser,
                 is_active: this.isActive,
                 email_verification_required: this.isVerified,
+                accepted_status: this.acceptanceVerified,
             };
         }
 

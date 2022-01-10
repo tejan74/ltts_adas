@@ -30,6 +30,7 @@ enum ConstructorMode {
 interface LabelsEditorProps {
     labels: Label[];
     onSubmit: (labels: any[]) => void;
+    readonly: boolean;
 }
 
 interface LabelsEditorState {
@@ -198,6 +199,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
 
     public render(): JSX.Element {
         const { labels } = this.props;
+        const { readonly } = this.props;
         const {
             savedLabels, unsavedLabels, constructorMode, labelForUpdate,
         } = this.state;
@@ -228,6 +230,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                                     ),
                                 );
                             }}
+                            disabled={readonly}
                         >
                             Copy
                         </Button>
@@ -242,6 +245,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                         </span>
                     )}
                     key='1'
+                    disabled={readonly}
                 >
                     <RawViewer labels={[...savedLabels, ...unsavedLabels]} onSubmit={this.handleRawSubmit} />
                 </Tabs.TabPane>
@@ -254,6 +258,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                         </span>
                     )}
                     key='2'
+                    disabled={readonly}
                 >
                     {constructorMode === ConstructorMode.SHOW && (
                         <ConstructorViewer
@@ -270,6 +275,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                                     constructorMode: ConstructorMode.CREATE,
                                 });
                             }}
+                            readonly={readonly}
                         />
                     )}
                     {constructorMode === ConstructorMode.UPDATE && labelForUpdate !== null && (

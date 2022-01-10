@@ -7,6 +7,7 @@ from rest_framework import serializers
 from django.conf import settings
 
 from cvat.apps.authentication.serializers import RegisterSerializerEx
+from .models import UserAgreementStatus
 
 class UserAgreementSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=256)
@@ -41,3 +42,12 @@ class RestrictedRegisterSerializer(RegisterSerializerEx):
                     )
 
         return validated_data
+    
+class AgreementStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserAgreementStatus
+        fields = ('user_id',
+                  'accepted_status',
+                  'accepted_date',
+                  'accepted_time')

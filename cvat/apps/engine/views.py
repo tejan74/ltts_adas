@@ -22,7 +22,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, response
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -69,6 +69,7 @@ from . import models, task
 from .log import clogger, slogger
 
 from allauth.account.models import EmailAddress
+from cvat.apps.restrictions.models import UserAgreementStatus
 
 import smtplib, ssl
 
@@ -254,6 +255,7 @@ class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.path.endswith('tasks'):
+            print("taskkkkkkkkkkkkkkkkkk")
             return TaskSerializer
         if self.request.query_params and self.request.query_params.get("names_only") == "true":
             return ProjectSearchSerializer
@@ -299,12 +301,14 @@ class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
         responses={'200': TaskSerializer(many=True)})
     @action(detail=True, methods=['GET'], serializer_class=TaskSerializer)
     def tasks(self, request, pk):
+        print("tasksss")
         self.get_object() # force to call check_object_permissions
         queryset = Task.objects.filter(project_id=pk).order_by('-id')
         queryset = auth.filter_task_queryset(queryset, request.user)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
+            print("jhdgdggg", page)
             serializer = self.get_serializer(page, many=True,
                 context={"request": request})
             return self.get_paginated_response(serializer.data)
@@ -427,7 +431,7 @@ class DjangoFilterInspector(CoreAPICompatInspector):
 @method_decorator(name='destroy', decorator=swagger_auto_schema(operation_summary='Method deletes a specific task, all attached jobs, annotations, and data'))
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a task'))
 class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
-    print("here")
+    print("herekk")
     queryset = Task.objects.all().prefetch_related(
             "label_set__attributespec_set",
             "segment_set__job_set",
@@ -440,9 +444,11 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
 
     def get_permissions(self):
         http_method = self.request.method
+        print("gggggggggggggggg",self.request.method )
         permissions = [IsAuthenticated]
 
         if http_method in SAFE_METHODS:
+            print("jjjjj",self.request.method )
             permissions.append(auth.TaskAccessPermission)
         elif http_method in ["POST"]:
             permissions.append(auth.TaskCreatePermission)
@@ -578,6 +584,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                 job_id=rq_id,
                 meta={ 'request_time': timezone.localtime() },
                 result_ttl=ttl, failure_ttl=ttl)
+            print(response,"ressssssssssssss")
             return Response(pk,status=status.HTTP_202_ACCEPTED)
 
         else:
@@ -611,6 +618,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
         serializer = JobSerializer(queryset, many=True,
             context={"request": request})
         #print(serializer.data)
+        print("respo in 620", response)
         return Response(serializer.data)
 
     # @swagger_auto_schema(method='get', operation_summary='Returns a list of jobs for a specific task',
@@ -656,6 +664,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=['POST', 'GET'])
     def data(self, request, pk):
         db_task = self.get_object() # call check_object_permissions as well
+        print("hhh", request.method)
         if request.method == 'POST':
             if db_task.data:
                 return Response(data='Adding more data is not supported',
@@ -684,16 +693,20 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
             if 'stop_frame' not in serializer.validated_data:
                 data['stop_frame'] = None
             task.create(db_task.id, data)
+            print("respi in 694", response)
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
+            print("getmmwm")
             data_type = request.query_params.get('type', None)
             data_id = request.query_params.get('number', None)
             data_quality = request.query_params.get('quality', 'compressed')
 
             possible_data_type_values = ('chunk', 'frame', 'preview', 'context_image')
             possible_quality_values = ('compressed', 'original')
+            
 
             try:
+                print(data_type,";;;;;;")
                 if not data_type or data_type not in possible_data_type_values:
                     raise ValidationError(detail='Data type not specified or has wrong value')
                 elif data_type == 'chunk' or data_type == 'frame':
@@ -703,6 +716,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                         raise ValidationError(detail='Wrong quality value')
 
                 db_data = db_task.data
+                print( db_data,";;;;;;;;;")
                 if not db_data:
                     raise NotFound(detail='Cannot find requested data for the task')
 
@@ -945,6 +959,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     operation_summary='Methods does a partial update of chosen fields in a job'))
 class JobViewSet(viewsets.GenericViewSet,
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    print("joviewseroooooooooooooooooooo")
     queryset = Job.objects.all().order_by('id')
     serializer_class = JobSerializer
 
@@ -955,6 +970,7 @@ class JobViewSet(viewsets.GenericViewSet,
         if http_method in SAFE_METHODS:
             permissions.append(auth.JobAccessPermission)
         elif http_method in ['PATCH', 'PUT', 'DELETE']:
+            print("joviewseroooooooooooooooooooo")
             # assignee_id = json.loads(self.request.body).get('assignee_id',False)
             # reviewer_id = json.loads(self.request.body).get('reviewer_id',False)
             # msg = MIMEMultipart('alternative')
@@ -1276,6 +1292,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
         # """code changes for email verification required by Savita and Kalaiselvi"""
         # emailid = serializer.data['email'] 
         # isverified = EmailAddress.objects.filter(email=emailid).values('email','verified')
+        agreemt = UserAgreementStatus.objects.filter(user=request.user).values('accepted_status','accepted_date')
         response = Response(serializer.data)
         # print(response.data.get('is_superuser'))
         # if response.data.get('is_superuser'):
@@ -1286,6 +1303,11 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
         
         # except:
         #     pass
+        try:
+            response.data['accepted_status']= agreemt[0].get('accepted_status')
+            response.data['accepted_date']= agreemt[0].get('accepted_date')
+        except:
+            pass
         return response
 
 class RedefineDescriptionField(FieldInspector):

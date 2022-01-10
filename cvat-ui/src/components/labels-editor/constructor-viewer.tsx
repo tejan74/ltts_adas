@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -14,12 +14,13 @@ interface ConstructorViewerProps {
     onUpdate: (label: Label) => void;
     onDelete: (label: Label) => void;
     onCreate: () => void;
+    readonly: boolean
 }
 
 export default function ConstructorViewer(props: ConstructorViewerProps): JSX.Element {
-    const { onCreate } = props;
+    const { onCreate, readonly } = props;
     const list = [
-        <Button key='create' type='ghost' onClick={onCreate} className='cvat-constructor-viewer-new-item'>
+        <Button key='create' type='ghost' disabled={readonly} onClick={onCreate} className='cvat-constructor-viewer-new-item'>
             Add label
             <PlusCircleOutlined />
         </Button>,

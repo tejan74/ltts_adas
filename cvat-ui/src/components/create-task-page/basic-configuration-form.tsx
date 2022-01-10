@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -13,6 +13,7 @@ export interface BaseConfiguration {
 
 interface Props {
     onSubmit(values: BaseConfiguration): void;
+    readonly: boolean;
 }
 
 export default class BasicConfigurationForm extends React.PureComponent<Props> {
@@ -42,6 +43,7 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
+        const { readonly } = this.props;
         return (
             <Form ref={this.formRef} layout='vertical'>
                 <Form.Item
@@ -55,7 +57,7 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter task name"/>
+                    <Input placeholder='Enter task name' readOnly={readonly} />
                 </Form.Item>
             </Form>
         );

@@ -16,7 +16,7 @@ import { FormInstance } from 'antd/lib/form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { EventDataNode } from 'rc-tree/lib/interface';
 import { InboxOutlined } from '@ant-design/icons';
-
+import notification from 'antd/lib/notification';
 import consts from 'consts';
 import { CloudStorage } from 'reducers/interfaces';
 import CloudStorageTab from './cloud-storages-tab';
@@ -40,6 +40,8 @@ interface Props {
     treeData: TreeNodeNormal[];
     onLoadData: (key: string, success: () => void, failure: () => void) => void;
     onChangeActiveKey(key: string): void;
+    readonly: boolean;
+    projectType: string;
 }
 
 export class FileManager extends React.PureComponent<Props, State> {
@@ -120,10 +122,12 @@ export class FileManager extends React.PureComponent<Props, State> {
 
     private renderLocalSelector(): JSX.Element {
         const { files } = this.state;
+        const { readonly } = this.props;
 
         return (
-            <Tabs.TabPane className='cvat-file-manager-local-tab' key='local' tab='My computer'>
+            <Tabs.TabPane className='cvat-file-manager-local-tab' key='local' tab='My computer' disabled={readonly}>
                 <Upload.Dragger
+                    disabled={readonly}
                     multiple
                     listType='text'
                     fileList={files.local as any[]}
@@ -140,6 +144,27 @@ export class FileManager extends React.PureComponent<Props, State> {
                             },
                         });
                         return false;
+                    }}
+                    onChange={(): any => {
+                        const { projectType } = this.props;
+                        // const uploadedFiles = this.getFiles();
+
+                        if (files) {
+                            if (files.local[0]?.type !== undefined) {
+                                const { type } = files.local[0];
+                                const type1 = type.split('/');
+                                const type2 = type1[0];
+                                const type3 = type2 && type2.charAt(0).toUpperCase() + type2.substring(1);
+                                if (projectType !== type3) {
+                                    notification.error({
+                                        message: 'Please give the correct type of file',
+                                        description: 'File type  miss match',
+                                        duration: 5,
+                                        className: 'cvat-notification-create-task-fail',
+                                    });
+                                }
+                            }
+                        }
                     }}
                 >
                     <p className='ant-upload-drag-icon'>
@@ -179,9 +204,10 @@ export class FileManager extends React.PureComponent<Props, State> {
         const { SHARE_MOUNT_GUIDE_URL } = consts;
         const { treeData } = this.props;
         const { expandedKeys, files } = this.state;
+        const { readonly } = this.props;
 
         return (
-            <Tabs.TabPane key='share' tab='Connected file share'>
+            <Tabs.TabPane key='share' tab='Connected file share' disabled={readonly}>
                 {treeData[0].children && treeData[0].children.length ? (
                     <Tree
                         className='cvat-share-tree'
@@ -235,9 +261,9 @@ export class FileManager extends React.PureComponent<Props, State> {
 
     private renderRemoteSelector(): JSX.Element {
         const { files } = this.state;
-
+        const { readonly } = this.props;
         return (
-            <Tabs.TabPane key='remote' tab='Remote sources'>
+            <Tabs.TabPane key='remote' tab='Remote sources' disabled={readonly}>
                 <Input.TextArea
                     className='cvat-file-selector-remote'
                     placeholder='Enter one URL per line'
@@ -257,9 +283,11 @@ export class FileManager extends React.PureComponent<Props, State> {
     }
 
     private renderCloudStorageSelector(): JSX.Element {
+        const { readonly } = this.props;
         const { cloudStorage, potentialCloudStorage, files } = this.state;
         return (
             <Tabs.TabPane
+                disabled={readonly}
                 key='cloudStorage'
                 className='cvat-create-task-page-cloud-storage-tab'
                 tab={<span> Cloud Storage </span>}

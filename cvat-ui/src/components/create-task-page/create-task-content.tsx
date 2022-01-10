@@ -32,6 +32,7 @@ export interface CreateTaskData {
     activeFileManagerTab: string;
     cloudStorageId: number | null;
     projectType: string;
+    readonly: boolean;
 }
 
 interface Props {
@@ -65,6 +66,7 @@ const defaultState = {
     },
     activeFileManagerTab: 'local',
     cloudStorageId: null,
+    readonly: true,
 };
 
 class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps, State> {
@@ -129,7 +131,6 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             });
         }
         const totalLen = Object.keys(files).reduce((acc, key) => acc + files[key].length, 0);
-
         return !!totalLen;
     };
     private validateFilesTypes = (): boolean => {
@@ -154,6 +155,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private handleProjectIdChange = (value: null | number, type: string): void => {
         const { projectId, subset } = this.state;
         this.setState((state) => ({
+            readonly: false,
             projectId: value,
             subset: value && value === projectId ? subset : '',
             labels: value ? [] : state.labels,
@@ -245,9 +247,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     };
 
     private renderBasicBlock(): JSX.Element {
+        const { readonly } = this.state;
+
         return (
             <Col span={24}>
                 <BasicConfigurationForm
+                    readonly={readonly}
                     ref={this.basicConfigurationComponent}
                     onSubmit={this.handleSubmitBasicConfiguration}
                 />
@@ -296,7 +301,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private renderLabelsBlock(): JSX.Element | null {
         // const { projectId, labels } = this.state;
         const { labels } = this.state;
-
+        const { readonly } = this.state;
         // if (projectId) {
         //     return (
         //         <>
@@ -316,6 +321,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                 <Text type='danger'>* </Text>
                 <Text className='cvat-text-color'>Labels:</Text>
                 <LabelsEditor
+                    readonly={readonly}
                     labels={labels}
                     onSubmit={(newLabels): void => {
                         this.setState({
@@ -328,11 +334,15 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     }
 
     private renderFilesBlock(): JSX.Element {
+        const { readonly } = this.state;
+        const { projectType } = this.state;
         return (
             <Col span={24}>
                 <Text type='danger'>* </Text>
                 <Text className='cvat-text-color'>Select files:</Text>
                 <ConnectedFileManager
+                    readonly={readonly}
+                    projectType={projectType}
                     onChangeActiveKey={this.changeFileManagerTab}
                     ref={(container: any): void => {
                         this.fileManagerContainer = container;
@@ -371,8 +381,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     <Text className='cvat-title'>Basic configuration</Text>
                 </Col>
 
-                {this.renderBasicBlock()}
                 {this.renderProjectBlock()}
+                {this.renderBasicBlock()}
                 {/* {this.renderSubsetBlock()} */}
                 {this.renderLabelsBlock()}
                 {this.renderFilesBlock()}

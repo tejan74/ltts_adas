@@ -195,7 +195,7 @@ class TaskExporter(_TaskBackupBase):
         self._db_data = self._db_task.data
         self._version = version
         #code added to fetch project_id in json file
-        self._db_task = self._db_task.project_id 
+        #self._db_task = self._db_task.project_id 
 
         db_labels = (self._db_task.project if self._db_task.project_id else self._db_task).label_set.all().prefetch_related(
             'attributespec_set')

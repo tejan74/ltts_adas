@@ -328,7 +328,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             // location,
             isModelPluginActive,
         } = this.props;
-
         const readyForRender =
             (userInitialized && (user == null || !user.isVerified)) ||
             (userInitialized &&
@@ -355,7 +354,32 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             },
         };
         if (readyForRender) {
-            if (user && user.isVerified && user.acceptanceVerified) {
+            if (user && !user.isVerified) {
+                return (
+                    <GlobalErrorBoundary>
+                        <Switch>
+                            <Route exact path='/auth/email-confirmation' component={EmailConfirmationPage} />
+                            <Redirect to='/auth/email-confirmation' />
+                        </Switch>
+                    </GlobalErrorBoundary>
+                );
+            }
+            if (user && !user.acceptanceVerified) {
+                return (
+                    <GlobalErrorBoundary>
+                        <Switch>
+                            <Route
+                                exact
+                                path='/auth/Termsandconditions-confirmation'
+                                component={AgreementConfirmationPage}
+                            />
+                            {/* )} */}
+                            <Redirect to='/auth/Termsandconditions-confirmation' />
+                        </Switch>
+                    </GlobalErrorBoundary>
+                );
+            }
+            if (user && user?.isVerified && user?.acceptanceVerified) {
                 return (
                     <GlobalErrorBoundary>
                         <Layout>
@@ -456,31 +480,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                 <a id='downloadAnchor' target='_blank' style={{ display: 'none' }} download />
                             </Layout.Content>
                         </Layout>
-                    </GlobalErrorBoundary>
-                );
-            }
-            if (user && !user.isVerified) {
-                return (
-                    <GlobalErrorBoundary>
-                        <Switch>
-                            <Route exact path='/auth/email-confirmation' component={EmailConfirmationPage} />
-                            <Redirect to='/auth/email-confirmation' />
-                        </Switch>
-                    </GlobalErrorBoundary>
-                );
-            }
-            if (user && !user.acceptanceVerified) {
-                return (
-                    <GlobalErrorBoundary>
-                        <Switch>
-                            <Route
-                                exact
-                                path='/auth/Termsandconditions-confirmation'
-                                component={AgreementConfirmationPage}
-                            />
-                            {/* )} */}
-                            <Redirect to='/auth/Termsandconditions-confirmation' />
-                        </Switch>
                     </GlobalErrorBoundary>
                 );
             }

@@ -5,6 +5,7 @@
 from django.conf import settings
 from allauth.account import app_settings as allauth_settings
 from allauth.account.models import EmailAddress
+from cvat.apps.restrictions.models import UserAgreementStatus
 
 from . import AUTH_ROLE
 
@@ -23,3 +24,7 @@ def create_user(sender, instance, created, **kwargs):
     # create and verify EmailAddress for superuser accounts
     if allauth_settings.EMAIL_REQUIRED:
             EmailAddress.objects.get_or_create(user=instance, email=instance.email, primary=True, verified=True)
+            
+    UserAgreementStatus.objects.get_or_create(user=instance, accepted_status=False)
+            
+            

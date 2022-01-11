@@ -38,9 +38,7 @@ function PlayerNavigation(props: Props): JSX.Element {
         onInputChange,
         onURLIconClick,
     } = props;
-
-    const [frameInputValue, setFrameInputValue] = useState<number>(frameNumber);
-
+    const [frameInputValue, setFrameInputValue] = useState<number>(frameNumber + 1);
     useEffect(() => {
         if (frameNumber !== frameInputValue) {
             setFrameInputValue(frameNumber);

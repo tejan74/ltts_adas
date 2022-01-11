@@ -11,7 +11,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.renderers import TemplateHTMLRenderer
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.generics import GenericAPIView
 from django.http.response import JsonResponse
 
@@ -20,8 +20,8 @@ from cvat.apps.restrictions.serializers import AgreementStatusSerializer
 
 class RestrictionsViewSet(viewsets.ViewSet):
     serializer_class = None
-    permission_classes = [AllowAny]
-    authentication_classes = []
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = []
 
     # To get nice documentation about ServerViewSet actions it is necessary
     # to implement the method. By default, ViewSet doesn't provide it.
@@ -49,13 +49,15 @@ class RestrictionsViewSet(viewsets.ViewSet):
 
     @staticmethod
     @swagger_auto_schema(
-        method='put',
+        method='patch',
         operation_summary='Method provides user agreements that the user must update',
         responses={'200': AgreementStatusSerializer})
-    @action(detail=False, methods=['PUT'], serializer_class=AgreementStatusSerializer)
+    @action(detail=False, methods=['PATCH'], serializer_class=AgreementStatusSerializer)
     def user_agreements(request):
         try:
-            agreement = UserAgreementStatus.objects.get(user_id=request.data['user_id'])
+            user_id = request.user.id
+            print("user details",user_id)
+            agreement = UserAgreementStatus.objects.get(user_id=user_id)
             # user_agreements = settings.RESTRICTIONS['user_agreements']
             # print("chekcing user_agreements", user_agreements)
             serializer = AgreementStatusSerializer(agreement, data=request.data)

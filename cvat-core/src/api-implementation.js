@@ -91,6 +91,9 @@
         cvat.server.Googlelogin.implementation = async (accessToken) => {
             await serverProxy.server.Googlelogin(accessToken);
         };
+        cvat.server.agreement.implementation = async () => {
+            await serverProxy.server.agreement();
+        };
         // New code added by raju
         cvat.server.logout.implementation = async () => {
             await serverProxy.server.logout();

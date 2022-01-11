@@ -9,15 +9,21 @@ import { Col, Row } from 'antd/lib/grid';
 import Layout from 'antd/lib/layout';
 import { Button } from 'antd';
 // import './styles.scss';
+import { useDispatch } from 'react-redux';
 import FooterDrawer from 'components/login-page/intel-footer-drawer';
+import { getAcceptanceAsync } from '../../actions/acceptance-saga-action';
 
 const { Content } = Layout;
-
 /**
  * Component for displaying Terms and condition acceptance message and then redirecting to the login page
  */
 
 function AgreementConfirmationPage(): JSX.Element {
+    const dispatch = useDispatch();
+    const acceptance = (event: any) => {
+        event.preventDefault();
+        dispatch(getAcceptanceAsync());
+    };
     // const linkRef = useRef();
     return (
         <Layout>
@@ -39,7 +45,7 @@ function AgreementConfirmationPage(): JSX.Element {
                         {/* <Link to='/auth/login' ref={linkRef}>Or click this link</Link> */}
 
                     </Col>
-                    <Button type='primary'>Acceptance</Button>
+                    <Button type='primary' onClick={(event) => acceptance(event)}>Acceptance</Button>
                 </Row>
             </Content>
             <FooterDrawer />

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import { all, put, takeLatest } from 'redux-saga/effects';
-// import { authSagaActions } from 'sagas/auth-saga';
+import { authSagaActions } from 'sagas/auth-saga';
 import { ActionUnion, createAction } from '../utils/redux';
 import { AcceptanceSagaActionTypes } from '../actions/acceptance-saga-action';
 import getCore from '../cvat-core-wrapper';
@@ -12,7 +12,7 @@ const core = getCore();
 
 const acceptanceSagaActions = {
     getAbout: () => createAction(AcceptanceSagaActionTypes.ACCEPTANCE),
-    AcceptanceSuccess: (server: any) => createAction(AcceptanceSagaActionTypes.ACCEPTANCE_SUCCESS, { server }),
+    AcceptanceSuccess: (user: any) => createAction(AcceptanceSagaActionTypes.ACCEPTANCE_SUCCESS, { user }),
     AcceptanceFailed: (error: any) => createAction(AcceptanceSagaActionTypes.ACCEPTANCE_FAILED, { error }),
 };
 
@@ -23,7 +23,7 @@ function* getAboutAsync(): any {
     try {
         yield core.server.agreement();
         const users = yield core.users.get({ self: true });
-        yield put(acceptanceSagaActions.AcceptanceSuccess(users));
+        yield put(authSagaActions.loginSuccess(users['0']));
     } catch (error) {
         yield put(acceptanceSagaActions.AcceptanceFailed(error));
     }

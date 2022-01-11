@@ -469,7 +469,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                     </GlobalErrorBoundary>
                 );
             }
-            if (user && user.acceptanceVerified) {
+            if (user && !user.acceptanceVerified) {
                 return (
                     <GlobalErrorBoundary>
                         <Switch>

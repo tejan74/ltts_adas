@@ -203,7 +203,7 @@
                     const data = {
                         accepted_status: true,
                     };
-                    response = await Axios.put(`${backendAPI}/restrictions/user_agreements`, data, {
+                    response = await Axios.patch(`${backendAPI}/restrictions/user_agreements`, data, {
                         proxy: config.proxy,
                     });
                     console.log();

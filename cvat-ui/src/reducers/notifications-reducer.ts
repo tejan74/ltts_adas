@@ -23,8 +23,8 @@ import { ReviewActionTypes } from 'actions/review-actions';
 // import { ExportActionTypes } from 'actions/export-actions';
 import { ExportSagaActionTypes } from 'actions/export-saga-actions';
 import { CloudStorageActionTypes } from 'actions/cloud-storage-actions';
-
 import getCore from 'cvat-core-wrapper';
+import { AcceptanceSagaActionTypes } from '../actions/acceptance-saga-action';
 import { NotificationsState } from './interfaces';
 
 const core = getCore();
@@ -40,6 +40,7 @@ const defaultState: NotificationsState = {
             requestPasswordReset: null,
             resetPassword: null,
             loadAuthActions: null,
+            loadAcceptance: null,
         },
         projects: {
             fetching: null,
@@ -192,6 +193,24 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
+        // new code added by raju
+        case AcceptanceSagaActionTypes.ACCEPTANCE_FAILED: {
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    auth: {
+                        ...state.errors.auth,
+                        loadAcceptance: {
+                            message: 'Could not call on the server',
+                            reason: action.payload.error.toString(),
+                            className: 'cvat-notification-notice-login-failed',
+                        },
+                    },
+                },
+            };
+        }
+        // new code ended by raju
         case AuthSagaActionTypes.REGISTER_FAILED: {
             return {
                 ...state,

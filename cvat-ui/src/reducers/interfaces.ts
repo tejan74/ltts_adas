@@ -333,6 +333,7 @@ export interface NotificationsState {
             requestPasswordReset: null | ErrorState;
             resetPassword: null | ErrorState;
             loadAuthActions: null | ErrorState;
+            loadAcceptance: null | ErrorState;
         };
         projects: {
             fetching: null | ErrorState;

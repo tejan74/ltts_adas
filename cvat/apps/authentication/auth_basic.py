@@ -24,7 +24,12 @@ def create_user(sender, instance, created, **kwargs):
     # create and verify EmailAddress for superuser accounts
     if allauth_settings.EMAIL_REQUIRED:
             EmailAddress.objects.get_or_create(user=instance, email=instance.email, primary=True, verified=True)
-            
-    UserAgreementStatus.objects.get_or_create(user=instance, accepted_status=False)
+    user_agreement_data = UserAgreementStatus.objects.filter(user_id=instance.id)   
+#     print("user_agre",user_agreement_data) 
+    if len(user_agreement_data) == 0:
+            UserAgreementStatus.objects.get_or_create(user=instance, accepted_status=False)
+
+    
+    
             
             

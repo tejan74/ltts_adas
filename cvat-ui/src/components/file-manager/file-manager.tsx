@@ -148,7 +148,7 @@ export class FileManager extends React.PureComponent<Props, State> {
                     }}
                     onChange={(): any => {
                         const { projectType, onFileSelect } = this.props;
-                        // const uploadedFiles = this.getFiles();
+
                         if (files) {
                             if (files.local[0]?.type !== undefined) {
                                 const { type } = files.local[0];

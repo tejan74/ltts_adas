@@ -10,11 +10,8 @@ import Checkbox from 'antd/lib/checkbox';
 import Form, { FormInstance, RuleObject, RuleRender } from 'antd/lib/form';
 import Text from 'antd/lib/typography/Text';
 import { Store } from 'antd/lib/form/interface';
-
 import CVATTooltip from 'components/common/cvat-tooltip';
 import patterns from 'utils/validation-patterns';
-// import ConnectedFileManager from 'containers/file-manager/file-manager';
-// import { Files } from 'components/file-manager/file-manager';
 
 export interface AdvancedConfiguration {
     bugTracker?: string;
@@ -30,7 +27,6 @@ export interface AdvancedConfiguration {
     dataChunkSize?: number;
     useCache: boolean;
     copyData?: boolean;
-    // files: Files;
 }
 
 const initialValues: AdvancedConfiguration = {
@@ -40,12 +36,6 @@ const initialValues: AdvancedConfiguration = {
     useCache: true,
     copyData: false,
     dataChunkSize: 1,
-    // files: {
-    //     local: [],
-    //     share: [],
-    //     remote: [],
-    //     cloudStorage: [],
-    // },
 };
 
 interface Props {
@@ -98,7 +88,7 @@ const isInteger = ({ min, max }: { min?: number; max?: number }) => (
     }
 
     if (typeof max !== 'undefined' && intValue > max) {
-        return Promise.reject(new Error(`Value must be less than ${max}`));
+        return Promise.reject(new Error(`Value must be less than or equal to ${max}`));
     }
 
     return Promise.resolve();
@@ -136,7 +126,6 @@ const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
 
 class AdvancedConfigurationForm extends React.PureComponent<Props> {
     private formRef: RefObject<FormInstance>;
-    // private fileManagerContainer: any;
 
     public constructor(props: Props) {
         super(props);

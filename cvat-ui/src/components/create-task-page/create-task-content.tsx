@@ -34,7 +34,6 @@ export interface CreateTaskData {
     projectType: string;
     readonly: boolean;
 }
-
 interface Props {
     onCreate: (data: CreateTaskData) => void;
     status: string;
@@ -56,6 +55,12 @@ const defaultState = {
         lfs: false,
         useZipChunks: true,
         useCache: true,
+        files: {
+            local: [],
+            share: [],
+            remote: [],
+            cloudStorage: [],
+        },
     },
     labels: [],
     files: {
@@ -73,6 +78,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private basicConfigurationComponent: RefObject<BasicConfigurationForm>;
     private advancedConfigurationComponent: RefObject<AdvancedConfigurationForm>;
     private fileManagerContainer: any;
+    onFileSelect: any;
 
     public constructor(props: Props & RouteComponentProps) {
         super(props);
@@ -178,6 +184,12 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private handleTaskSubsetChange = (value: string): void => {
         this.setState({
             subset: value,
+        });
+    };
+
+    private handleFileChange = (value: Files): void => {
+        this.setState({
+            files: value,
         });
     };
 
@@ -336,6 +348,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private renderFilesBlock(): JSX.Element {
         const { readonly } = this.state;
         const { projectType } = this.state;
+        this.onFileSelect = this.handleFileChange.bind(this);
         return (
             <Col span={24}>
                 <Text type='danger'>* </Text>
@@ -344,6 +357,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     readonly={readonly}
                     projectType={projectType}
                     onChangeActiveKey={this.changeFileManagerTab}
+                    onFileSelect={this.onFileSelect}
                     ref={(container: any): void => {
                         this.fileManagerContainer = container;
                     }}
@@ -355,11 +369,13 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
     private renderAdvancedBlock(): JSX.Element {
         const { installedGit } = this.props;
         const { activeFileManagerTab } = this.state;
+        const { files } = this.state;
         return (
             <Col span={24}>
                 <Collapse>
                     <Collapse.Panel key='1' header={<Text className='cvat-title'>Advanced configuration</Text>}>
                         <AdvancedConfigurationForm
+                            files={files}
                             installedGit={installedGit}
                             activeFileManagerTab={activeFileManagerTab}
                             ref={this.advancedConfigurationComponent}

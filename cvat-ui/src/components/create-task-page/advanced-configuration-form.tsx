@@ -13,6 +13,8 @@ import { Store } from 'antd/lib/form/interface';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 import patterns from 'utils/validation-patterns';
+// import ConnectedFileManager from 'containers/file-manager/file-manager';
+// import { Files } from 'components/file-manager/file-manager';
 
 export interface AdvancedConfiguration {
     bugTracker?: string;
@@ -28,6 +30,7 @@ export interface AdvancedConfiguration {
     dataChunkSize?: number;
     useCache: boolean;
     copyData?: boolean;
+    // files: Files;
 }
 
 const initialValues: AdvancedConfiguration = {
@@ -37,12 +40,19 @@ const initialValues: AdvancedConfiguration = {
     useCache: true,
     copyData: false,
     dataChunkSize: 1,
+    // files: {
+    //     local: [],
+    //     share: [],
+    //     remote: [],
+    //     cloudStorage: [],
+    // },
 };
 
 interface Props {
     onSubmit(values: AdvancedConfiguration): void;
     installedGit: boolean;
     activeFileManagerTab: string;
+    files: any// ;
 }
 
 function validateURL(_: RuleObject, value: string): Promise<void> {
@@ -126,6 +136,7 @@ const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
 
 class AdvancedConfigurationForm extends React.PureComponent<Props> {
     private formRef: RefObject<FormInstance>;
+    // private fileManagerContainer: any;
 
     public constructor(props: Props) {
         super(props);
@@ -211,10 +222,12 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
     }
 
     private renderSegmentSize(): JSX.Element {
+        const { files } = this.props;
+        const maxSegmentNumber = files.local.length;
         return (
             <CVATTooltip title='Defines a number of frames in a segment'>
-                <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' min={1} />
+                <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1, max: maxSegmentNumber }) }]}>
+                    <Input size='large' type='number' max={files.local.length} placeholder='fileLength' />
                 </Form.Item>
             </CVATTooltip>
         );

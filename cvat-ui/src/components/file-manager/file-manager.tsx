@@ -40,6 +40,7 @@ interface Props {
     treeData: TreeNodeNormal[];
     onLoadData: (key: string, success: () => void, failure: () => void) => void;
     onChangeActiveKey(key: string): void;
+    onFileSelect(value: Files): void;
     readonly: boolean;
     projectType: string;
 }
@@ -146,8 +147,7 @@ export class FileManager extends React.PureComponent<Props, State> {
                         return false;
                     }}
                     onChange={(): any => {
-                        const { projectType } = this.props;
-                        // const uploadedFiles = this.getFiles();
+                        const { projectType, onFileSelect } = this.props;
 
                         if (files) {
                             if (files.local[0]?.type !== undefined) {
@@ -163,6 +163,7 @@ export class FileManager extends React.PureComponent<Props, State> {
                                         className: 'cvat-notification-create-task-fail',
                                     });
                                 }
+                                onFileSelect(files);
                             }
                         }
                     }}

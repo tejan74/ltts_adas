@@ -71,13 +71,14 @@ function LeftGroup(props: Props): JSX.Element {
 
     return (
         <>
-            <Modal title='Saving changes on the server' visible={saving} footer={[]} closable={false}>
+        {/* code commented by Raju  */}
+            {/* <Modal title='Saving changes on the server'  visible={saving} footer={[]} closable={false}>
                 <Timeline pending={savingStatuses[savingStatuses.length - 1] || 'Pending..'}>
                     {savingStatuses.slice(0, -1).map((status: string, id: number) => (
                         <Timeline.Item key={id}>{status}</Timeline.Item>
                     ))}
                 </Timeline>
-            </Modal>
+            </Modal> */}
             <Col className='cvat-annotation-header-left-group'>
                 <Dropdown overlay={<AnnotationMenuContainer />}>
                     <Button type='link' className='cvat-annotation-header-button'>

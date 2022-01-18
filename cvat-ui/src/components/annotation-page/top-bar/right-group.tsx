@@ -54,6 +54,7 @@ function RightGroup(props: Props): JSX.Element {
         ObjectActivatID,
     } = props;
     const annotationAmount = predictor.annotationAmount || 0;
+    const statesCount = ObjectActivatID?.states.length || 0;
     const mediaAmount = predictor.mediaAmount || 0;
     const formattedScore = `${(predictor.projectScore * 100).toFixed(0)}%`;
     const role = userGroup.groups['0'];
@@ -114,7 +115,6 @@ function RightGroup(props: Props): JSX.Element {
                 <span>
                     Progress:
                     {predictor.progress.toFixed(1)}
-                    {' '}
                     %
                 </span>
             ) : null}
@@ -147,10 +147,10 @@ function RightGroup(props: Props): JSX.Element {
     function DeleteObject(): void {
         if (ObjectActivatID.activatedStateID !== null) {
             Modal.confirm({
-                title: 'annotation will be removed',
+                title: 'Annotation will be removed',
                 content:
-                    'You are going to remove the annotation from the client. ' +
-                    'It will stay on the server till you save the job. Continue?',
+                    'Do you want to remove the annotation from the client. ' +
+                      'Continue?',
                 className: 'cvat-modal-confirm-remove-annotation',
                 onOk: () => {
                     onClickdelete();
@@ -163,10 +163,8 @@ function RightGroup(props: Props): JSX.Element {
             });
         } else {
             Modal.info({
-                title: 'annotation will not be removed',
-                content:
-                    'Please Select One annotation Object' +
-                    '',
+                title: 'Annotation will not be remove',
+                content: 'Please Select one annotation Object',
                 className: 'cvat-modal-confirm-remove-annotation',
                 okButtonProps: {
                     type: 'primary',
@@ -179,9 +177,8 @@ function RightGroup(props: Props): JSX.Element {
         if (key === Actions.REMOVE_ANNO) {
             Modal.confirm({
                 title: 'All the annotations will be removed',
-                content:
-                    'You are going to remove all the annotations from the client. ' +
-                    'It will stay on the server till you save the job. Continue?',
+                content: `You are going to remove the  ${statesCount} annotations from the client. DO you
+                        Continue?`,
                 className: 'cvat-modal-confirm-remove-annotation',
                 onOk: () => {
                     onClickMenu('remove_anno');
@@ -215,11 +212,23 @@ function RightGroup(props: Props): JSX.Element {
                 <img style={{ width: '30px', marginBottom: '5px' }} alt='keyboard' src={image} />
                 Shortcut
             </Button>
-            <Button className='cvat-annotation-header-button' type='link' onClick={() => DeleteObject()}>
+            <Button
+                style={{
+                    pointerEvents: ObjectActivatID.activatedStateID ? 'initial' : 'none',
+                    opacity: ObjectActivatID.activatedStateID ? 1 : 0.5,
+                }}
+                className='cvat-annotation-header-button'
+                type='link'
+                onClick={() => DeleteObject()}
+            >
                 <DeleteOutlined style={{ fontSize: '18px' }} />
                 <span style={{ marginBottom: '-6px' }}> Delete </span>
             </Button>
             <Button
+                style={{
+                    pointerEvents: ObjectActivatID.activatedStateID ? 'initial' : 'none',
+                    opacity: ObjectActivatID.activatedStateID ? 1 : 0.5,
+                }}
                 className='cvat-annotation-header-button'
                 type='link'
                 onClick={() => DeleteAllObject('remove_anno')}

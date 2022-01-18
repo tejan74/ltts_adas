@@ -5,9 +5,9 @@
 import React from 'react';
 import { Col } from 'antd/lib/grid';
 import Icon, { StopOutlined, CheckOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import Modal from 'antd/lib/modal';
+// import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
-import Timeline from 'antd/lib/timeline';
+// import Timeline from 'antd/lib/timeline';
 import Dropdown from 'antd/lib/dropdown';
 
 import AnnotationMenuContainer from 'containers/annotation-page/top-bar/annotation-menu';
@@ -39,7 +39,7 @@ interface Props {
 function LeftGroup(props: Props): JSX.Element {
     const {
         saving,
-        savingStatuses,
+        // savingStatuses,
         undoAction,
         redoAction,
         saveShortcut,
@@ -71,7 +71,7 @@ function LeftGroup(props: Props): JSX.Element {
 
     return (
         <>
-        {/* code commented by Raju  */}
+            {/* code commented by Raju  */}
             {/* <Modal title='Saving changes on the server'  visible={saving} footer={[]} closable={false}>
                 <Timeline pending={savingStatuses[savingStatuses.length - 1] || 'Pending..'}>
                     {savingStatuses.slice(0, -1).map((status: string, id: number) => (

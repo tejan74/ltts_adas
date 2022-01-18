@@ -137,7 +137,8 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
             ),
         ).map((value: string | null) => ({ text: value || 'Is Empty', value: value || false }));
     }
-
+    const role = user.groups['0'];
+    console.log(role, 'role');
     const columns = [
         {
             title: 'Job',
@@ -253,7 +254,78 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                 (record.reviewer.reviewer?.username || false) === value,
         },
     ];
+    const columns1 = [
+        {
+            title: 'Job',
+            dataIndex: 'job',
+            key: 'job',
+            render: (id: number): JSX.Element => (
+                <div>
+                    <Button
+                        type='link'
+                        onClick={(e: React.MouseEvent): void => {
+                            e.preventDefault();
+                            push(`/tasks/${taskId}/jobs/${id}`);
+                        }}
+                        href={`/tasks/${taskId}/jobs/${id}`}
+                    >
+                        {`Job #${id}`}
+                    </Button>
+                </div>
+            ),
+        },
+        {
+            title: 'Frames',
+            dataIndex: 'frames',
+            key: 'frames',
+            className: 'cvat-text-color cvat-job-item-frames',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            className: 'cvat-job-item-status',
+            render: (jobInstance: any): JSX.Element => {
+                const { status } = jobInstance;
+                let progressColor = null;
+                if (status === 'completed') {
+                    progressColor = 'cvat-job-completed-color';
+                } else if (status === 'validation') {
+                    progressColor = 'cvat-job-validation-color';
+                } else {
+                    progressColor = 'cvat-job-annotation-color';
+                }
 
+                return (
+                    <Text strong className={progressColor}>
+                        {status}
+                        <CVATTooltip title={<ReviewSummaryComponent jobInstance={jobInstance} />}>
+                            <QuestionCircleOutlined />
+                        </CVATTooltip>
+                    </Text>
+                );
+            },
+            sorter: sorter('status.status'),
+            filters: [
+                { text: 'annotation', value: 'annotation' },
+                { text: 'validation', value: 'validation' },
+                { text: 'completed', value: 'completed' },
+            ],
+            onFilter: (value: string | number | boolean, record: any) => record.status.status === value,
+        },
+        {
+            title: 'Started on',
+            dataIndex: 'started',
+            key: 'started',
+            className: 'cvat-text-color',
+        },
+        {
+            title: 'Duration',
+            dataIndex: 'duration',
+            key: 'duration',
+            className: 'cvat-text-color',
+        },
+    ];
     let completed = 0;
     // let jobsAssignee : any ;
     const assigneeId = user.id;
@@ -332,13 +404,23 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                     </Text>
                 </Col>
             </Row>
-            <Table
-                className='cvat-task-jobs-table'
-                rowClassName={() => 'cvat-task-jobs-table-row'}
-                columns={columns}
-                dataSource={data}
-                size='small'
-            />
+            {role === 'admin' ? (
+                <Table
+                    className='cvat-task-jobs-table'
+                    rowClassName={() => 'cvat-task-jobs-table-row'}
+                    columns={columns}
+                    dataSource={data}
+                    size='small'
+                />
+            ) : (
+                <Table
+                    className='cvat-task-jobs-table'
+                    rowClassName={() => 'cvat-task-jobs-table-row'}
+                    columns={columns1}
+                    dataSource={data}
+                    size='small'
+                />
+            )}
         </div>
     );
 }

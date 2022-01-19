@@ -17,7 +17,6 @@ from tempfile import mkstemp, NamedTemporaryFile
 import json
 import csv
 from django.template.loader import get_template
-from xhtml2pdf import pisa
 
 import cv2
 from django.db.models.query import Prefetch

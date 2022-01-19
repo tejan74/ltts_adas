@@ -6,6 +6,8 @@ import os
 import re
 import shutil
 
+from django.db.models import fields
+
 from rest_framework import serializers, exceptions
 from django.contrib.auth.models import User, Group
 
@@ -14,7 +16,7 @@ from cvat.apps.engine import models
 from cvat.apps.engine.cloud_provider import get_cloud_storage_instance, Credentials, Status
 from cvat.apps.engine.log import slogger
 from cvat.apps.engine.utils import parse_specific_attributes
-from cvat.apps.engine.models import Label
+from cvat.apps.engine.models import Label, Autosave
 
 class BasicUserSerializer(serializers.ModelSerializer):
     def validate(self, data):
@@ -98,7 +100,7 @@ class LabelSerializer(serializers.ModelSerializer):
             logger = slogger.project[parent_instance.id]
         else:
             instance['task'] = parent_instance
-            print("line 102 in seri")
+            print("line 102 in seri,", parent_instance.id)
             logger = slogger.task[parent_instance.id]
         if not validated_data.get('id') is None:
             try:
@@ -110,8 +112,10 @@ class LabelSerializer(serializers.ModelSerializer):
             db_label.name = validated_data.get('name', db_label.name)
             logger.info("{}({}) label was updated".format(db_label.name, db_label.id))
         else:
-            db_label = models.Label.objects.create(name=validated_data.get('name'), **instance)
-            print("line 109",db_label)
+            projectid = models.Task.objects.filter(id=parent_instance.id).values('project_id')
+            project_id = projectid[0].get('project_id')
+            db_label = models.Label.objects.create(name=validated_data.get('name'), project_id=project_id,  **instance)
+            print("line 109",db_label, instance, project_id)
             logger.info("New {} label was created".format(db_label.name))
         if validated_data.get('deleted') == True:
             db_label.delete()
@@ -145,6 +149,19 @@ class JobCommitSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobCommit
         fields = ('id', 'version', 'author', 'message', 'timestamp')
+        
+# class BasicAutoSaveSerializer(serializers.ModelSerializer):
+#     def validate(self, data):
+#         if hasattr(self, 'initial_data'):
+#             unknown_keys = set(self.initial_data.keys()) - set(self.fields.keys())
+#             if unknown_keys:
+#                 if set(['isenabled', 'duration']) & unknown_keys:
+#                 #     message = 'You do not have permissions to access some of' + \
+#                 #         ' these fields: {}'.format(unknown_keys)
+#                 # else:
+#                 #     message = 'Got unknown fields: {}'.format(unknown_keys)
+#                 # raise serializers.ValidationError(message)
+#                 return data
 
 class JobSerializer(serializers.ModelSerializer):
     task_id = serializers.ReadOnlyField(source="segment.task.id")
@@ -154,30 +171,44 @@ class JobSerializer(serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     reviewer = BasicUserSerializer(allow_null=True, required=False)
     reviewer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    
 
     class Meta:
         model = models.Job
         fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer',
             'reviewer_id', 'status', 'start_frame', 'stop_frame', 'task_id')
         read_only_fields = ('assignee', 'reviewer')
+        
+class AutosaveSerializer(serializers.ModelSerializer):
+    job_id = serializers.IntegerField(required=False)
+    user_id = serializers.IntegerField(required=False)
+    
+    class Meta:
+        model = models.Autosave
+        fields =('job_id','user_id','isenabled','duration')
 
 class SimpleJobSerializer(serializers.ModelSerializer):
     assignee = BasicUserSerializer(allow_null=True)
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True)
     reviewer = BasicUserSerializer(allow_null=True, required=False)
     reviewer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    isenabled = AutosaveSerializer(allow_null=True, required=True)
+    
 
     class Meta:
         model = models.Job
-        fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer', 'reviewer_id', 'status')
-        read_only_fields = ('assignee', 'reviewer')
+        fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer', 'reviewer_id', 'status', 'isenabled')
+        read_only_fields = ('assignee', 'reviewer', 'isenabled')
 
 class SegmentSerializer(serializers.ModelSerializer):
     jobs = SimpleJobSerializer(many=True, source='job_set')
+    
 
     class Meta:
         model = models.Segment
         fields = ('start_frame', 'stop_frame', 'jobs')
+        
+
 
 class ClientFileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -365,6 +396,9 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     project_id = serializers.IntegerField(required=False)
     dimension = serializers.CharField(allow_blank=True, required=False)
+    # autosave_enabled = serializers.BooleanField(default=False)
+    # autosave_duration =serializers.IntegerField(write_only=True, allow_null=False, required=False)
+    
     
 
     class Meta:
@@ -375,7 +409,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             'data_chunk_size', 'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality',
             'data', 'dimension', 'subset')
         read_only_fields = ('mode', 'created_date', 'updated_date', 'status', 'data_chunk_size', 'owner', 'assignee',
-            'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality', 'data')
+            'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality', 'data' )
         write_once_fields = ('overlap', 'segment_size', 'project_id')
         ordering = ['-id']
 
@@ -387,7 +421,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         #     raise serializers.ValidationError('Project must have only one of Label set or project_id')
 
         labels = validated_data.pop('label_set', [])
-        print("labels[] in line 378",labels)
+        print("labels[] in line 378",labels, validated_data)
         db_task = models.Task.objects.create(**validated_data)
         # added line 379 to fetch labels for task by Keshava and Savita
         project = models.Project.objects.filter(id=validated_data.get("project_id")).first()
@@ -433,10 +467,12 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         # added not none condition for task labels by Savita
         if instance.project_id is None or instance.project_id is not None:
             for label in labels:
-                print("line 424 ser")
+                print("line 468 ser", instance.project_id)
                 LabelSerializer.update_instance(label, instance)
+                
+        
         validated_project_id = validated_data.get('project_id', None)
-        print("line 427")
+        print("line 471", validated_data, validated_project_id )
 
         if validated_project_id is not None and validated_project_id != instance.project_id:
             print("checking",validated_project_id)
@@ -551,6 +587,8 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
                   'project_description','start_date','project_type')
         read_only_fields = ('created_date', 'updated_date', 'status', 'owner', 'asignee', 'task_subsets', 'dimension')
         ordering = ['-id']
+        
+
 
 
     def to_representation(self, instance):
@@ -560,6 +598,9 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
         response['task_subsets'] = list(task_subsets)
         response['dimension'] = instance.tasks.first().dimension if instance.tasks.count() else None
         return response
+    
+
+    
 
 class ProjectSerializer(ProjectWithoutTaskSerializer):
     tasks = TaskSerializer(many=True, read_only=True)

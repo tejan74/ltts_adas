@@ -123,7 +123,7 @@ export class FileManager extends React.PureComponent<Props, State> {
 
     private renderLocalSelector(): JSX.Element {
         const { files } = this.state;
-        const { readonly } = this.props;
+        const { readonly, projectType } = this.props;
 
         return (
             <Tabs.TabPane className='cvat-file-manager-local-tab' key='local' tab='My computer' disabled={readonly}>
@@ -147,8 +147,7 @@ export class FileManager extends React.PureComponent<Props, State> {
                         return false;
                     }}
                     onChange={(): any => {
-                        const { projectType, onFileSelect } = this.props;
-
+                        const { onFileSelect } = this.props;
                         if (files) {
                             if (files.local[0]?.type !== undefined) {
                                 const { type } = files.local[0];
@@ -172,7 +171,12 @@ export class FileManager extends React.PureComponent<Props, State> {
                         <InboxOutlined />
                     </p>
                     <p className='ant-upload-text'>Click or drag files to this area</p>
-                    <p className='ant-upload-hint'>Support for a bulk images or a single video</p>
+                    {projectType === 'Image' && (
+                        <p className='ant-upload-hint'>Support for bulk images</p>
+                    )}
+                    {projectType === 'Video' && (
+                        <p className='ant-upload-hint'>Support for single video</p>
+                    )}
                 </Upload.Dragger>
                 {files.local.length >= 5 && (
                     <>

@@ -131,6 +131,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         ]}
                     >
                         <Input
+                            style={{ marginLeft: '50px' }}
                             prefix={<UserAddOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                             placeholder='First name'
                         />
@@ -151,6 +152,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         ]}
                     >
                         <Input
+                            style={{ marginLeft: '50px' }}
                             prefix={<UserAddOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                             placeholder='Last name'
                         />
@@ -194,6 +196,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                 ]}
             >
                 <Input
+                    style={{ marginLeft: '79px', width: '89%' }}
                     autoComplete='email'
                     prefix={<MailOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                     placeholder='Email address'
@@ -212,6 +215,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                 ]}
             >
                 <Input.Password
+                    style={{ marginLeft: '53px', width: '99%' }}
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                     placeholder='Password'
@@ -231,6 +235,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                 ]}
             >
                 <Input.Password
+                    style={{ width: '127%' }}
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
                     placeholder='Confirm password'

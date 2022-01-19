@@ -5,11 +5,11 @@
 import React, { useState, useEffect } from 'react';
 
 import { Row, Col } from 'antd/lib/grid';
-import { LinkOutlined } from '@ant-design/icons';
+// import { LinkOutlined } from '@ant-design/icons';
 import Slider from 'antd/lib/slider';
 import InputNumber from 'antd/lib/input-number';
 import Input from 'antd/lib/input';
-import Text from 'antd/lib/typography/Text';
+// import Text from 'antd/lib/typography/Text';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { clamp } from 'utils/math';
@@ -31,12 +31,12 @@ function PlayerNavigation(props: Props): JSX.Element {
         startFrame,
         stopFrame,
         frameNumber,
-        frameFilename,
+        // frameFilename,
         focusFrameInputShortcut,
         inputFrameRef,
         onSliderChange,
         onInputChange,
-        onURLIconClick,
+        // onURLIconClick,
     } = props;
     const [frameInputValue, setFrameInputValue] = useState<number>(frameNumber + 1);
     useEffect(() => {
@@ -60,7 +60,9 @@ function PlayerNavigation(props: Props): JSX.Element {
                     </Col>
                 </Row>
                 <Row justify='center'>
-                    <Col className='cvat-player-filename-wrapper'>
+                    {/* below code commented by giti to hide the file name in the
+                     player slider section of annotation page */}
+                    {/* <Col className='cvat-player-filename-wrapper'>
                         <CVATTooltip title={frameFilename}>
                             <Text type='secondary'>{frameFilename}</Text>
                         </CVATTooltip>
@@ -69,7 +71,7 @@ function PlayerNavigation(props: Props): JSX.Element {
                         <CVATTooltip title='Create frame URL'>
                             <LinkOutlined className='cvat-player-frame-url-icon' onClick={onURLIconClick} />
                         </CVATTooltip>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Col>
             <Col>

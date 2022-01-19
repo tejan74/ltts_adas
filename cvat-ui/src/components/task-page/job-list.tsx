@@ -98,7 +98,6 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
     } = props;
 
     const { jobs, id: taskId } = taskInstance;
-
     function sorter(path: string) {
         return (obj1: any, obj2: any): number => {
             let currentObj1 = obj1;
@@ -138,15 +137,15 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
         ).map((value: string | null) => ({ text: value || 'Is Empty', value: value || false }));
     }
     const role = user.groups['0'];
-    console.log(role, 'role');
     const columns = [
         {
             title: 'Job',
             dataIndex: 'job',
             key: 'job',
-            render: (id: number): JSX.Element => (
+            render: (id: number, jobInstance: any): JSX.Element => (
                 <div>
                     <Button
+                        disabled={jobInstance.status.status === 'completed'}
                         type='link'
                         onClick={(e: React.MouseEvent): void => {
                             e.preventDefault();
@@ -219,7 +218,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                 <UserSelector
                     className='cvat-job-assignee-selector'
                     value={jobInstance.assignee}
-                    status={jobInstance.status}
+                    status={jobInstance.status === 'validation' || jobInstance.status === 'completed'}
                     onSelect={(value: User | null): void => {
                         // eslint-disable-next-line no-param-reassign
                         jobInstance.assignee = value;
@@ -241,6 +240,7 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
                 <UserSelector
                     className='cvat-job-reviewer-selector'
                     value={jobInstance.reviewer}
+                    status={jobInstance.status === 'annotation' || jobInstance.status === 'completed'}
                     onSelect={(value: User | null): void => {
                         // eslint-disable-next-line
                         jobInstance.reviewer = value;
@@ -259,9 +259,10 @@ function JobListComponent(props: Props & RouteComponentProps): JSX.Element {
             title: 'Job',
             dataIndex: 'job',
             key: 'job',
-            render: (id: number): JSX.Element => (
+            render: (id: number, jobInstance: any): JSX.Element => (
                 <div>
                     <Button
+                        disabled={jobInstance.status.status === 'completed'}
                         type='link'
                         onClick={(e: React.MouseEvent): void => {
                             e.preventDefault();

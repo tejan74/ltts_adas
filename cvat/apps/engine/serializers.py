@@ -6,6 +6,8 @@ import os
 import re
 import shutil
 
+from django.db.models import fields
+
 from rest_framework import serializers, exceptions
 from django.contrib.auth.models import User, Group
 
@@ -69,7 +71,6 @@ class AttributeSerializer(serializers.ModelSerializer):
         return attribute
 
 class LabelSerializer(serializers.ModelSerializer):
-    print("adding")
     id = serializers.IntegerField(required=False)
     attributes = AttributeSerializer(many=True, source='attributespec_set',
         default=[])
@@ -81,7 +82,6 @@ class LabelSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'attributes', 'deleted')
 
     def validate(self, attrs):
-        print("done changing")
         if attrs.get('deleted') == True and attrs.get('id') is None:
             raise serializers.ValidationError('Deleted label must have an ID')
 
@@ -98,20 +98,20 @@ class LabelSerializer(serializers.ModelSerializer):
             logger = slogger.project[parent_instance.id]
         else:
             instance['task'] = parent_instance
-            print("line 102 in seri")
+            print("line 102 in seri,", parent_instance.id)
             logger = slogger.task[parent_instance.id]
         if not validated_data.get('id') is None:
             try:
                 db_label = models.Label.objects.get(id=validated_data['id'],
                     **instance)
-                print("db_label in line 104", db_label)
             except models.Label.DoesNotExist:
                 raise exceptions.NotFound(detail='Not found label with id #{} to change'.format(validated_data['id']))
             db_label.name = validated_data.get('name', db_label.name)
             logger.info("{}({}) label was updated".format(db_label.name, db_label.id))
         else:
-            db_label = models.Label.objects.create(name=validated_data.get('name'), **instance)
-            print("line 109",db_label)
+            projectid = models.Task.objects.filter(id=parent_instance.id).values('project_id')
+            project_id = projectid[0].get('project_id')
+            db_label = models.Label.objects.create(name=validated_data.get('name'), project_id=project_id,  **instance)
             logger.info("New {} label was created".format(db_label.name))
         if validated_data.get('deleted') == True:
             db_label.delete()
@@ -154,18 +154,21 @@ class JobSerializer(serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     reviewer = BasicUserSerializer(allow_null=True, required=False)
     reviewer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    
 
     class Meta:
         model = models.Job
         fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer',
             'reviewer_id', 'status', 'start_frame', 'stop_frame', 'task_id')
         read_only_fields = ('assignee', 'reviewer')
+        
 
 class SimpleJobSerializer(serializers.ModelSerializer):
     assignee = BasicUserSerializer(allow_null=True)
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True)
     reviewer = BasicUserSerializer(allow_null=True, required=False)
     reviewer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    
 
     class Meta:
         model = models.Job
@@ -174,10 +177,13 @@ class SimpleJobSerializer(serializers.ModelSerializer):
 
 class SegmentSerializer(serializers.ModelSerializer):
     jobs = SimpleJobSerializer(many=True, source='job_set')
+    
 
     class Meta:
         model = models.Segment
         fields = ('start_frame', 'stop_frame', 'jobs')
+        
+
 
 class ClientFileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -365,6 +371,8 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     project_id = serializers.IntegerField(required=False)
     dimension = serializers.CharField(allow_blank=True, required=False)
+
+    
     
 
     class Meta:
@@ -375,7 +383,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
             'data_chunk_size', 'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality',
             'data', 'dimension', 'subset')
         read_only_fields = ('mode', 'created_date', 'updated_date', 'status', 'data_chunk_size', 'owner', 'assignee',
-            'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality', 'data')
+            'data_compressed_chunk_type', 'data_original_chunk_type', 'size', 'image_quality', 'data' )
         write_once_fields = ('overlap', 'segment_size', 'project_id')
         ordering = ['-id']
 
@@ -387,7 +395,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         #     raise serializers.ValidationError('Project must have only one of Label set or project_id')
 
         labels = validated_data.pop('label_set', [])
-        print("labels[] in line 378",labels)
+        print("labels[] in line 378",labels, validated_data)
         db_task = models.Task.objects.create(**validated_data)
         # added line 379 to fetch labels for task by Keshava and Savita
         project = models.Project.objects.filter(id=validated_data.get("project_id")).first()
@@ -433,10 +441,12 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
         # added not none condition for task labels by Savita
         if instance.project_id is None or instance.project_id is not None:
             for label in labels:
-                print("line 424 ser")
+                print("line 468 ser", instance.project_id)
                 LabelSerializer.update_instance(label, instance)
+                
+        
         validated_project_id = validated_data.get('project_id', None)
-        print("line 427")
+        print("line 471", validated_data, validated_project_id )
 
         if validated_project_id is not None and validated_project_id != instance.project_id:
             print("checking",validated_project_id)
@@ -551,6 +561,8 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
                   'project_description','start_date','project_type')
         read_only_fields = ('created_date', 'updated_date', 'status', 'owner', 'asignee', 'task_subsets', 'dimension')
         ordering = ['-id']
+        
+
 
 
     def to_representation(self, instance):
@@ -560,6 +572,9 @@ class ProjectWithoutTaskSerializer(serializers.ModelSerializer):
         response['task_subsets'] = list(task_subsets)
         response['dimension'] = instance.tasks.first().dimension if instance.tasks.count() else None
         return response
+    
+
+    
 
 class ProjectSerializer(ProjectWithoutTaskSerializer):
     tasks = TaskSerializer(many=True, read_only=True)

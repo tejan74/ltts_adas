@@ -16,7 +16,7 @@ from cvat.apps.engine import models
 from cvat.apps.engine.cloud_provider import get_cloud_storage_instance, Credentials, Status
 from cvat.apps.engine.log import slogger
 from cvat.apps.engine.utils import parse_specific_attributes
-from cvat.apps.engine.models import Label, Autosave
+from cvat.apps.engine.models import Label
 
 class BasicUserSerializer(serializers.ModelSerializer):
     def validate(self, data):
@@ -71,7 +71,6 @@ class AttributeSerializer(serializers.ModelSerializer):
         return attribute
 
 class LabelSerializer(serializers.ModelSerializer):
-    print("adding")
     id = serializers.IntegerField(required=False)
     attributes = AttributeSerializer(many=True, source='attributespec_set',
         default=[])
@@ -83,7 +82,6 @@ class LabelSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'attributes', 'deleted')
 
     def validate(self, attrs):
-        print("done changing")
         if attrs.get('deleted') == True and attrs.get('id') is None:
             raise serializers.ValidationError('Deleted label must have an ID')
 
@@ -106,7 +104,6 @@ class LabelSerializer(serializers.ModelSerializer):
             try:
                 db_label = models.Label.objects.get(id=validated_data['id'],
                     **instance)
-                print("db_label in line 104", db_label)
             except models.Label.DoesNotExist:
                 raise exceptions.NotFound(detail='Not found label with id #{} to change'.format(validated_data['id']))
             db_label.name = validated_data.get('name', db_label.name)
@@ -115,7 +112,6 @@ class LabelSerializer(serializers.ModelSerializer):
             projectid = models.Task.objects.filter(id=parent_instance.id).values('project_id')
             project_id = projectid[0].get('project_id')
             db_label = models.Label.objects.create(name=validated_data.get('name'), project_id=project_id,  **instance)
-            print("line 109",db_label, instance, project_id)
             logger.info("New {} label was created".format(db_label.name))
         if validated_data.get('deleted') == True:
             db_label.delete()
@@ -149,19 +145,6 @@ class JobCommitSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobCommit
         fields = ('id', 'version', 'author', 'message', 'timestamp')
-        
-# class BasicAutoSaveSerializer(serializers.ModelSerializer):
-#     def validate(self, data):
-#         if hasattr(self, 'initial_data'):
-#             unknown_keys = set(self.initial_data.keys()) - set(self.fields.keys())
-#             if unknown_keys:
-#                 if set(['isenabled', 'duration']) & unknown_keys:
-#                 #     message = 'You do not have permissions to access some of' + \
-#                 #         ' these fields: {}'.format(unknown_keys)
-#                 # else:
-#                 #     message = 'Got unknown fields: {}'.format(unknown_keys)
-#                 # raise serializers.ValidationError(message)
-#                 return data
 
 class JobSerializer(serializers.ModelSerializer):
     task_id = serializers.ReadOnlyField(source="segment.task.id")
@@ -179,26 +162,18 @@ class JobSerializer(serializers.ModelSerializer):
             'reviewer_id', 'status', 'start_frame', 'stop_frame', 'task_id')
         read_only_fields = ('assignee', 'reviewer')
         
-class AutosaveSerializer(serializers.ModelSerializer):
-    job_id = serializers.IntegerField(required=False)
-    user_id = serializers.IntegerField(required=False)
-    
-    class Meta:
-        model = models.Autosave
-        fields =('job_id','user_id','isenabled','duration')
 
 class SimpleJobSerializer(serializers.ModelSerializer):
     assignee = BasicUserSerializer(allow_null=True)
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True)
     reviewer = BasicUserSerializer(allow_null=True, required=False)
     reviewer_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
-    isenabled = AutosaveSerializer(allow_null=True, required=True)
     
 
     class Meta:
         model = models.Job
-        fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer', 'reviewer_id', 'status', 'isenabled')
-        read_only_fields = ('assignee', 'reviewer', 'isenabled')
+        fields = ('url', 'id', 'assignee', 'assignee_id', 'reviewer', 'reviewer_id', 'status')
+        read_only_fields = ('assignee', 'reviewer')
 
 class SegmentSerializer(serializers.ModelSerializer):
     jobs = SimpleJobSerializer(many=True, source='job_set')
@@ -396,8 +371,7 @@ class TaskSerializer(WriteOnceMixin, serializers.ModelSerializer):
     assignee_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     project_id = serializers.IntegerField(required=False)
     dimension = serializers.CharField(allow_blank=True, required=False)
-    # autosave_enabled = serializers.BooleanField(default=False)
-    # autosave_duration =serializers.IntegerField(write_only=True, allow_null=False, required=False)
+
     
     
 

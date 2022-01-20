@@ -6,6 +6,7 @@ import errno
 import io
 import os
 import os.path as osp
+from django.db.models import query
 import pytz
 import shutil
 import traceback
@@ -14,6 +15,8 @@ from datetime import datetime
 from distutils.util import strtobool
 from tempfile import mkstemp, NamedTemporaryFile
 import json
+import csv
+from django.template.loader import get_template
 
 import cv2
 from django.db.models.query import Prefetch
@@ -38,7 +41,6 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from sendfile import sendfile
-
 import cvat.apps.dataset_manager as dm
 import cvat.apps.dataset_manager.views  # pylint: disable=unused-import
 from cvat.apps.authentication import auth
@@ -61,7 +63,7 @@ from cvat.apps.engine.serializers import (
     LogEventSerializer, ProjectSerializer, ProjectSearchSerializer, ProjectWithoutTaskSerializer,
     RqStatusSerializer, TaskSerializer, UserSerializer, PluginsSerializer, ReviewSerializer,
     CombinedReviewSerializer, IssueSerializer, CombinedIssueSerializer, CommentSerializer,
-    CloudStorageSerializer, BaseCloudStorageSerializer, TaskFileSerializer,)
+    CloudStorageSerializer, BaseCloudStorageSerializer, TaskFileSerializer)
 from utils.dataset_manifest import ImageManifestManager
 from cvat.apps.engine.utils import av_scan_paths
 from cvat.apps.engine.backup import import_task
@@ -75,7 +77,6 @@ import smtplib, ssl
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from cvat.settings.development import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from cvat.apps.engine.templates.email_template import admin_annot, annot_review
 
 class ServerViewSet(viewsets.ViewSet):
@@ -222,10 +223,11 @@ class ProjectFilter(filters.FilterSet):
     owner = filters.CharFilter(field_name="owner__username", lookup_expr="icontains")
     assignee = filters.CharFilter(field_name="assignee__username", lookup_expr="icontains")
     status = filters.CharFilter(field_name="status", lookup_expr="icontains")
+    project_type = filters.CharFilter(field_name="project_type", lookup_expr="icontains")
 
     class Meta:
         model = models.Project
-        fields = ("id", "name", "owner", "status")
+        fields = ("id", "name", "owner", "status", "project_type")
 
 @method_decorator(name='list', decorator=swagger_auto_schema(
     operation_summary='Returns a paginated list of projects according to query parameters (12 projects per page)',
@@ -248,14 +250,13 @@ class ProjectFilter(filters.FilterSet):
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a project'))
 class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
     queryset = models.Project.objects.all().order_by('-id')
-    search_fields = ("name", "owner__username", "assignee__username", "status")
+    search_fields = ("name", "owner__username", "assignee__username", "status", "project_type")
     filterset_class = ProjectFilter
-    ordering_fields = ("id", "name", "owner", "status", "assignee")
+    ordering_fields = ("id", "name", "owner", "status", "assignee", "project_type")
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
 
     def get_serializer_class(self):
         if self.request.path.endswith('tasks'):
-            print("taskkkkkkkkkkkkkkkkkk")
             return TaskSerializer
         if self.request.query_params and self.request.query_params.get("names_only") == "true":
             return ProjectSearchSerializer
@@ -308,7 +309,6 @@ class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            print("jhdgdggg", page)
             serializer = self.get_serializer(page, many=True,
                 context={"request": request})
             return self.get_paginated_response(serializer.data)
@@ -395,17 +395,19 @@ class TaskFilter(filters.FilterSet):
     mode = filters.CharFilter(field_name="mode", lookup_expr="icontains")
     status = filters.CharFilter(field_name="status", lookup_expr="icontains")
     assignee = filters.CharFilter(field_name="assignee__username", lookup_expr="icontains")
+    dimension = filters.CharFilter(field_name="dimension", lookup_expr="icontains")
 
     class Meta:
         model = Task
         fields = ("id", "project_id", "project", "name", "owner", "mode", "status",
-            "assignee")
+            "assignee", "dimension")
 
 class DjangoFilterInspector(CoreAPICompatInspector):
     def get_filter_parameters(self, filter_backend):
         if isinstance(filter_backend, DjangoFilterBackend):
             result = super(DjangoFilterInspector, self).get_filter_parameters(filter_backend)
             res = result.copy()
+            print("hhh409", res)
 
             for param in result:
                 if param.get('name') == 'project_id' or param.get('name') == 'project':
@@ -431,24 +433,21 @@ class DjangoFilterInspector(CoreAPICompatInspector):
 @method_decorator(name='destroy', decorator=swagger_auto_schema(operation_summary='Method deletes a specific task, all attached jobs, annotations, and data'))
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a task'))
 class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
-    print("herekk")
     queryset = Task.objects.all().prefetch_related(
             "label_set__attributespec_set",
             "segment_set__job_set",
         ).order_by('-id')
     serializer_class = TaskSerializer
     
-    search_fields = ("name",  "owner__username", "mode", "status")
+    search_fields = ("name",  "owner__username", "mode", "status", "dimension")
     filterset_class = TaskFilter
-    ordering_fields = ("id", "name", "owner", "status", "assignee")
+    ordering_fields = ("id", "name", "owner", "status", "assignee", "dimension")
 
     def get_permissions(self):
         http_method = self.request.method
-        print("gggggggggggggggg",self.request.method )
         permissions = [IsAuthenticated]
 
         if http_method in SAFE_METHODS:
-            print("jjjjj",self.request.method )
             permissions.append(auth.TaskAccessPermission)
         elif http_method in ["POST"]:
             permissions.append(auth.TaskCreatePermission)
@@ -532,7 +531,6 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         db_task = self.get_object() # force to call check_object_permissions
         action = self.request.query_params.get('action', None)
-        print("line 518", db_task, action )
         if action is None:
             return super().retrieve(request, pk)
         elif action in ('export', 'download'):
@@ -584,7 +582,6 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                 job_id=rq_id,
                 meta={ 'request_time': timezone.localtime() },
                 result_ttl=ttl, failure_ttl=ttl)
-            print(response,"ressssssssssssss")
             return Response(pk,status=status.HTTP_202_ACCEPTED)
 
         else:
@@ -876,6 +873,7 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     def _get_rq_response(queue, job_id):
         queue = django_rq.get_queue(queue)
         job = queue.fetch_job(job_id)
+        print("priniting jobs in status",job)
         response = {}
         if job is None or job.is_finished:
             response = { "state": "Finished" }
@@ -957,9 +955,10 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
 @method_decorator(name='update', decorator=swagger_auto_schema(operation_summary='Method updates a job by id'))
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(
     operation_summary='Methods does a partial update of chosen fields in a job'))
+
+
 class JobViewSet(viewsets.GenericViewSet,
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
-    print("joviewseroooooooooooooooooooo")
     queryset = Job.objects.all().order_by('id')
     serializer_class = JobSerializer
 
@@ -970,34 +969,29 @@ class JobViewSet(viewsets.GenericViewSet,
         if http_method in SAFE_METHODS:
             permissions.append(auth.JobAccessPermission)
         elif http_method in ['PATCH', 'PUT', 'DELETE']:
-            print("joviewseroooooooooooooooooooo")
+            
             # assignee_id = json.loads(self.request.body).get('assignee_id',False)
             # reviewer_id = json.loads(self.request.body).get('reviewer_id',False)
             # msg = MIMEMultipart('alternative')
             # msg['From'] = EMAIL_HOST_USER
             # mess = ''
-            # print("hfhhfh", self.request.data)
+            # job_id = self.kwargs['pk']
+            # segment_id = Job.objects.filter(id=job_id).values('segment_id')[0].get('segment_id')
+            # task_id =Segment.objects.filter(id=segment_id).values('task_id')[0].get('task_id')
         
             # if assignee_id:
-            #     task_id =6
-            #     segment_id = Segment.objects.filter(task_id=task_id).values('id')[0].get('id')
-            #     job_id = Job.objects.filter(assignee_id=assignee_id, segment_id=segment_id).values('id')
-            #     jobid= job_id.values('id')[0]
-            #     idg= jobid.get('id')
-            #     print("///////////", job_id.values(), jobid, idg)
-                
             #     assignee_queryset = User.objects.filter(id=assignee_id).values()[0]
             #     assignee_email, assignee_username = assignee_queryset.get('email'),assignee_queryset.get('username')
             #     msg['Subject'] = "Job assignment notification"
             #     msg['To'] = assignee_email
-            #     mess = admin_annot.format(assignee_username, idg)
+            #     mess = admin_annot.format(assignee_username,task_id, job_id)
             
             # elif reviewer_id:
             #     reviewer_queryset = User.objects.filter(id=reviewer_id).values()[0]
             #     reviewer_email, reviewer_username = reviewer_queryset.get('email'),reviewer_queryset.get('username')
-            #     msg['Subject'] = "Job Review notification on "
+            #     msg['Subject'] = "Job Review notification"
             #     msg['To'] = reviewer_email
-            #     mess = annot_review.format(reviewer_username)
+            #     mess = annot_review.format(reviewer_username,task_id,job_id)
             
             # part = MIMEText(mess, 'html')
             # msg.attach(part)
@@ -1252,7 +1246,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     print("line 1148")
     queryset = User.objects.all().order_by('id')
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
-    search_fields = ('username', 'first_name', 'last_name')
+    search_fields = ('username', 'first_name', 'last_name', 'email')
     filterset_class = UserFilter
 
     def get_serializer_class(self):
@@ -1317,6 +1311,7 @@ class RedefineDescriptionField(FieldInspector):
             if hasattr(result, 'title') and result.title == 'Specific attributes':
                 result.description = 'structure like key1=value1&key2=value2\n' \
                     'supported: range=aws_range'
+        print("result1320,,,,,", result)
         return result
 
 class CloudStorageFilter(filters.FilterSet):
@@ -1751,5 +1746,4 @@ def _export_annotations(db_instance, rq_id, request, format_name, action, callba
         meta={ 'request_time': timezone.localtime() },
         result_ttl=ttl, failure_ttl=ttl)
     return Response(status=status.HTTP_202_ACCEPTED)
-
 

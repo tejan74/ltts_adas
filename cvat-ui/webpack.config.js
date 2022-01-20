@@ -101,6 +101,17 @@ module.exports = (env) => ({
                 ],
             },
             {
+                test: /\.pdf$/,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {
+                      name: '[name].[ext]'
+                    }
+                  }
+                ]
+              },
+            {
                 test: /\.svg$/,
                 exclude: /node_modules/,
                 use: [

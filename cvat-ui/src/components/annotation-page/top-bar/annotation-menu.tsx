@@ -22,6 +22,7 @@ interface Props {
     onUploadAnnotations(format: string, file: File): void;
     setForceExitAnnotationFlag(forceExit: boolean): void;
     saveAnnotations(jobInstance: any, afterSave?: () => void): void;
+    isuser: any;
 }
 
 export enum Actions {
@@ -33,6 +34,8 @@ export enum Actions {
     SUBMIT_REVIEW = 'submit_review',
     FINISH_JOB = 'finish_job',
     RENEW_JOB = 'renew_job',
+    FEEDBACK_JOB = 'feedback_job',
+    SUBMIT_JOB = 'submit_job',
 }
 
 export default function AnnotationMenuComponent(props: Props): JSX.Element {
@@ -45,12 +48,13 @@ export default function AnnotationMenuComponent(props: Props): JSX.Element {
         onUploadAnnotations,
         setForceExitAnnotationFlag,
         saveAnnotations,
+        isuser,
     } = props;
 
     const jobStatus = jobInstance.status;
     const taskID = jobInstance.task.id;
-
-    function onClickMenuWrapper(params: MenuInfo): void {
+    const role = isuser.groups['0'];
+    const onClickMenuWrapper = (params: MenuInfo): void => {
         function checkUnsavedChanges(_params: MenuInfo): void {
             if (jobInstance.annotations.hasUnsavedChanges()) {
                 Modal.confirm({
@@ -122,48 +126,75 @@ export default function AnnotationMenuComponent(props: Props): JSX.Element {
         } else {
             onClickMenu(params);
         }
-    }
+    };
 
     const is2d = jobInstance.task.dimension === DimensionType.DIM_2D;
 
     return (
-        <Menu onClick={onClickMenuWrapper} className='cvat-annotation-menu' selectable={false}>
-            {LoadSubmenu({
-                loaders,
-                loadActivity,
-                onFileUpload: (format: string, file: File): void => {
-                    if (file) {
-                        Modal.confirm({
-                            title: 'Current annotation will be lost',
-                            content: 'You are going to upload new annotations to this job. Continue?',
-                            className: 'cvat-modal-content-load-job-annotation',
-                            onOk: () => {
-                                onUploadAnnotations(format, file);
+        <>
+            <Menu onClick={onClickMenuWrapper} className='cvat-annotation-menu' selectable={false}>
+                {role === 'admin' && (
+                    <div>
+                        {LoadSubmenu({
+                            loaders,
+                            loadActivity,
+                            onFileUpload: (format: string, file: File): void => {
+                                if (file) {
+                                    Modal.confirm({
+                                        title: 'Current annotation will be lost',
+                                        content: 'You are going to upload new annotations to this job. Continue?',
+                                        className: 'cvat-modal-content-load-job-annotation',
+                                        onOk: () => {
+                                            onUploadAnnotations(format, file);
+                                        },
+                                        okButtonProps: {
+                                            type: 'primary',
+                                            danger: true,
+                                        },
+                                        okText: 'Update',
+                                    });
+                                }
                             },
-                            okButtonProps: {
-                                type: 'primary',
-                                danger: true,
-                            },
-                            okText: 'Update',
-                        });
-                    }
-                },
-                menuKey: Actions.LOAD_JOB_ANNO,
-                taskDimension: jobInstance.task.dimension,
-            })}
-            <Menu.Item key={Actions.EXPORT_TASK_DATASET}>Export task dataset</Menu.Item>
-            <Menu.Item key={Actions.REMOVE_ANNO}>Remove annotations</Menu.Item>
-            <Menu.Item key={Actions.OPEN_TASK}>
-                <a href={`/tasks/${taskID}`} onClick={(e: React.MouseEvent) => e.preventDefault()}>
-                    Open the task
-                </a>
-            </Menu.Item>
-            {jobStatus === 'annotation' && is2d && <Menu.Item key={Actions.REQUEST_REVIEW}>Request a review</Menu.Item>}
-            {jobStatus === 'annotation' && <Menu.Item key={Actions.FINISH_JOB}>Finish the job</Menu.Item>}
-            {jobStatus === 'validation' && isReviewer && (
-                <Menu.Item key={Actions.SUBMIT_REVIEW}>Submit the review</Menu.Item>
-            )}
-            {jobStatus === 'completed' && <Menu.Item key={Actions.RENEW_JOB}>Renew the job</Menu.Item>}
-        </Menu>
+                            menuKey: Actions.LOAD_JOB_ANNO,
+                            taskDimension: jobInstance.task.dimension,
+                        })}
+                    </div>
+                )}
+                {role === 'admin' && <Menu.Item key={Actions.EXPORT_TASK_DATASET}>Export task dataset</Menu.Item>}
+                {role === 'admin' && <Menu.Item key={Actions.REMOVE_ANNO}>Remove annotations</Menu.Item>}
+                {role === 'admin' && (
+                    <Menu.Item key={Actions.OPEN_TASK}>
+                        <a href={`/tasks/${taskID}`} onClick={(e: React.MouseEvent) => e.preventDefault()}>
+                            Open the task
+                        </a>
+                    </Menu.Item>
+                )}
+                {jobStatus === 'annotation' && is2d && role === 'admin' && (
+                    <Menu.Item key={Actions.REQUEST_REVIEW}>Request a review</Menu.Item>
+                )}
+                {jobStatus === 'annotation' && role === 'admin' && (
+                    <Menu.Item key={Actions.FINISH_JOB}>Finish the job</Menu.Item>
+                )}
+                {jobStatus === 'validation' && isReviewer && (
+                    <Menu.Item key={Actions.SUBMIT_REVIEW}>Submit the review</Menu.Item>
+                )}
+                {jobStatus === 'completed' && <Menu.Item key={Actions.RENEW_JOB}>Renew the job</Menu.Item>}
+                {role === 'annotator' && <Menu.Item key={Actions.FINISH_JOB}>Finish the job</Menu.Item>}
+                {jobStatus === 'validation' && isReviewer && (
+                    <Menu.Item key={Actions.SUBMIT_REVIEW}>Submit the review</Menu.Item>
+                )}
+                {role === 'annotator' && (
+                    <Menu.Item key={Actions.FEEDBACK_JOB} disabled>
+                        Feedback
+                    </Menu.Item>
+                )}
+                {role === 'annotator' && (
+                    <Menu.Item key={Actions.SUBMIT_JOB} disabled>
+                        submit the job
+                    </Menu.Item>
+                )}
+                {/* {jobStatus ==='completed' && <Menu.Item key={Actions.SUBMIT_JOB}>submit the job</Menu.Item>} */}
+            </Menu>
+        </>
     );
 }

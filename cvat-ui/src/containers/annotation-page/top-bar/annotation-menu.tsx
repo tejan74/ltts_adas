@@ -156,6 +156,7 @@ function AnnotationMenuContainer(props: Props): JSX.Element {
             saveAnnotations={saveAnnotations}
             jobInstance={jobInstance}
             isReviewer={isReviewer}
+            isuser={user}
         />
     );
 }

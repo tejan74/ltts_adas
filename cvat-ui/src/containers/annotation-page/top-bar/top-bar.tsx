@@ -247,7 +247,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
 
     public componentDidUpdate(prevProps: Props): void {
         const { autoSaveInterval } = this.props;
-
         if (autoSaveInterval !== prevProps.autoSaveInterval) {
             if (this.autoSaveInterval) window.clearInterval(this.autoSaveInterval);
             this.autoSaveInterval = window.setInterval(this.autoSave.bind(this), autoSaveInterval);
@@ -263,7 +262,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
 
     private undo = (): void => {
         const { undo, jobInstance, frameNumber } = this.props;
-
         if (isAbleToChangeFrame()) {
             undo(jobInstance, frameNumber);
         }
@@ -530,9 +528,10 @@ class AnnotationTopBarContainer extends React.PureComponent<Props, State> {
     }
 
     private autoSave(): void {
-        const { autoSave, saving } = this.props;
+        // const { autoSave, saving } = this.props;
+        const { saving } = this.props;
 
-        if (autoSave && !saving) {
+        if (true && !saving) {
             this.onSaveAnnotation();
         }
     }

@@ -119,7 +119,7 @@ export default function UserSelector(props: Props): JSX.Element {
             ref={autocompleteRef}
             value={searchPhrase}
             placeholder='Select a user'
-            disabled={status === 'completed'}
+            disabled={status}
             onSearch={handleSearch}
             onSelect={handleSelect}
             onBlur={onBlur}

@@ -173,6 +173,21 @@ function build() {
                 return result;
             },
             // New code added by Raju ended above
+            // new code added by Raju
+            /**
+             * Method allows to agreement on a server
+             * @method agreement
+             * @async
+             * @memberof module:API.cvat.server
+             * @param {string|null} Token An username of an account
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async agreement() {
+                const result = await PluginRegistry.apiWrapper(cvat.server.agreement);
+                return result;
+            },
+            // New code added by Raju ended above
             /**
              * Method allows to logout from the server
              * @method logout

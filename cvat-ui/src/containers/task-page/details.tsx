@@ -18,6 +18,8 @@ interface StateToProps {
     activeInference: ActiveInference | null;
     installedGit: boolean;
     projectSubsets: string[];
+    userRole: any,
+
 }
 
 interface DispatchToProps {
@@ -27,10 +29,12 @@ interface DispatchToProps {
 
 function mapStateToProps(state: CombinedState, own: OwnProps): StateToProps {
     const { list } = state.plugins;
+    const { user } = state.auth;
     const [taskProject] = state.projects.current.filter((project) => project.id === own.task.instance.projectId);
 
     return {
         installedGit: list.GIT_INTEGRATION,
+        userRole: user,
         activeInference: state.models.inferences[own.task.instance.id] || null,
         projectSubsets: taskProject ?
             ([
@@ -54,8 +58,8 @@ function mapDispatchToProps(dispatch: any, own: OwnProps): DispatchToProps {
 function TaskPageContainer(props: StateToProps & DispatchToProps & OwnProps): JSX.Element {
     const {
         task, installedGit, activeInference, projectSubsets, cancelAutoAnnotation, onTaskUpdate,
+        userRole,
     } = props;
-
     return (
         <DetailsComponent
             previewImage={task.preview}
@@ -65,6 +69,7 @@ function TaskPageContainer(props: StateToProps & DispatchToProps & OwnProps): JS
             projectSubsets={projectSubsets}
             onTaskUpdate={onTaskUpdate}
             cancelAutoAnnotation={cancelAutoAnnotation}
+            userGroup={userRole}
         />
     );
 }

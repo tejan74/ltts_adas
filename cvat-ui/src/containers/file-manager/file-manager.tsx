@@ -14,6 +14,7 @@ import { ShareItem, CombinedState } from 'reducers/interfaces';
 interface OwnProps {
     ref: any;
     onChangeActiveKey(key: string): void;
+    onFileSelect(value: Files): void;
     readonly: boolean;
     projectType: string;
 }
@@ -80,7 +81,9 @@ export class FileManagerContainer extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
-        const { treeData, getTreeData, onChangeActiveKey } = this.props;
+        const {
+            treeData, getTreeData, onChangeActiveKey, onFileSelect,
+        } = this.props;
         const { readonly } = this.props;
         const { projectType } = this.props;
 
@@ -91,6 +94,7 @@ export class FileManagerContainer extends React.PureComponent<Props> {
                 treeData={treeData}
                 onLoadData={getTreeData}
                 onChangeActiveKey={onChangeActiveKey}
+                onFileSelect={onFileSelect}
                 ref={(component): void => {
                     this.managerComponentRef = component;
                 }}

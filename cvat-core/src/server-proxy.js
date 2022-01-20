@@ -195,7 +195,25 @@
                 }
                 return response.data;
             }
-
+            // new code added by raju
+            async function agreement() {
+                const { backendAPI } = config;
+                let response = null;
+                try {
+                    const data = {
+                        accepted_status: true,
+                    };
+                    response = await Axios.patch(`${backendAPI}/restrictions/user_agreements`, data, {
+                        proxy: config.proxy,
+                    });
+                    console.log();
+                } catch (errorData) {
+                    throw generateError('errorData');
+                    // eslint-disable-next-line no-throw-literal
+                    // throw 'Request failed with status code 504';
+                }
+                return response.data;
+            }
             async function register(username, firstName, lastName, email, password1, password2, confirmations) {
                 let response = null;
                 try {
@@ -1339,6 +1357,7 @@
                             userAgreements,
                             installedApps,
                             Googlelogin,
+                            agreement,
                         }),
                         writable: false,
                     },

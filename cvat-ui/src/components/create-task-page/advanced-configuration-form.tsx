@@ -10,7 +10,6 @@ import Checkbox from 'antd/lib/checkbox';
 import Form, { FormInstance, RuleObject, RuleRender } from 'antd/lib/form';
 import Text from 'antd/lib/typography/Text';
 import { Store } from 'antd/lib/form/interface';
-
 import CVATTooltip from 'components/common/cvat-tooltip';
 import patterns from 'utils/validation-patterns';
 
@@ -43,6 +42,7 @@ interface Props {
     onSubmit(values: AdvancedConfiguration): void;
     installedGit: boolean;
     activeFileManagerTab: string;
+    files: any// ;
 }
 
 function validateURL(_: RuleObject, value: string): Promise<void> {
@@ -88,7 +88,7 @@ const isInteger = ({ min, max }: { min?: number; max?: number }) => (
     }
 
     if (typeof max !== 'undefined' && intValue > max) {
-        return Promise.reject(new Error(`Value must be less than ${max}`));
+        return Promise.reject(new Error(`Value must be less than or equal to ${max}`));
     }
 
     return Promise.resolve();
@@ -211,10 +211,12 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
     }
 
     private renderSegmentSize(): JSX.Element {
+        const { files } = this.props;
+        const maxSegmentNumber = files.local.length;
         return (
             <CVATTooltip title='Defines a number of frames in a segment'>
-                <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' min={1} />
+                <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1, max: maxSegmentNumber }) }]}>
+                    <Input size='large' type='number' max={files.local.length} placeholder='fileLength' />
                 </Form.Item>
             </CVATTooltip>
         );

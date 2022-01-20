@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from posixpath import basename
 from django.urls import path, include
 from . import views
 from rest_framework import routers
@@ -72,5 +73,5 @@ urlpatterns = [
 
     # entry point for API
     path('api/v1/auth/', include('cvat.apps.authentication.urls')),
-    path('api/v1/', include((router.urls, 'cvat'), namespace='v1'))
+    path('api/v1/', include((router.urls, 'cvat'), namespace='v1')),
 ]

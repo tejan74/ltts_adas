@@ -32,11 +32,12 @@ interface Props {
     projectSubsets: string[];
     cancelAutoAnnotation(): void;
     onTaskUpdate: (taskInstance: any) => void;
+    userGroup:any;
 }
 
 interface State {
     name: string;
-    subset: string;
+    // subset: string;
     repository: string;
     repositoryStatus: string;
 }
@@ -326,8 +327,9 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
     public render(): JSX.Element {
         const {
             activeInference, cancelAutoAnnotation, taskInstance, onTaskUpdate,
+            userGroup,
         } = this.props;
-
+        const role = userGroup.groups['0'];
         return (
             <div className='cvat-task-details'>
                 <Row justify='start' align='middle'>
@@ -363,7 +365,7 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
                         </Row>
                         {this.renderDatasetRepository()}
                         {/* {!taskInstance.projectId && this.renderLabelsEditor()} */}
-                        {taskInstance.projectId && this.renderLabelsEditor()}
+                        {taskInstance.projectId && role === 'admin' ? this.renderLabelsEditor() : null}
                         {/* {taskInstance.projectId && this.renderSubsetField()} */}
                     </Col>
                 </Row>

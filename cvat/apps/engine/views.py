@@ -223,10 +223,11 @@ class ProjectFilter(filters.FilterSet):
     owner = filters.CharFilter(field_name="owner__username", lookup_expr="icontains")
     assignee = filters.CharFilter(field_name="assignee__username", lookup_expr="icontains")
     status = filters.CharFilter(field_name="status", lookup_expr="icontains")
+    project_type = filters.CharFilter(field_name="project_type", lookup_expr="icontains")
 
     class Meta:
         model = models.Project
-        fields = ("id", "name", "owner", "status")
+        fields = ("id", "name", "owner", "status", "project_type")
 
 @method_decorator(name='list', decorator=swagger_auto_schema(
     operation_summary='Returns a paginated list of projects according to query parameters (12 projects per page)',
@@ -249,9 +250,9 @@ class ProjectFilter(filters.FilterSet):
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a project'))
 class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
     queryset = models.Project.objects.all().order_by('-id')
-    search_fields = ("name", "owner__username", "assignee__username", "status")
+    search_fields = ("name", "owner__username", "assignee__username", "status", "project_type")
     filterset_class = ProjectFilter
-    ordering_fields = ("id", "name", "owner", "status", "assignee")
+    ordering_fields = ("id", "name", "owner", "status", "assignee", "project_type")
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
 
     def get_serializer_class(self):
@@ -394,11 +395,12 @@ class TaskFilter(filters.FilterSet):
     mode = filters.CharFilter(field_name="mode", lookup_expr="icontains")
     status = filters.CharFilter(field_name="status", lookup_expr="icontains")
     assignee = filters.CharFilter(field_name="assignee__username", lookup_expr="icontains")
+    dimension = filters.CharFilter(field_name="dimension", lookup_expr="icontains")
 
     class Meta:
         model = Task
         fields = ("id", "project_id", "project", "name", "owner", "mode", "status",
-            "assignee")
+            "assignee", "dimension")
 
 class DjangoFilterInspector(CoreAPICompatInspector):
     def get_filter_parameters(self, filter_backend):
@@ -437,9 +439,9 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
         ).order_by('-id')
     serializer_class = TaskSerializer
     
-    search_fields = ("name",  "owner__username", "mode", "status")
+    search_fields = ("name",  "owner__username", "mode", "status", "dimension")
     filterset_class = TaskFilter
-    ordering_fields = ("id", "name", "owner", "status", "assignee")
+    ordering_fields = ("id", "name", "owner", "status", "assignee", "dimension")
 
     def get_permissions(self):
         http_method = self.request.method
@@ -1244,7 +1246,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     print("line 1148")
     queryset = User.objects.all().order_by('id')
     http_method_names = ['get', 'post', 'head', 'patch', 'delete']
-    search_fields = ('username', 'first_name', 'last_name')
+    search_fields = ('username', 'first_name', 'last_name', 'email')
     filterset_class = UserFilter
 
     def get_serializer_class(self):

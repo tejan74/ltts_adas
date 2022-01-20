@@ -17,7 +17,6 @@ from tempfile import mkstemp, NamedTemporaryFile
 import json
 import csv
 from django.template.loader import get_template
-from xhtml2pdf import pisa
 
 import cv2
 from django.db.models.query import Prefetch
@@ -42,7 +41,6 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from sendfile import sendfile
-
 import cvat.apps.dataset_manager as dm
 import cvat.apps.dataset_manager.views  # pylint: disable=unused-import
 from cvat.apps.authentication import auth
@@ -79,7 +77,6 @@ import smtplib, ssl
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from cvat.settings.development import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from cvat.apps.engine.templates.email_template import admin_annot, annot_review
 
 class ServerViewSet(viewsets.ViewSet):
@@ -259,7 +256,6 @@ class ProjectViewSet(auth.ProjectGetQuerySetMixin, viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.path.endswith('tasks'):
-            print("taskkkkkkkkkkkkkkkkkk")
             return TaskSerializer
         if self.request.query_params and self.request.query_params.get("names_only") == "true":
             return ProjectSearchSerializer
@@ -435,13 +431,11 @@ class DjangoFilterInspector(CoreAPICompatInspector):
 @method_decorator(name='destroy', decorator=swagger_auto_schema(operation_summary='Method deletes a specific task, all attached jobs, annotations, and data'))
 @method_decorator(name='partial_update', decorator=swagger_auto_schema(operation_summary='Methods does a partial update of chosen fields in a task'))
 class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
-    print("herekk")
     queryset = Task.objects.all().prefetch_related(
             "label_set__attributespec_set",
             "segment_set__job_set",
         ).order_by('-id')
     serializer_class = TaskSerializer
-    print("kkkhd", serializer_class.data)
     
     search_fields = ("name",  "owner__username", "mode", "status")
     filterset_class = TaskFilter
@@ -535,7 +529,6 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         db_task = self.get_object() # force to call check_object_permissions
         action = self.request.query_params.get('action', None)
-        print("line 518", db_task, action )
         if action is None:
             return super().retrieve(request, pk)
         elif action in ('export', 'download'):
@@ -587,7 +580,6 @@ class TaskViewSet(auth.TaskGetQuerySetMixin, viewsets.ModelViewSet):
                 job_id=rq_id,
                 meta={ 'request_time': timezone.localtime() },
                 result_ttl=ttl, failure_ttl=ttl)
-            print(response,"ressssssssssssss")
             return Response(pk,status=status.HTTP_202_ACCEPTED)
 
         else:
